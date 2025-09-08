@@ -1,0 +1,71 @@
+index = Página principal (Feed de facebook/posts)
+    En la página Web principal, se debe de ver la forma de acceder a cada mundial,
+    representados con imágenes; y también, la forma de registrarse como usuario o ingresar.
+    
+    Se puede filtrar por país sede del mundial, para ver las publicaciones de ese mundial.
+    Las publicaciones se podrán ordenar por orden cronológico de los
+    mundiales (default), por país, por mas likes o por más comentarios.
+    
+    La página es de uso público, pero solo los usuarios registrados podrán
+    realizar las publicaciones.
+
+    Conexiones
+    (Barra de búsqueda, info, post, login, signup, profile, admin tools)
+
+info = Página donde se mostrará la infografía de cada mundial (Como una pequeña wiki)
+search = Página que muestre los resultados de búsqueda
+    Se debe permitir la búsqueda, donde el resultado serán las publicaciones,
+    se puede buscar por categoría, año de mundial, país sede, usuario que publicó.
+post = Página para crear y editar nuevos posts (Seguramente sea dentro de index pero podría ser a parte)
+    Los usuarios registrados pueden hacer publicaciones con relación a algún mundial.
+    Se debe elegir una categoría, por ejemplo: Jugadas, entrevistas, partidos,
+    estadísticas, asistentes, incidentes, polémicas, Sedes, Cultura. Etc.
+    
+    La publicación puede ser una imagen o un video y se debe especificar a
+    qué mundial pertenece y si es de alguna selección también se puede especificar.
+    
+    Las publicaciones antes de estar visibles para el público en general, el
+    admin deberá aprobarlas.
+    
+    Se debe guardar fecha/hora de la aprobación, y fecha/hora de la
+    elaboración de la publicación.
+    
+    Los usuarios pueden calificar las publicaciones de otros usuarios y hacer
+    comentarios.
+login = Página para logearse
+signup = Página para registrarse
+    Se debe contar con la funcionalidad para el registro de usuarios que
+    puedan ver el contenido de la página y/o enriquecer con material que
+    tengan disponible, los datos de los usuarios deben ser al menos:
+    • Nombre completo
+    • Fecha de nacimiento (solo los mayores de 12 años pueden
+    acceder)
+    • Foto
+    • Género
+    • País de nacimiento
+    • Nacionalidad
+    • Correo electrónico
+    Descripción del proyecto
+    • Contraseña de acceso con una longitud de 8 caracteres.
+    o Mayúsculas y minúsculas: KLJDFwerfn
+    o Caracteres numéricos: 923857
+    o Caracteres especiales: =)§)]€&
+
+profile = Página para ver y editar perfil, además de ver posts (como facebook)
+    Cada usuario podrá visualizar su perfil, donde pueda modificar sus datos,
+    incluyendo la contraseña, y además visualizar sus publicaciones, y qué
+    otros usuarios han interactuado con ellas ya sea comentando o calificando,
+    ver la cantidad de likes y cantidad de vistas que tiene cada una.
+
+
+admin = Página de opciones exclusivas para admins
+    Al menos debe existir un usuario administrador, para confirmar las
+    publicaciones de otros usuarios, y armar la estructura de la historia de los
+    mundiales, con países, años, sedes, etc.
+
+    Funciones del admin: crear categorías, crear página de cada mundial con
+    imagen, logotipo, nombre del mundial, año y una breve reseña de ese
+    mundial; además aprobar las publicaciones de los usuarios. Los usuarios
+    adminstradores también pueden enriquecer la página de cada mundial.
+
+    Solo el admin puede eliminar los comentarios de cualquier usuario.
