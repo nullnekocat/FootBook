@@ -6,23 +6,23 @@
         <!-- Filters -->
         <section class="mb-4">
             <form class="row gx-2 align-items-center">
-                <div class="col-md-3">
+                <div class="col-5 col-auto">
                     <select class="form-select" name="worldcup-filter">
-                        <option value="">Todos los mundiales</option>
+                        <option value="">Todas las copas</option>
                         <option value="2018">Rusia 2018</option>
                         <option value="2022">Qatar 2022</option>
                         <option value="2026">México/EUA/Canadá 2026</option>
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-5 col-auto">
                     <select class="form-select" name="order-by">
-                        <option value="cronologico">Orden cronológico</option>
+                        <option value="cronologico">Más reciente</option>
                         <option value="pais">País sede</option>
                         <option value="likes">Más likes</option>
                         <option value="comentarios">Más comentarios</option>
                     </select>
                 </div>
-                <div class="col-md-2">
+                <div class="col-2 col-md-2 col-auto">
                     <button class="btn btn-primary w-100" type="submit">Filtrar</button>
                 </div>
             </form>
