@@ -15,13 +15,13 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Profile
+                        User
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="login.php">Login</a>
                         <a class="dropdown-item" href="signup.php">Sign up</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="profile.php">Page</a>
+                        <a class="dropdown-item" href="profile.php">Profile</a>
                     </div>
                 </li>
                 <li class="nav-item">
