@@ -15,9 +15,15 @@
     transform: translate(-50%, -50%);
 }
 
-.feed-center {
+.center-maxw {
   max-width: 600px;
   margin-left: auto;
+  margin-right: auto;
+}
+
+.left-maxw {
+  max-width: 600px;
+  margin-left: 0px;
   margin-right: auto;
 }
 
@@ -25,3 +31,4 @@
     height: 320px;
     width: 370px;
 }
+

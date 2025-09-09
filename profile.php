@@ -2,7 +2,7 @@
 <body>
 <?php require('inc/navbar.inc.php'); ?>
 
-<div class="container my-4">
+<div class="container my-4 center-maxw">
     <!-- Cover & avatar -->
     <div class="card mb-4 shadow-sm">
         <div class="profile-cover" style="background: linear-gradient(90deg, #4776E6 0%, #8e54e9 100%); height: 180px; position: relative;">
