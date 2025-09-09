@@ -1,7 +1,6 @@
 <?php require('inc/head.inc.php'); ?>
 <body>
     <?php require('inc/navbar.inc.php'); ?>
-
     <div class="container my-4">
         <div class="row justify-content-center">
             <div class="col-lg-8 col-md-10">
@@ -13,8 +12,7 @@
                             ¿Ya tienes cuenta? <a href="login.php">Inicia sesión</a>
                         </h6>
   
-                    </div>
-                    
+                    </div>           
                     <div class="card-body">
                         <form class="needs-validation" novalidate>
                             <div class="row g-3">
