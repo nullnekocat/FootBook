@@ -6,5 +6,6 @@
     <title>FootBook</title>
     <link rel="stylesheet" href="bootstrap-5.3.8-dist/css/bootstrap.css">
     <link rel="stylesheet" href="styles.css">
-    <script defer src="bootstrap-5.3.8-dist/js/bootstrap.bundle.js"></script>    
+    <script defer src="bootstrap-5.3.8-dist/js/bootstrap.bundle.js"></script>
+    <script defer src="/navbar.js"></script>
 </head>

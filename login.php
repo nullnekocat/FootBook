@@ -4,7 +4,7 @@
 
     <div class="container">
         <div class="row">
-            <div class="centered login-size">
+            <div class="middle login-size">
                 <div class="card shadow">
                     <div class="card-header bg-dark text-light text-center">
                         <h4 class="mb-0">Iniciar sesión</h4>

@@ -2,7 +2,7 @@
 <body>
     <?php require('inc/navbar.inc.php'); ?>
     
-    <div class="container my-4">
+    <div class="container my-4 feed-center">
         <!-- Filters -->
         <section class="mb-4">
             <form class="row gx-2 align-items-center">

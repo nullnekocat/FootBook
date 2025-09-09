@@ -8,11 +8,17 @@
     color:whitesmoke
 }
 
-.centered {
+.middle {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+.feed-center {
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .login-size{
