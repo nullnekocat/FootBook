@@ -47,7 +47,7 @@
   <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header bg-secondary text-dark">
-        <h4 class="modal-title" id="modal2018Label">
+        <h4 class="modal-title text-light" id="modal2018Label">
           <img src="img/russia2018.png" alt="Rusia 2018" width="48" class="me-2 rounded">
           Copa Mundial de la FIFA Rusia 2018
         </h4>
@@ -73,9 +73,6 @@
           </li>
           <li class="nav-item" role="presentation">
             <button class="nav-link" id="entrevistas-tab" data-bs-toggle="tab" data-bs-target="#entrevistas2018" type="button" role="tab">Entrevistas</button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="juegos-tab" data-bs-toggle="tab" data-bs-target="#juegos2018" type="button" role="tab">Juegos</button>
           </li>
         </ul>
         <div class="tab-content" id="wikiTabContent">
@@ -168,16 +165,11 @@
               <blockquote class="blockquote">"Dejamos todo en la cancha y estamos orgullosos de nuestro país."</blockquote>
             </div>
           </div>
-          <!-- Videogames -->
-          <div class="tab-pane fade text-dark" id="juegos2018" role="tabpanel">
-            <h5>Juegos interactivos / trivias</h5>
-            <p>¡Próximamente trivias y juegos sobre Rusia 2018!</p>
-          </div>
         </div>
       </div>
       <div class="modal-footer">
         <small class="text-muted">Fuente: Wikipedia, FIFA, YouTube</small>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
       </div>
     </div>
   </div>

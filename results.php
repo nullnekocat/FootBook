@@ -1,5 +1,5 @@
 <?php require('inc/head.inc.php'); ?>
-
+<?php require('inc/comments.inc.php')?>
 <body>
     <?php require('inc/navbar.inc.php'); ?>
 
@@ -7,7 +7,7 @@
         <!--h3 class="mb-4">Resultados</h3-->
         <!-- Active filters SM-XS -->
         <div class="mb-3 d-block d-md-none">
-            <span class="badge bg-primary me-1">Categoría:
+            <span class="badge bg-success me-1">Categoría:
                 <?php echo htmlspecialchars($_GET['category'] ?? 'Todas'); ?>
             </span>
             <span class="badge bg-secondary me-1">Año:
@@ -64,7 +64,7 @@
                                         <option value="comments">Más comentarios</option>
                                     </select>
                                 </div>
-                                <button class="btn btn-primary w-100 mt-2" type="submit">Aplicar filtros</button>
+                                <button class="btn btn-success w-100 mt-2" type="submit">Aplicar filtros</button>
                             </form>
                         </div>
                     </div>
@@ -90,8 +90,8 @@
                         <p>¡Gran entrevista con un jugador legendario!</p>
                         <img src="img/demo<?php echo $i+2; ?>.jpg" class="img-fluid rounded mb-2" alt="Post image">
                         <div>
-                            <button class="btn btn-sm btn-outline-primary me-2">👍 15</button>
-                            <button class="btn btn-sm btn-outline-secondary">💬 5</button>
+                            <button class="btn btn-sm btn-outline-success me-2">👍 15</button>
+                            <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#commentsModal">💬 3</button>
                         </div>
                     </div>
                 </div>

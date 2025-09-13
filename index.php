@@ -1,7 +1,7 @@
 <?php require('inc/head.inc.php'); ?>
+<?php require('inc/comments.inc.php')?>
 <body>
     <?php require('inc/navbar.inc.php'); ?>
-    
     <div class="container my-4 center-maxw">
         <!-- Filters -->
         <section class="mb-4">
@@ -23,7 +23,7 @@
                     </select>
                 </div>
                 <div class="col-2 col-md-2 col-auto">
-                    <button class="btn btn-primary w-100" type="submit">Filtrar</button>
+                    <button class="btn btn-success w-100" type="submit">Filtrar</button>
                 </div>
             </form>
         </section>
@@ -44,11 +44,11 @@
                                 <span class="badge bg-secondary ms-2">Jugadas</span>
                             </div>
                         </div>
-                        <p>¡Qué jugadón en la final!</p>
+                        <p>Dummy: Texto de post en homepage</p>
                         <img src="img/demo<?php echo $i+1; ?>.jpg" class="img-fluid rounded mb-2" alt="Post image">
                         <div>
-                            <button class="btn btn-sm btn-outline-primary me-2">👍 5</button>
-                            <button class="btn btn-sm btn-outline-secondary">💬 2</button>
+                            <button class="btn btn-sm btn-outline-success me-2">👍 5</button>
+                            <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#commentsModal">💬 3</button>
                         </div>
                     </div>
                 </div>

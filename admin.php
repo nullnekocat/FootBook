@@ -26,7 +26,7 @@
                     <input type="text" class="form-control" id="category-name" name="category_name" placeholder="Nombre de la categoría" required>
                 </div>
                 <div class="col-auto">
-                    <button type="submit" class="btn btn-primary">Agregar</button>
+                    <button type="submit" class="btn btn-success">Agregar</button>
                 </div>
             </form>
             <h6 class="text-dark">Categorías existentes</h6>
@@ -56,7 +56,7 @@
                         <div>
                             <h6 class="mb-1">Usuario123 <span class="badge bg-info">Jugadas</span> <span class="badge bg-secondary">Qatar 2022</span></h6>
                             <small>05/09/2025</small>
-                            <p class="mb-1">¡Qué jugada tan espectacular!</p>
+                            <p class="mb-1">Dummy: Texto de post en las herramientas de administrador</p>
                             <img src="img/demo1.jpg" class="img-fluid rounded mb-2" style="max-width:220px;" alt="Post image">
                         </div>
                         <div class="ms-3">
@@ -76,7 +76,7 @@
                         <img src="img/russia2018.png" class="card-img-top" alt="Rusia 2018">
                         <div class="card-body">
                             <h6 class="card-title mb-0">Rusia 2018</h6>
-                            <button class="btn btn-outline-primary btn-sm mt-2 w-100" data-bs-toggle="modal" data-bs-target="#editWikiModal2018">
+                            <button class="btn btn-outline-success btn-sm mt-2 w-100" data-bs-toggle="modal" data-bs-target="#editWikiModal2018">
                                 <i class="bi bi-pencil"></i> Editar wiki
                             </button>
                         </div>
@@ -87,19 +87,18 @@
                         <img src="img/qatar2022.png" class="card-img-top" alt="Qatar 2022">
                         <div class="card-body">
                             <h6 class="card-title mb-0">Quatar 2022</h6>
-                            <button class="btn btn-outline-primary btn-sm mt-2 w-100" data-bs-toggle="modal" data-bs-target="#editWikiModal2018">
+                            <button class="btn btn-outline-success btn-sm mt-2 w-100" data-bs-toggle="modal" data-bs-target="#editWikiModal2018">
                                 <i class="bi bi-pencil"></i> Editar wiki
                             </button>
                         </div>
                     </div>
                 </div>
-                <!-- ...más wikis -->
             </div>
             <!-- Modal de edición de wiki de ejemplo -->
             <div class="modal fade" id="editWikiModal2018" tabindex="-1" aria-labelledby="editWikiModal2018Label" aria-hidden="true">
                 <div class="modal-dialog modal-xl modal-dialog-centered">
                     <form class="modal-content">
-                        <div class="modal-header bg-primary text-white">
+                        <div class="modal-header bg-secondary text-white">
                             <h5 class="modal-title" id="editWikiModal2018Label">Editar Wiki - Rusia 2018</h5>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                         </div>
@@ -139,7 +138,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                            <button type="submit" class="btn btn-success">Guardar cambios</button>
                         </div>
                     </form>
                 </div>

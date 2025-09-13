@@ -1,4 +1,5 @@
 <?php require('inc/head.inc.php'); ?>
+<?php require('inc/comments.inc.php')?>
 <body>
 <?php require('inc/navbar.inc.php'); ?>
 
@@ -17,7 +18,7 @@
                 <span class="text-muted small">0 seguidores · 0 seguidos</span>
             </div>
             <div class="ms-md-auto d-flex gap-2 mt-2 mb-3">
-                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#editProfileModal">
                     <i class="bi bi-pencil"></i> Editar perfil
                 </button>
             </div>
@@ -94,8 +95,8 @@
                                 <p>¡Mi primer post sobre los mundiales!</p>
                                 <img src="img/demo1.jpg" class="img-fluid rounded mb-2" alt="Post image">
                                 <div>
-                                    <button class="btn btn-sm btn-outline-primary me-2">👍 10</button>
-                                    <button class="btn btn-sm btn-outline-secondary">💬 3</button>
+                                    <button class="btn btn-sm btn-outline-success me-2">👍 10</button>
+                                    <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#commentsModal">💬 3</button>
                                 </div>
                             </div>
                         </div>
@@ -181,7 +182,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <button type="submit" class="btn btn-success">Guardar cambios</button>
       </div>
     </form>
   </div>

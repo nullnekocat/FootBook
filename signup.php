@@ -6,15 +6,17 @@
             <div class="col-lg-8 col-md-10">
                 <div class="card shadow">
                     <div class="row card-header pt-3 bg-dark text-light " style="margin:0!important;">
-                        
                         <h4 class="col-5">Crear cuenta</h4>
                         <h6 class="col-7 pt-1 text-end">
                             ¿Ya tienes cuenta? <a href="login.php">Inicia sesión</a>
                         </h6>
-  
-                    </div>           
+                    </div>
                     <div class="card-body">
-                        <form class="needs-validation" novalidate>
+                        <!-- Alert de éxito oculto -->
+                        <div class="alert alert-success d-none" id="signupSuccess" role="alert">
+                            ¡Cuenta creada exitosamente! Redirigiendo...
+                        </div>
+                        <form class="needs-validation" id="signupForm" novalidate>
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label for="fullname" class="form-label">Nombre completo</label>
@@ -23,13 +25,15 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="birthdate" class="form-label">Fecha de nacimiento</label>
-                                    <input type="date" class="form-control" id="birthdate" name="birthdate" required min="1900-01-01" max="<?php echo date('Y-m-d', strtotime('-12 years')); ?>">
-                                    <div class="invalid-feedback">Debes tener al menos 12 años para registrarte.</div>
+                                    <input type="date" class="form-control" id="birthdate" name="birthdate" required min="1900-01-01" max="<?php echo date('Y-m-d'); ?>">
+                                    <div class="invalid-feedback" id="birthdateFeedback">
+                                        Debes tener al menos 12 años para registrarte.
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="photo" class="form-label">Foto de perfil</label>
-                                    <input class="form-control" type="file" id="photo" name="photo" accept="image/*" required>
-                                    <div class="invalid-feedback">Sube una foto de perfil.</div>
+                                    <label for="photo" class="form-label">Foto de perfil <span class="text-muted">(opcional)</span></label>
+                                    <input class="form-control" type="file" id="photo" name="photo" accept="image/*">
+                                    <!-- Elimina el invalid-feedback aquí -->
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label d-block">Género</label>
@@ -63,10 +67,19 @@
                                 </div>
                                 <div class="col-md-12">
                                     <label for="password" class="form-label">Contraseña</label>
-                                    <input type="password" class="form-control" id="password" name="password"
-                                        required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':\|,.<>\/?]).{8,}$"
-                                        minlength="8"
-                                        aria-describedby="passwordHelpBlock">
+                                    <div class="input-group">
+                                        <input type="password"
+                                            class="form-control"
+                                            id="password"
+                                            name="password"
+                                            required
+                                            minlength="8"
+                                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-=\[\]{};':\\|,.<>\/?]).{8,}$"
+                                            aria-describedby="passwordHelpBlock">
+                                        <button class="btn btn-outline-secondary" type="button" id="togglePassword" tabindex="-1">
+                                            <i class="bi bi-eye" id="eyeIcon"></i>
+                                        </button>
+                                    </div>
                                     <div id="passwordHelpBlock" class="form-text">
                                         Mínimo 8 caracteres, incluye mayúsculas, minúsculas, número y carácter especial.
                                     </div>
@@ -79,29 +92,11 @@
                                 </div>
                             </div>
                         </form>
-                        
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-    // Bootstrap custom validation
-    (() => {
-      'use strict'
-      const forms = document.querySelectorAll('.needs-validation')
-      Array.from(forms).forEach(form => {
-        form.addEventListener('submit', event => {
-          if (!form.checkValidity()) {
-            event.preventDefault()
-            event.stopPropagation()
-          }
-          form.classList.add('was-validated')
-        }, false)
-      })
-    })()
-    </script>
-
+    <script src='signup.js'></script>
 <?php require('inc/footer.inc.php'); ?>
 </body>
