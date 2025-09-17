@@ -24,10 +24,31 @@
                         <a class="dropdown-item" href="profile.php">Profile</a>
                     </div>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Language
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">English</a>
+                        <a class="dropdown-item" href="#">Español</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Theme
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Light</a>
+                        <a class="dropdown-item" href="#">Dark</a>
+                    </div>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="admin.php">Admin</a>
                 </li>
             </ul>
+
             <form class="form-inline d-flex ms-auto" method="get" action="results.php" id="mainSearchForm" autocomplete="off">
                 <div class="input-group position-relative">
                     <input class="form-control" type="search" placeholder="Buscar publicaciones" aria-label="Buscar" name="q" id="main-search-input">

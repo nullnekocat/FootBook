@@ -33,6 +33,7 @@
         <!-- Feed -->
         <section class="mb-4">
             <!-- Posts loop -->
+             
             <?php for($i = 0; $i < 4; $i++): ?>
                 <div class="card mb-3 shadow-sm">
                     <div class="card-body">
