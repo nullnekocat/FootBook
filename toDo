@@ -1,3 +1,28 @@
+todo 2
+Ambos:
+- Si / Validación de requisitos de contraseña para el perfil de usuario.
+- No / Página para el Registro, modificación y consulta del perfil del usuario, por rol de usuario.
+- No / Clase de PHP para la conexión a la base de datos.
+
+PWCI:
+- Si / Al menos 1 API creada desde 0 aplicada
+- Si / Propuesta para al menos 1 middleware
+- Si / Landing page atractiva y acorde a la temática
+- Si / Propuesta de API de terceros.
+- No / MVC Aplicado al proyecto
+
+BDM:
+- Si / Establece la estructura de la base de datos en un modelo relacional definiendo las llaves primarias y llaves foráneas.
+- Si / Script de la creación de tablas, índices, llaves primarias y foráneas en MySQL
+- Si / En el script con la creación de las tablas, sin omitir la relación de alguna tabla. 
+       Determina los tipos de datos adecuados para cada campo.
+- Si / Obtiene el diagrama relacional de MySql.
+- Si / Diccionario de Datos (incluyendo dominio para cada atributo y descripción, ambos en la estructura de cada tabla).
+- Si / Script con el o los SP necesarios para todas las gestiones del perfil de usuario.
+- Si / Creación de 3 videos tutoriales con temas de BDM que serán cargados al portal en la entrega final.
+
+
+todo 1
 index = Página principal (Feed de facebook/posts)
     En la página Web principal, se debe de ver la forma de acceder a cada mundial,
     representados con imágenes; y también, la forma de registrarse como usuario o ingresar.
