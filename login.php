@@ -10,7 +10,7 @@
                         <h4 class="mb-0">Iniciar sesión</h4>
                     </div>
                     <div class="card-body">
-                        <form class="needs-validation" novalidate>
+                        <form class="needs-validation" id="signupForm" novalidate>
                             <div class="mb-3">
                                 <label for="username" class="form-label">Nombre de usuario</label>
                                 <input type="text" class="form-control" id="username" name="username" required autocomplete="username">
@@ -42,23 +42,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-    // Bootstrap custom validation
-    (() => {
-      'use strict'
-      const forms = document.querySelectorAll('.needs-validation')
-      Array.from(forms).forEach(form => {
-        form.addEventListener('submit', event => {
-          if (!form.checkValidity()) {
-            event.preventDefault()
-            event.stopPropagation()
-          }
-          form.classList.add('was-validated')
-        }, false)
-      })
-    })()
-    </script>
 
 <?php require('inc/footer.inc.php'); ?>
 </body>

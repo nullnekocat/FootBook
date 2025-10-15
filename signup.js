@@ -2,6 +2,7 @@
 (() => {
     'use strict'
     const form = document.getElementById('signupForm');
+     //const form = document.querySelector('.needs-validation');
     // Validación en vivo para todos los campos requeridos (excepto password y birthdate, que tienen lógica especial)
     form.querySelectorAll('input, select, textarea').forEach(input => {
         if (input.id === 'password' || input.id === 'birthdate') return;
@@ -30,19 +31,24 @@
             icon.classList.add('bi-eye');
         }
     });
-
-    // Validación de password EN VIVO
+    
     const pwdInput = document.getElementById('password');
     pwdInput.addEventListener('input', function() {
-        if (validatePassword(pwdInput.value)) {
-            pwdInput.classList.remove('is-invalid');
-            pwdInput.classList.add('is-valid');
-        } else {
-            pwdInput.classList.remove('is-valid');
-            pwdInput.classList.add('is-invalid');
-        }
-    });
+        const ok = validatePassword(pwdInput.value);
 
+        // sincroniza HTML5 validity
+        if (!ok) {
+            pwdInput.setCustomValidity('La contraseña no cumple los requisitos');
+        } else {
+            pwdInput.setCustomValidity('');
+        }
+
+        // actualiza clases visuales
+        pwdInput.classList.toggle('is-valid', ok);
+        pwdInput.classList.toggle('is-invalid', !ok);
+    });
+    
+    
     // Validación en vivo de fecha de nacimiento (mínimo 12 años)
     const birthInput = document.getElementById('birthdate');
     const birthFeedback = document.getElementById('birthdateFeedback');
@@ -82,43 +88,46 @@
 
     // Submit: solo se permite si TODO es válido (HTML5 y custom)
     form.addEventListener('submit', function(e) {
+        e.preventDefault();
         let customValid = true;
-
-        // Password
-        if (!validatePassword(pwdInput.value)) {
+          // Password
+        const passwordOK = validatePassword(pwdInput.value);
+        if (!passwordOK) {
+            pwdInput.setCustomValidity('La contraseña no cumple los requisitos');
+            pwdInput.classList.remove('is-valid');
             pwdInput.classList.add('is-invalid');
             customValid = false;
+        } else {
+            pwdInput.setCustomValidity('');
+            pwdInput.classList.remove('is-invalid');
+            pwdInput.classList.add('is-valid');
         }
 
         // Birthdate
-        const birthDate = new Date(birthInput.value);
-        const today = new Date();
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const m = today.getMonth() - birthDate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
-        }
-        if (!birthInput.value || age < 12) {
-            birthInput.classList.add('is-invalid');
-            customValid = false;
+        if (birthInput) {
+            const birthDate = new Date(birthInput.value);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            if (!birthInput.value || age < 12) {
+                birthInput.classList.add('is-invalid');
+                customValid = false;
+            }
         }
 
-        // Validación HTML5 de todos los campos
-        if (!form.checkValidity() || !customValid) {
-            e.preventDefault();
+        // Verifica todo el formulario
+        const html5Valid = form.checkValidity();
+        console.log('checkValidity() =', html5Valid, '| customValid =', customValid);
+
+        if (!html5Valid || !customValid) {
             e.stopPropagation();
             form.classList.add('was-validated');
-            // Marcar campos inválidos (en caso de que el usuario no haya interactuado con todos)
-            form.querySelectorAll('input, select, textarea').forEach(input => {
-                if (!input.checkValidity()) {
-                    input.classList.add('is-invalid');
-                }
-            });
-            return false;
+            return;
         }
-
-        // Si todo es válido, simula éxito y redirige
-        e.preventDefault();
+        
         document.getElementById('signupSuccess').classList.remove('d-none');
         setTimeout(function(){
             window.location.href = "index.php";
