@@ -4,7 +4,7 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Methods: GET, POST, DELETE");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-include_once("../config/database.php");
+include_once("../config/db_connection.php");
 
 $database = new Database();
 $db = $database->getConnection();

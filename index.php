@@ -1,5 +1,5 @@
 <?php
-include_once("./config/database.php");
+include_once("./config/db_connection.php");
 
 $database = new Database();
 $conn = $database->getConnection();
