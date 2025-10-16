@@ -1,3 +1,15 @@
+<?php
+include_once("./config/database.php");
+
+$database = new Database();
+$conn = $database->getConnection();
+
+if ($conn) {
+    echo "<script>alert('✅ Conexión exitosa a la base de datos FootBook.');</script>";
+} else {
+    echo "<script>alert('❌ Error al conectar con la base de datos.');</script>";
+}
+?>
 <?php require('inc/head.inc.php'); ?>
 <?php require('inc/comments.inc.php')?>
 <body>
