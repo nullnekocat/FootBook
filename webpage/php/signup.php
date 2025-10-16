@@ -97,6 +97,6 @@
             </div>
         </div>
     </div>
-    <script src='signup.js'></script>
+    <script src='../js/signup.js'></script>
 <?php require('inc/footer.inc.php'); ?>
 </body>

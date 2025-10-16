@@ -11,7 +11,7 @@
         </div>
         <div class="d-flex flex-column flex-md-row align-items-center px-4 mb-md-3">
             <div class="position-relative mt-2" style="width:120px;">
-                <img src="img/default.jpg" alt="Profile Photo" class="rounded-circle border border-4 border-white shadow" width="120" height="120" style="object-fit:cover;">
+                <img src="../../img/default.jpg" alt="Profile Photo" class="rounded-circle border border-4 border-white shadow" width="120" height="120" style="object-fit:cover;">
             </div>
             <div class="ms-md-4 text-center text-md-start mt-3 mt-md-0 flex-grow-1">
                 <h3 class="mb-0">Nombre de Usuario</h3>
@@ -86,14 +86,14 @@
                         <div class="card mb-3 shadow-sm">
                             <div class="card-body">
                                 <div class="d-flex align-items-center mb-2">
-                                    <img src="img/default.jpg" class="rounded-circle me-2" width="36" height="36" alt="User">
+                                    <img src="../../img/default.jpg" class="rounded-circle me-2" width="36" height="36" alt="User">
                                     <div>
                                         <strong>Nombre de Usuario</strong>
                                         <span class="text-muted small">· 05/09/2025</span>
                                     </div>
                                 </div>
                                 <p>¡Mi primer post sobre los mundiales!</p>
-                                <img src="img/demo1.jpg" class="img-fluid rounded mb-2" alt="Post image">
+                                <img src="../../img/demo1.jpg" class="img-fluid rounded mb-2" alt="Post image">
                                 <div>
                                     <button class="btn btn-sm btn-outline-success me-2">👍 10</button>
                                     <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#commentsModal">💬 3</button>

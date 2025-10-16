@@ -1,5 +1,7 @@
+<?php require('inc/head.inc.php'); ?>
+<?php require('inc/comments.inc.php')?>
 <?php
-include_once("./config/db_connection.php");
+include_once(__DIR__ . '/../../db_connection.php');
 
 $database = new Database();
 $conn = $database->getConnection();
@@ -10,8 +12,6 @@ if ($conn) {
     echo "<script>alert('❌ Error al conectar con la base de datos.');</script>";
 }
 ?>
-<?php require('inc/head.inc.php'); ?>
-<?php require('inc/comments.inc.php')?>
 <body>
     <?php require('inc/navbar.inc.php'); ?>
     <div class="container my-4 center-maxw">
@@ -50,7 +50,7 @@ if ($conn) {
                 <div class="card mb-3 shadow-sm">
                     <div class="card-body">
                         <div class="d-flex mb-2 align-items-center">
-                            <img src="img/user<?php echo $i+1; ?>.jpg" class="rounded-circle me-2" width="40" height="40" alt="User">
+                            <img src="../../img/user<?php echo $i+1; ?>.jpg" class="rounded-circle me-2" width="40" height="40" alt="User">
                             <div>
                                 <strong>Usuario <?php echo $i+1; ?></strong>
                                 <span class="text-muted small">en Qatar 2022 · 05/09/2025</span>
@@ -58,7 +58,7 @@ if ($conn) {
                             </div>
                         </div>
                         <p>Dummy: Texto de post en homepage</p>
-                        <img src="img/demo<?php echo $i+1; ?>.jpg" class="img-fluid rounded mb-2" alt="Post image">
+                        <img src="../../img/demo<?php echo $i+1; ?>.jpg" class="img-fluid rounded mb-2" alt="Post image">
                         <div>
                             <button class="btn btn-sm btn-outline-success me-2">👍 5</button>
                             <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#commentsModal">💬 3</button>

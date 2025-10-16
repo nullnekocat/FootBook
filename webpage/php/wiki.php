@@ -9,7 +9,7 @@
             <div class="col">
                 <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#modal2018">
                     <div class="card shadow-sm h-100">
-                        <img src="img/russia2018.png" class="card-img-top" alt="Rusia 2018">
+                        <img src="../../img/russia2018.png" class="card-img-top" alt="Rusia 2018">
                         <div class="card-body p-2 text-center">
                             <small>Rusia 2018</small>
                         </div>
@@ -20,7 +20,7 @@
             <div class="col">
                 <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#modal2022">
                     <div class="card shadow-sm h-100">
-                        <img src="img/qatar2022.png" class="card-img-top" alt="Qatar 2022">
+                        <img src="../../img/qatar2022.png" class="card-img-top" alt="Qatar 2022">
                         <div class="card-body p-2 text-center">
                             <small>Qatar 2022</small>
                         </div>
@@ -31,7 +31,7 @@
             <div class="col">
                 <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#modal2026">
                     <div class="card shadow-sm h-100">
-                        <img src="img/mx-usa-ca2026.png" class="card-img-top" alt="México/EUA/Canadá 2026">
+                        <img src="../../img/mx-usa-ca2026.png" class="card-img-top" alt="México/EUA/Canadá 2026">
                         <div class="card-body p-2 text-center">
                             <small>México/EUA/Canadá 2026</small>
                         </div>
@@ -48,7 +48,7 @@
     <div class="modal-content">
       <div class="modal-header bg-secondary text-dark">
         <h4 class="modal-title text-light" id="modal2018Label">
-          <img src="img/russia2018.png" alt="Rusia 2018" width="48" class="me-2 rounded">
+          <img src="../../img/russia2018.png" alt="Rusia 2018" width="48" class="me-2 rounded">
           Copa Mundial de la FIFA Rusia 2018
         </h4>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
@@ -80,7 +80,7 @@
           <div class="tab-pane fade show active text-dark" id="infografia2018" role="tabpanel">
             <div class="row">
               <div class="col-md-4 text-center mb-3 mb-md-0">
-                <img src="img/russia2018.png" alt="Rusia 2018" class="img-fluid rounded shadow" style="max-width: 180px;">
+                <img src="../../img/russia2018.png" alt="Rusia 2018" class="img-fluid rounded shadow" style="max-width: 180px;">
                 <p class="mt-2"><span class="badge bg-secondary">2018</span></p>
                 <p><strong>Sede:</strong> Rusia</p>
               </div>

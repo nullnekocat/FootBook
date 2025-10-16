@@ -57,7 +57,7 @@
                             <h6 class="mb-1">Usuario123 <span class="badge bg-info">Jugadas</span> <span class="badge bg-secondary">Qatar 2022</span></h6>
                             <small>05/09/2025</small>
                             <p class="mb-1">Dummy: Texto de post en las herramientas de administrador</p>
-                            <img src="img/demo1.jpg" class="img-fluid rounded mb-2" style="max-width:220px;" alt="Post image">
+                            <img src="../../img/demo1.jpg" class="img-fluid rounded mb-2" style="max-width:220px;" alt="Post image">
                         </div>
                         <div class="ms-3">
                             <button class="btn btn-success btn-sm mb-2 w-100"><i class="bi bi-check"></i> Aprobar</button>
@@ -73,7 +73,7 @@
             <div class="row row-cols-2 row-cols-md-3 g-3">
                 <div class="col">
                     <div class="card h-100">
-                        <img src="img/russia2018.png" class="card-img-top" alt="Rusia 2018">
+                        <img src="../../img/russia2018.png" class="card-img-top" alt="Rusia 2018">
                         <div class="card-body">
                             <h6 class="card-title mb-0">Rusia 2018</h6>
                             <button class="btn btn-outline-success btn-sm mt-2 w-100" data-bs-toggle="modal" data-bs-target="#editWikiModal2018">
@@ -84,7 +84,7 @@
                 </div>
                 <div class="col">
                     <div class="card h-100">
-                        <img src="img/qatar2022.png" class="card-img-top" alt="Qatar 2022">
+                        <img src="../../img/qatar2022.png" class="card-img-top" alt="Qatar 2022">
                         <div class="card-body">
                             <h6 class="card-title mb-0">Quatar 2022</h6>
                             <button class="btn btn-outline-success btn-sm mt-2 w-100" data-bs-toggle="modal" data-bs-target="#editWikiModal2018">
