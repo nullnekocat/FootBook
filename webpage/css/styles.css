@@ -1,3 +1,9 @@
+.bbh-sans-bartle {
+  font-family: "BBH Sans Bartle", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
 .dropdown-menu { z-index: 1040 !important; }
 
 .card-img-top {
@@ -32,4 +38,19 @@
 .login-size{
     height: 320px;
     width: 370px;
+}
+
+.bg-img {
+  background-image: "../../img/LandingXL.png";
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.bg-img>p {
+  background-color: rgb(17, 17, 17, 0.7);
+  padding: 10px;
+  color: white;
 }
