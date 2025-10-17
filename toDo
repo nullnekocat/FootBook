@@ -1,28 +1,44 @@
-todo 2
-Ambos:
-- Si / Validación de requisitos de contraseña para el perfil de usuario.
-- No / Página para el Registro, modificación y consulta del perfil del usuario, por rol de usuario.
-- No / Clase de PHP para la conexión a la base de datos.
-
-PWCI:
-- Si / Al menos 1 API creada desde 0 aplicada
-- Si / Propuesta para al menos 1 middleware
+AMBOS 2:
+~ Si / Validación de requisitos de contraseña para el perfil de usuario.
 - Si / Landing page atractiva y acorde a la temática
-- Si / Propuesta de API de terceros.
-- No / MVC Aplicado al proyecto
+~ No / Página para el Registro, modificación y consulta del perfil del usuario, por rol de usuario.
++ No / Clase de PHP para la conexión a la base de datos.
 
-BDM:
-- Si / Establece la estructura de la base de datos en un modelo relacional definiendo las llaves primarias y llaves foráneas.
-- Si / Script de la creación de tablas, índices, llaves primarias y foráneas en MySQL
-- Si / En el script con la creación de las tablas, sin omitir la relación de alguna tabla. 
+AMBOS 3:
+- Si / Página Principal
+- Si / Filtros y ordenamiento de publicaciones
+- Si / Gestión de Usuarios
+- Si / Categorías
+- Si / Elaboración de publicaciones
+- Si / Ver Publicaciones (multimedia)
+- Si / Interacciones (comentarios y calificación de publicaciones y estadísticas)
+- Si / Búsqueda
+- Si / Archivos con scripts de creación de objetos de la BD (un archivo por tipo)
+- No / Web Hosting
+
+PWCI 2:
++ Si / Al menos 1 API creada desde 0 aplicada
++ Si / Propuesta para al menos 1 middleware
++ Si / Propuesta de API de terceros.
+
+PWCI 3:
+~ Si / APIs propias aplicadas al proyecto
+- Si / APIs de terceros aplicadas al proyecto
+
+BDM 2:
++ Si / Establece la estructura de la base de datos en un modelo relacional definiendo las llaves primarias y llaves foráneas.
++ Si / Script de la creación de tablas, índices, llaves primarias y foráneas en MySQL
++ Si / En el script con la creación de las tablas, sin omitir la relación de alguna tabla. 
        Determina los tipos de datos adecuados para cada campo.
 - Si / Obtiene el diagrama relacional de MySql.
 - Si / Diccionario de Datos (incluyendo dominio para cada atributo y descripción, ambos en la estructura de cada tabla).
 - Si / Script con el o los SP necesarios para todas las gestiones del perfil de usuario.
-- Si / Creación de 3 videos tutoriales con temas de BDM que serán cargados al portal en la entrega final.
 
+BDM 3:
+- Si / Uso avanzado de SQL: mínimo 2 Triggers, 8 Views, 2 Functions (que sean de utilidad al proyecto).
+- Si / Validaciones en toda la operación del proyecto (se descontará en cada rubro)
 
-todo 1
+GENERAL IDEA:
 index = Página principal (Feed de facebook/posts)
     En la página Web principal, se debe de ver la forma de acceder a cada mundial,
     representados con imágenes; y también, la forma de registrarse como usuario o ingresar.
@@ -38,9 +54,11 @@ index = Página principal (Feed de facebook/posts)
     (Barra de búsqueda, info, post, login, signup, profile, admin tools)
 
 info = Página donde se mostrará la infografía de cada mundial (Como una pequeña wiki)
+
 search = Página que muestre los resultados de búsqueda
     Se debe permitir la búsqueda, donde el resultado serán las publicaciones,
     se puede buscar por categoría, año de mundial, país sede, usuario que publicó.
+
 post = Página para crear y editar nuevos posts (Seguramente sea dentro de index pero podría ser a parte)
     Los usuarios registrados pueden hacer publicaciones con relación a algún mundial.
     Se debe elegir una categoría, por ejemplo: Jugadas, entrevistas, partidos,
@@ -57,7 +75,9 @@ post = Página para crear y editar nuevos posts (Seguramente sea dentro de index
     
     Los usuarios pueden calificar las publicaciones de otros usuarios y hacer
     comentarios.
+
 login = Página para logearse
+
 signup = Página para registrarse
     Se debe contar con la funcionalidad para el registro de usuarios que
     puedan ver el contenido de la página y/o enriquecer con material que
