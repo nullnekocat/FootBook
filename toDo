@@ -1,6 +1,6 @@
 AMBOS 2:
-~ Si / Validación de requisitos de contraseña para el perfil de usuario.
-- Si / Landing page atractiva y acorde a la temática
++ Si / Validación de requisitos de contraseña para el perfil de usuario.
++ Si / Landing page atractiva y acorde a la temática
 ~ No / Página para el Registro, modificación y consulta del perfil del usuario, por rol de usuario.
 + No / Clase de PHP para la conexión a la base de datos.
 
@@ -22,7 +22,7 @@ PWCI 2:
 + Si / Propuesta de API de terceros.
 
 PWCI 3:
-~ Si / APIs propias aplicadas al proyecto
++ Si / APIs propias aplicadas al proyecto
 - Si / APIs de terceros aplicadas al proyecto
 
 BDM 2:
@@ -30,9 +30,9 @@ BDM 2:
 + Si / Script de la creación de tablas, índices, llaves primarias y foráneas en MySQL
 + Si / En el script con la creación de las tablas, sin omitir la relación de alguna tabla. 
        Determina los tipos de datos adecuados para cada campo.
-- Si / Obtiene el diagrama relacional de MySql.
-- Si / Diccionario de Datos (incluyendo dominio para cada atributo y descripción, ambos en la estructura de cada tabla).
-- Si / Script con el o los SP necesarios para todas las gestiones del perfil de usuario.
+~ Si / Obtiene el diagrama relacional de MySql.
+~ Si / Diccionario de Datos (incluyendo dominio para cada atributo y descripción, ambos en la estructura de cada tabla).
++ Si / Script con el o los SP necesarios para todas las gestiones del perfil de usuario.
 
 BDM 3:
 - Si / Uso avanzado de SQL: mínimo 2 Triggers, 8 Views, 2 Functions (que sean de utilidad al proyecto).
