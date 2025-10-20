@@ -17,9 +17,10 @@
                 <h3 class="mb-0">Nombre de Usuario</h3>
                 <span class="text-muted small">0 seguidores · 0 seguidos</span>
             </div>
+            <!-- Edit profile -->
             <div class="ms-md-auto d-flex gap-2 mt-2 mb-3">
                 <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#editProfileModal">
-                    <i class="bi bi-pencil"></i> Editar perfil
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h357l-80 80H200v560h560v-278l80-80v358q0 33-23.5 56.5T760-120H200Zm280-360ZM360-360v-170l367-367q12-12 27-18t30-6q16 0 30.5 6t26.5 18l56 57q11 12 17 26.5t6 29.5q0 15-5.5 29.5T897-728L530-360H360Zm481-424-56-56 56 56ZM440-440h56l232-232-28-28-29-28-231 231v57Zm260-260-29-28 29 28 28 28-28-28Z"/></svg>
                 </button>
             </div>
         </div>
@@ -39,41 +40,6 @@
         <!-- Posts tab -->
         <div class="tab-pane fade show active" id="posts" role="tabpanel">
             <div class="row">
-                <!-- Details -->
-                <!-- div class="col-md-4 mb-4">
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-light">
-                            <strong>Detalles</strong>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-2">
-                                <i class="bi bi-person-fill"></i>
-                                <span id="fullname">Nombre completo</span>
-                            </div>
-                            <div class="mb-2">
-                                <i class="bi bi-calendar-event"></i>
-                                <span id="birthdate">Fecha de nacimiento</span>
-                            </div>
-                            <div class="mb-2">
-                                <i class="bi bi-gender-ambiguous"></i>
-                                <span id="gender">Género</span>
-                            </div>
-                            <div class="mb-2">
-                                <i class="bi bi-flag"></i>
-                                <span id="birthcountry">País de nacimiento</span>
-                            </div>
-                            <div class="mb-2">
-                                <i class="bi bi-globe"></i>
-                                <span id="nationality">Nacionalidad</span>
-                            </div>
-                            <div class="mb-2">
-                                <i class="bi bi-envelope"></i>
-                                <span id="email">Correo electrónico</span>
-                            </div>
-                        </div>
-                    </div>
-                </div -->
-
                 <!-- Posts -->
                 <div class="col">
 
@@ -95,8 +61,14 @@
                                 <p>¡Mi primer post sobre los mundiales!</p>
                                 <img src="../../img/demo1.jpg" class="img-fluid rounded mb-2" alt="Post image">
                                 <div>
-                                    <button class="btn btn-sm btn-outline-success me-2">👍 10</button>
-                                    <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#commentsModal">💬 3</button>
+                                    <button class="btn btn-sm btn-outline-success me-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z"/></svg>
+                                    10
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#commentsModal">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M880-80 720-240H320q-33 0-56.5-23.5T240-320v-40h440q33 0 56.5-23.5T760-440v-280h40q33 0 56.5 23.5T880-640v560ZM160-473l47-47h393v-280H160v327ZM80-280v-520q0-33 23.5-56.5T160-880h440q33 0 56.5 23.5T680-800v280q0 33-23.5 56.5T600-440H240L80-280Zm80-240v-280 280Z"/></svg>
+                                    3
+                                    </button>
                                 </div>
                             </div>
                         </div>

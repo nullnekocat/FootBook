@@ -27,14 +27,13 @@
                     Además, podrás buscar las publicaciones de los demás usuarios mediante la barra de búsqueda y nuestro sistema de filtros.
                 </p>
             </div>
-            <div class="col-md-5"> <svg aria-label="Placeholder: 500x500" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" height="500" preserveAspectRatio="xMidYMid slice" role="img" width="500" xmlns="http://www.w3.org/2000/svg">
-                    <title>Placeholder</title>
-                    <rect width="100%" height="100%" fill="var(--bs-secondary-bg)"></rect><text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text>
-                </svg> </div>
+            <div class="col-md-5">
+                <img src="../../img/copa.jpg" class="img-fluid rounded mb-2" alt="La copa del mundo">
+            </div>
         </div>
         <hr class="featurette-divider m-5">
         <div class="row featurette">
-            <div class="col-md-7 order-md-2">
+            <div class="col-md-8 order-md-2">
                 <h2 class="featurette-heading fw-normal lh-1">
                     Una sola wiki. 
                     <span class="text-body-secondary">
@@ -50,10 +49,9 @@
                     así formas parte de este gran esfuerzo por preservar la información de el deporte más icónico de la humanidad.
                 </p>
             </div>
-            <div class="col-md-5 order-md-1"> <svg aria-label="Placeholder: 500x500" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" height="500" preserveAspectRatio="xMidYMid slice" role="img" width="500" xmlns="http://www.w3.org/2000/svg">
-                    <title>Placeholder</title>
-                    <rect width="100%" height="100%" fill="var(--bs-secondary-bg)"></rect><text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text>
-                </svg> </div>
+            <div class="col-md-4 order-md-1"> 
+                <img src="../../img/world1.jpg" class="img-fluid rounded mb-2" alt="El planeta tierra con un balón de fútbol como luna">
+            </div>
         </div>
         <hr class="featurette-divider"> <!-- /END THE FEATURETTES -->
     </div>

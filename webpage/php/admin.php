@@ -7,13 +7,16 @@
     <!-- Nav buttons -->
     <div class="d-flex justify-content-between mb-4">
         <button class="btn btn-dark flex-fill mx-1 admin-tab-btn active" data-target="#admin-categories">
-            <i class="bi bi-tags"></i> Crear categorías
+            <i class="bi bi-tags"></i> Categorías
         </button>
         <button class="btn btn-dark flex-fill mx-1 admin-tab-btn" data-target="#admin-posts">
-            <i class="bi bi-check-circle"></i> Aprobar publicaciones
+            <i class="bi bi-check-circle"></i> Publicaciones
         </button>
         <button class="btn btn-dark flex-fill mx-1 admin-tab-btn" data-target="#admin-wikis">
-            <i class="bi bi-journal-text"></i> Administrar wikis
+            <i class="bi bi-journal-text"></i> Wikis
+        </button>
+        <button class="btn btn-dark flex-fill mx-1 admin-tab-btn" data-target="#admin-users">
+            <i class="bi bi-people"></i> Usuarios
         </button>
     </div>
     <!-- Sections -->
@@ -25,8 +28,11 @@
                 <div class="col-auto flex-fill">
                     <input type="text" class="form-control" id="category-name" name="category_name" placeholder="Nombre de la categoría" required>
                 </div>
+                <!-- Add -->
                 <div class="col-auto">
-                    <button type="submit" class="btn btn-success">Agregar</button>
+                    <button type="submit" class="btn btn-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
+                    </button>
                 </div>
             </form>
             <h6 class="text-dark">Categorías existentes</h6>
@@ -34,15 +40,13 @@
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     Jugadas
                     <span>
-                        <button class="btn btn-sm btn-outline-warning me-1"><i class="bi bi-pencil"></i></button>
-                        <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
-                    </span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Partidos
-                    <span>
-                        <button class="btn btn-sm btn-outline-warning me-1"><i class="bi bi-pencil"></i></button>
-                        <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                        <!-- Edit & Delete-->
+                        <button class="btn btn-sm btn-outline-warning me-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
+                        </button>
                     </span>
                 </li>
             </ul>
@@ -60,8 +64,12 @@
                             <img src="../../img/demo1.jpg" class="img-fluid rounded mb-2" style="max-width:220px;" alt="Post image">
                         </div>
                         <div class="ms-3">
-                            <button class="btn btn-success btn-sm mb-2 w-100"><i class="bi bi-check"></i> Aprobar</button>
-                            <button class="btn btn-danger btn-sm w-100"><i class="bi bi-x"></i> Rechazar</button>
+                            <button class="btn btn-success btn-sm mb-2 w-100"> 
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg>
+                            </button>
+                            <button class="btn btn-danger btn-sm w-100">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -144,20 +152,31 @@
                 </div>
             </div>
         </div>
+        <!-- Users -->
+        <div class="tab-pane fade" id="admin-users">
+            <h5 class="text-dark">Usuarios registrados</h5>
+            <div class="table-responsive">
+                <table class="table table-striped" id="admin-users-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Usuario</th>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Creado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Filled dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 
-<script>
-    // Botones de navegación de admin
-    document.querySelectorAll('.admin-tab-btn').forEach(btn => {
-        btn.addEventListener('click', function(){
-            document.querySelectorAll('.admin-tab-btn').forEach(b=>b.classList.remove('active'));
-            this.classList.add('active');
-            document.querySelectorAll('.tab-pane').forEach(tp=>tp.classList.remove('show','active'));
-            document.querySelector(this.getAttribute('data-target')).classList.add('show','active');
-        });
-    });
-</script>
+<script src="../js/admin.js"> </script>
 
 <?php require('inc/footer.inc.php'); ?>
 </body>
