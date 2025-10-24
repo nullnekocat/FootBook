@@ -116,7 +116,6 @@
             default: genderValue = null;
         }
 
-        // Avatar (opcional)
         const photoInput = document.getElementById('photo');
         let avatarBase64 = null;
         if (photoInput.files.length) {
@@ -128,7 +127,6 @@
             });
         }
 
-        // Preparar datos
         const data = {
             username: document.getElementById('username').value,
             email: document.getElementById('email').value,
@@ -142,7 +140,6 @@
             admin: 0
         };
 
-        // Enviar al API
         try {
             const res = await fetch('/FootBook/api/users.php', {
                 method: 'POST',
