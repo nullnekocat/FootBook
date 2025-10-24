@@ -87,50 +87,78 @@
     }
 
     // Submit: solo se permite si TODO es válido (HTML5 y custom)
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', async function(e) {
         e.preventDefault();
-        let customValid = true;
-          // Password
+
+        // Validaciones finales
         const passwordOK = validatePassword(pwdInput.value);
         if (!passwordOK) {
             pwdInput.setCustomValidity('La contraseña no cumple los requisitos');
-            pwdInput.classList.remove('is-valid');
             pwdInput.classList.add('is-invalid');
-            customValid = false;
+            return;
         } else {
             pwdInput.setCustomValidity('');
-            pwdInput.classList.remove('is-invalid');
-            pwdInput.classList.add('is-valid');
         }
 
-        // Birthdate
-        if (birthInput) {
-            const birthDate = new Date(birthInput.value);
-            const today = new Date();
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const m = today.getMonth() - birthDate.getMonth();
-            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-                age--;
-            }
-            if (!birthInput.value || age < 12) {
-                birthInput.classList.add('is-invalid');
-                customValid = false;
-            }
-        }
-
-        // Verifica todo el formulario
-        const html5Valid = form.checkValidity();
-        console.log('checkValidity() =', html5Valid, '| customValid =', customValid);
-
-        if (!html5Valid || !customValid) {
-            e.stopPropagation();
-            form.classList.add('was-validated');
+        const birthDateValid = birthInput.value && new Date(birthInput.value) <= new Date(new Date().setFullYear(new Date().getFullYear() - 12));
+        if (!birthDateValid) {
+            birthInput.classList.add('is-invalid');
             return;
         }
-        
-        document.getElementById('signupSuccess').classList.remove('d-none');
-        setTimeout(function(){
-            window.location.href = "index.php";
-        }, 2000);
+
+        // Mapear género a INT
+        const genderSelect = document.getElementById('gender');
+        let genderValue;
+        switch(genderSelect.value){
+            case 'F': genderValue = 1; break;
+            case 'M': genderValue = 2; break;
+            case 'O': genderValue = 3; break;
+            default: genderValue = null;
+        }
+
+        // Avatar (opcional)
+        const photoInput = document.getElementById('photo');
+        let avatarBase64 = null;
+        if (photoInput.files.length) {
+            const file = photoInput.files[0];
+            avatarBase64 = await new Promise(resolve => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result.split(',')[1]); // Base64 sin prefijo
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Preparar datos
+        const data = {
+            username: document.getElementById('username').value,
+            email: document.getElementById('email').value,
+            password: pwdInput.value,
+            fullName: document.getElementById('fullname').value,
+            birthday: birthInput.value,
+            gender: genderValue,
+            birth_country: document.getElementById('birthcountry').value,
+            country: document.getElementById('nationality').value,
+            avatar: avatarBase64,
+            admin: 0
+        };
+
+        // Enviar al API
+        try {
+            const res = await fetch('/FootBook/api/users.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const resp = await res.json();
+
+            if (resp.message) {
+                document.getElementById('signupSuccess').classList.remove('d-none');
+                setTimeout(()=> window.location.href = "index.php", 2000);
+            } else {
+                alert(resp.error || 'Error desconocido');
+            }
+        } catch (err) {
+            alert('Error: ' + err.message);
+        }
     });
 })();
