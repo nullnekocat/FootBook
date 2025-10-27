@@ -1,6 +1,9 @@
-<?php require('inc/head.inc.php'); ?>
+<?php 
+    require_once __DIR__ . '/../config.php';
+    include __DIR__ . '/inc/head.inc.php'; 
+    include __DIR__ . '/inc/navbar.inc.php'; 
+?>
 <body>
-    <?php require('inc/navbar.inc.php'); ?>
     <div class="container my-4">
         <div class="row justify-content-center">
             <div class="col-lg-8 col-md-10">
@@ -8,7 +11,7 @@
                     <div class="row card-header pt-3 bg-dark text-light " style="margin:0!important;">
                         <h4 class="col-5">Crear cuenta</h4>
                         <h6 class="col-7 pt-1 text-end">
-                            ¿Ya tienes cuenta? <a href="login.php">Inicia sesión</a>
+                            ¿Ya tienes cuenta? <a href="router.php?page=login">Inicia sesión</a>
                         </h6>
                     </div>
                     <div class="card-body">
@@ -97,6 +100,6 @@
             </div>
         </div>
     </div>
-    <script src='../js/signup.js'></script>
-<?php require('inc/footer.inc.php'); ?>
+    <script src='<?= BASE_URL ?>views/js/signup.js'></script>
+<?php include __DIR__ . '/inc/footer.inc.php'; ?>
 </body>

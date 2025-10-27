@@ -1,6 +1,6 @@
-<?php require('inc/head.inc.php'); ?>
+<?php include __DIR__ . '/inc/head.inc.php'; ?>
 <body>
-    <?php require('inc/navbar.inc.php'); ?>
+    <?php include __DIR__ . '/inc/navbar.inc.php'; ?>
 
     <div class="container">
         <div class="row">
@@ -35,7 +35,7 @@
                             <a href="#">¿Olvidaste tu contraseña?</a>
                         </div-->
                         <p class="mt-3 mb-0 text-center">
-                            ¿Aún no tienes cuenta? <a href="signup.php">Regístrate</a>
+                            ¿Aún no tienes cuenta? <a href="router.php?page=signup">Regístrate</a>
                         </p>
                     </div>
                 </div>
@@ -43,5 +43,5 @@
         </div>
     </div>
 
-<?php require('inc/footer.inc.php'); ?>
+ <?php require('inc/footer.inc.php'); ?>
 </body>

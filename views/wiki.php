@@ -1,6 +1,9 @@
-<?php require('inc/head.inc.php'); ?>
+<?php 
+  require_once __DIR__ . '/../config.php';
+  include __DIR__ . '/inc/head.inc.php'; 
+  include __DIR__ . '/inc/navbar.inc.php'; 
+?>
 <body>
-<?php require('inc/navbar.inc.php'); ?>
 
 <div class="container py-5">
     <h1 class="mb-4 text-center">World Cups</h1>
@@ -29,7 +32,7 @@
   </div>
 </div>
 
-<script src="../js/wiki.js"></script>
+<script src="<?= BASE_URL ?>views/js/wiki.js"></script>
 
-<?php require('inc/footer.inc.php'); ?>
+<?php include __DIR__ . '/inc/footer.inc.php'; ?>
 </body>

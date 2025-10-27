@@ -2,7 +2,7 @@
 <body>
     <?php require('inc/navbar.inc.php'); ?>
 
-    <img src="../../img/LandingXL.png" class="img-fluid">
+    <img src="../img/LandingXL.png" class="img-fluid">
 
     <div class="container">
         <div class="my-4 text-center text-black">
@@ -28,7 +28,7 @@
                 </p>
             </div>
             <div class="col-md-5">
-                <img src="../../img/copa.jpg" class="img-fluid rounded mb-2" alt="La copa del mundo">
+                <img src="../img/copa.jpg" class="img-fluid rounded mb-2" alt="La copa del mundo">
             </div>
         </div>
         <hr class="featurette-divider m-5">
@@ -50,7 +50,7 @@
                 </p>
             </div>
             <div class="col-md-4 order-md-1"> 
-                <img src="../../img/world1.jpg" class="img-fluid rounded mb-2" alt="El planeta tierra con un balón de fútbol como luna">
+                <img src="../img/world1.jpg" class="img-fluid rounded mb-2" alt="El planeta tierra con un balón de fútbol como luna">
             </div>
         </div>
         <hr class="featurette-divider"> <!-- /END THE FEATURETTES -->

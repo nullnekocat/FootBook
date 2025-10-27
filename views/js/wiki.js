@@ -17,7 +17,7 @@ async function loadWorldCups() {
             const card = document.createElement('div');
             card.className = 'col-md-4 col-lg-3';
 
-            const imgSrc = cup.banner || '../../img/default_banner.jpg';
+            const imgSrc = cup.banner || '../img/default_banner.jpg';
 
             card.innerHTML = `
                 <div class="card shadow-sm h-100">
@@ -55,7 +55,7 @@ async function loadModalData(id) {
         document.getElementById('modalCountry').textContent = data.country;
         document.getElementById('modalYear').textContent = data.year;
         document.getElementById('modalDescription').textContent = data.description || 'No description available.';
-        document.getElementById('modalBanner').src = data.banner || '../../img/default_banner.jpg';
+        document.getElementById('modalBanner').src = data.banner || '../img/default_banner.jpg';
     } catch (err) {
         console.error('Error loading modal data:', err);
     }
