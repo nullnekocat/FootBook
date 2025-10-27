@@ -150,7 +150,7 @@
 
             if (resp.message) {
                 document.getElementById('signupSuccess').classList.remove('d-none');
-                setTimeout(()=> window.location.href = "index.php", 2000);
+                setTimeout(()=> window.location.href = "router.php?page=login", 2000);
             } else {
                 alert(resp.error || 'Error desconocido');
             }

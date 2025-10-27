@@ -77,7 +77,7 @@
                 <div class="card mb-3 shadow-sm">
                     <div class="card-body">
                         <div class="d-flex align-items-center mb-2">
-                            <img src="../../img/user<?php echo $i+1; ?>.jpg" class="rounded-circle me-2" width="40"
+                            <img src="../img/user<?php echo $i+1; ?>.jpg" class="rounded-circle me-2" width="40"
                                 height="40" alt="User">
                             <div>
                                 <strong>Usuario
@@ -88,7 +88,7 @@
                             </div>
                         </div>
                         <p>¡Gran entrevista con un jugador legendario!</p>
-                        <img src="../../img/demo<?php echo $i+2; ?>.jpg" class="img-fluid rounded mb-2" alt="Post image">
+                        <img src="../img/demo<?php echo $i+2; ?>.jpg" class="img-fluid rounded mb-2" alt="Post image">
                         <div>
                             <button class="btn btn-sm btn-outline-success me-2">👍 15</button>
                             <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#commentsModal">💬 3</button>
