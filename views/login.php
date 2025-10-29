@@ -1,6 +1,10 @@
-<?php include __DIR__ . '/inc/head.inc.php'; ?>
+<?php
+require_once __DIR__ . '/../config.php';         // ajusta si tu config está 1 nivel arriba
+include __DIR__ . '/inc/head.inc.php';
+include __DIR__ . '/inc/navbar.inc.php';
+?>
+
 <body>
-    <?php include __DIR__ . '/inc/navbar.inc.php'; ?>
 
     <div class="container">
         <div class="row">
@@ -10,10 +14,10 @@
                         <h4 class="mb-0">Iniciar sesión</h4>
                     </div>
                     <div class="card-body">
-                        <form class="needs-validation" id="signupForm" novalidate>
+                        <form class="needs-validation" id="loginForm" novalidate>
                             <div class="mb-3">
-                                <label for="username" class="form-label">Nombre de usuario</label>
-                                <input type="text" class="form-control" id="username" name="username" required autocomplete="username">
+                                <label for="identity" class="form-label">Nombre de usuario</label>
+                                <input type="text" class="form-control" id="identity" name="identity" required autocomplete="username">
                                 <div class="invalid-feedback">
                                     Ingresa tu nombre de usuario.
                                 </div>
@@ -42,6 +46,6 @@
             </div>
         </div>
     </div>
-
- <?php require('inc/footer.inc.php'); ?>
 </body>
+<?php require('inc/footer.inc.php'); ?>
+<script src="<?= BASE_URL ?>views/js/login.js"></script>
