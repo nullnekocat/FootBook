@@ -41,7 +41,7 @@ include __DIR__ . '/inc/navbar.inc.php';
                 <div class="card mb-3 shadow-sm">
                     <div class="card-body">
                         <div class="d-flex mb-2 align-items-center">
-                            <img src="FootBook/img/user<?php echo $i+1; ?>.jpg" class="rounded-circle me-2" width="40" height="40" alt="User">
+                            <img src="img/user<?php echo $i+1; ?>.jpg" class="rounded-circle me-2" width="40" height="40" alt="User">
                             <div>
                                 <strong>Usuario <?php echo $i+1; ?></strong>
                                 <span class="text-muted small">en Qatar 2022 · 05/09/2025</span>
@@ -49,7 +49,7 @@ include __DIR__ . '/inc/navbar.inc.php';
                             </div>
                         </div>
                         <p>Dummy: Texto de post en homepage</p>
-                        <img src="FootBook/img/demo<?php echo $i+1; ?>.jpg" class="img-fluid rounded mb-2" alt="Post image">
+                        <img src="img/demo<?php echo $i+1; ?>.jpg" class="img-fluid rounded mb-2" alt="Post image">
                         <div>
                             <button class="btn btn-sm btn-outline-success me-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z"/></svg>
