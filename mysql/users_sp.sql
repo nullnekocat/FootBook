@@ -153,5 +153,18 @@ END $$
 
 DELIMITER ;
 
+--Login del usuario
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_user_for_login`(IN p_identity VARCHAR(64))
+BEGIN
+    SELECT 
+        id, admin, username, email, password, fullname, birthday, gender,
+        birth_country, country, status, created_at
+    FROM Users
+    WHERE (username = p_identity)
+      AND status = 1
+    LIMIT 1;
+END
 
+DELIMITER ;
 

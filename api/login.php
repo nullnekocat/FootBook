@@ -7,9 +7,8 @@ require_once __DIR__ . '/../core/App.php';
 
 try {
     $app = new App();
-    // 👇 ESTE es el correcto para signup/listado de usuarios
-    $controller = $app->loadController('UserController');
-    $controller->handleRequest();
+    $auth = $app->loadController('AuthController');
+    $auth->handleLogin();
 } catch (Throwable $e) {
     http_response_code(500);
     echo json_encode(['error' => $e->getMessage()]);

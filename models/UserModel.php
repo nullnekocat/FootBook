@@ -63,4 +63,11 @@ class UserModel {
         $this->db->callSP('sp_get_user_by_id', [(int)$id], [PDO::PARAM_INT]);
         return []; // idem comentario de arriba
     }
+    public function getUserForLogin(string $identity) {
+        $stmt = $this->db->callSP('sp_get_user_for_login', [$identity], [PDO::PARAM_STR]);
+        $user = $stmt->fetch(); // devuelve una fila o false
+        $stmt->closeCursor();
+        return $user ?: null;
+    }
+
 }
