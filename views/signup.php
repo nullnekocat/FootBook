@@ -1,6 +1,9 @@
-<?php require('inc/head.inc.php'); ?>
+<?php 
+    require_once __DIR__ . '/../config.php';
+    include __DIR__ . '/inc/head.inc.php'; 
+    include __DIR__ . '/inc/navbar.inc.php'; 
+?>
 <body>
-    <?php require('inc/navbar.inc.php'); ?>
     <div class="container my-4">
         <div class="row justify-content-center">
             <div class="col-lg-8 col-md-10">
@@ -8,7 +11,7 @@
                     <div class="row card-header pt-3 bg-dark text-light " style="margin:0!important;">
                         <h4 class="col-5">Crear cuenta</h4>
                         <h6 class="col-7 pt-1 text-end">
-                            ¿Ya tienes cuenta? <a href="login.php">Inicia sesión</a>
+                            ¿Ya tienes cuenta? <a href="router.php?page=login">Inicia sesión</a>
                         </h6>
                     </div>
                     <div class="card-body">
@@ -74,7 +77,6 @@
                                             name="password"
                                             required
                                             minlength="8"
-                                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-=\[\]{};':\\|,.<>\/?]).{8,}$"
                                             aria-describedby="passwordHelpBlock">
                                         <button class="btn btn-outline-secondary" type="button" id="togglePassword" tabindex="-1">
                                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M480-320q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 127.5T480-320Zm0-72q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 76.5T480-392Zm0 192q-146 0-266-81.5T40-500q54-137 174-218.5T480-800q146 0 266 81.5T920-500q-54 137-174 218.5T480-200Zm0-300Zm0 220q113 0 207.5-59.5T832-500q-50-101-144.5-160.5T480-720q-113 0-207.5 59.5T128-500q50 101 144.5 160.5T480-280Z"/></svg>
@@ -97,6 +99,6 @@
             </div>
         </div>
     </div>
-    <script src='../js/signup.js'></script>
-<?php require('inc/footer.inc.php'); ?>
+    <script src='<?= BASE_URL ?>views/js/signup.js'></script>
+<?php include __DIR__ . '/inc/footer.inc.php'; ?>
 </body>
