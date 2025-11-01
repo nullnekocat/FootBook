@@ -168,3 +168,23 @@ END
 
 DELIMITER ;
 
+CREATE PROCEDURE sp_get_user_data(IN p_id BIGINT)
+BEGIN
+    SELECT 
+        id,
+        admin,
+        username,
+        email,
+        fullname,
+        birthday,
+        gender,
+        birth_country,
+        country,
+        status,
+        created_at,
+        avatar     -- LONGBLOB (si lo vas a servir como binario o base64 desde PHP)
+    FROM Users
+    WHERE id = p_id AND status = 1
+    LIMIT 1;
+END $$
+DELIMITER ;

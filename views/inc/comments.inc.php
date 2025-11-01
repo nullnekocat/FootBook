@@ -10,7 +10,7 @@
         <div class="comments-list" style="max-height: 320px; overflow-y: auto;">
           <!-- Dummy comments -->
           <div class="d-flex align-items-center mb-3">
-            <img src="../img/user1.jpg" class="rounded-circle me-2" width="36" height="36" alt="User">
+            <img src="/Footbook/img/user1.jpg" class="rounded-circle me-2" width="36" height="36" alt="User">
             <div>
               <strong>Usuario1</strong>
               <span class="text-muted small ms-1">Qué buena jugada!</span>
@@ -18,7 +18,7 @@
             </div>
           </div>
           <div class="d-flex align-items-center mb-3">
-            <img src="../img/user2.jpg" class="rounded-circle me-2" width="36" height="36" alt="User">
+            <img src="/Footbook/img/user2.jpg" class="rounded-circle me-2" width="36" height="36" alt="User">
             <div>
               <strong>Usuario2</strong>
               <span class="text-muted small ms-1">¡Impresionante final!</span>
@@ -26,7 +26,7 @@
             </div>
           </div>
           <div class="d-flex align-items-center mb-3">
-            <img src="../img/default.jpg" class="rounded-circle me-2" width="36" height="36" alt="User">
+            <img src="/Footbook/img/default.jpg" class="rounded-circle me-2" width="36" height="36" alt="User">
             <div>
               <strong>Usuario3</strong>
               <span class="text-muted small ms-1">👏👏👏</span>

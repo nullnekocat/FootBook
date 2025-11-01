@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../config.php';
 include __DIR__ . '/inc/head.inc.php'; 
 include __DIR__ . '/inc/navbar.inc.php'; 
+require('inc/comments.inc.php');
 ?>
 <body>
     <div class="container my-4 center-maxw">
