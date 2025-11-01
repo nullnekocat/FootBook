@@ -69,5 +69,11 @@ class UserModel {
         $stmt->closeCursor();
         return $user ?: null;
     }
+    public function getUserDataById(int $id): ?array {
+    $stmt = $this->db->callSP('sp_get_user_data', [$id], [PDO::PARAM_INT]);
+    $row  = $stmt->fetch(PDO::FETCH_ASSOC);
+    $this->db->finish($stmt);
+    return $row ?: null;
+}
 
 }

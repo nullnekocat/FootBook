@@ -1,7 +1,20 @@
-<?php require('inc/head.inc.php'); ?>
+<?php 
+require_once __DIR__ . '/../core/auth.php';
+$user = current_user();
+require_once __DIR__ . '/../config.php';
+include __DIR__ . '/inc/head.inc.php'; 
+include __DIR__ . '/inc/navbar.inc.php'; 
+?>
+<?php if ($user): ?>
+  <div class="alert alert-success mb-3">
+    Hola, <strong><?= htmlspecialchars($user['username']) ?></strong> (<?= htmlspecialchars($user['email']) ?>)
+  </div>
+<?php else: ?>
+  <a href="router.php?page=login" class="btn btn-sm btn-outline-secondary">Inicia sesión</a>
+<?php endif; ?>
 <?php require('inc/comments.inc.php')?>
+
 <body>
-<?php require('inc/navbar.inc.php'); ?>
 
 <div class="container my-4 center-maxw">
     <!-- Cover & avatar -->
@@ -11,7 +24,7 @@
         </div>
         <div class="d-flex flex-column flex-md-row align-items-center px-4 mb-md-3">
             <div class="position-relative mt-2" style="width:120px;">
-                <img src="../../img/default.jpg" alt="Profile Photo" class="rounded-circle border border-4 border-white shadow" width="120" height="120" style="object-fit:cover;">
+                <img src="/Footbook/img/default.jpg" alt="Profile Photo" class="rounded-circle border border-4 border-white shadow" width="120" height="120" style="object-fit:cover;">
             </div>
             <div class="ms-md-4 text-center text-md-start mt-3 mt-md-0 flex-grow-1">
                 <h3 class="mb-0">Nombre de Usuario</h3>
@@ -52,14 +65,14 @@
                         <div class="card mb-3 shadow-sm">
                             <div class="card-body">
                                 <div class="d-flex align-items-center mb-2">
-                                    <img src="../../img/default.jpg" class="rounded-circle me-2" width="36" height="36" alt="User">
+                                    <img src="/Footbook/img/default.jpg" class="rounded-circle me-2" width="36" height="36" alt="User">
                                     <div>
                                         <strong>Nombre de Usuario</strong>
                                         <span class="text-muted small">· 05/09/2025</span>
                                     </div>
                                 </div>
                                 <p>¡Mi primer post sobre los mundiales!</p>
-                                <img src="../../img/demo1.jpg" class="img-fluid rounded mb-2" alt="Post image">
+                                <img src="/Footbook/img/demo1.jpg" class="img-fluid rounded mb-2" alt="Post image">
                                 <div>
                                     <button class="btn btn-sm btn-outline-success me-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z"/></svg>
