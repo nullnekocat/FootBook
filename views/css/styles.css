@@ -54,3 +54,105 @@
   padding: 10px;
   color: white;
 }
+
+[data-theme="dark"] .navbar {
+    background-color: #0d0d0d !important;
+    border-bottom: 1px solid #2a2a2a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Fondo del body en dark mode */
+[data-theme="dark"] body {
+    background-color: #1a1a1a;
+}
+
+/* Cards */
+[data-theme="dark"] .card {
+    background-color: #242424;
+    border-color: #3a3a3a;
+}
+
+/* Modales */
+[data-theme="dark"] .modal-content {
+    background-color: #242424;
+    border-color: #3a3a3a;
+}
+
+/* Inputs y selects */
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select {
+    background-color: #2a2a2a;
+    border-color: #3a3a3a;
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .form-control:focus,
+[data-theme="dark"] .form-select:focus {
+    background-color: #2a2a2a;
+    border-color: #4a4a4a;
+    color: #e0e0e0;
+}
+
+/* Dropdowns */
+[data-theme="dark"] .dropdown-menu {
+    background-color: #1f1f1f;
+    border-color: #3a3a3a;
+}
+
+[data-theme="dark"] .dropdown-item {
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .dropdown-item:hover,
+[data-theme="dark"] .dropdown-item:focus {
+    background-color: #2a2a2a;
+    color: #ffffff;
+}
+
+/* List groups  */
+[data-theme="dark"] .list-group-item {
+    background-color: #242424;
+    border-color: #3a3a3a;
+    color: #e0e0e0;
+}
+
+/* Tables */
+[data-theme="dark"] .table {
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .table-striped > tbody > tr:nth-of-type(odd) > * {
+    background-color: #1f1f1f;
+}
+
+/* Badges  */
+[data-theme="dark"] .badge {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Text colors  */
+[data-theme="dark"] .text-dark,
+[data-theme="dark"] .text-black {
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .text-muted {
+    color: #a0a0a0 !important;
+}
+
+/* Alerts  */
+[data-theme="dark"] .alert {
+    border-width: 1px;
+}
+
+[data-theme="dark"] .alert-success {
+    background-color: #1a3a2a;
+    border-color: #2a5a3a;
+    color: #90ee90;
+}
+
+[data-theme="dark"] .alert-info {
+    background-color: #1a2a3a;
+    border-color: #2a3a5a;
+    color: #87ceeb;
+}
