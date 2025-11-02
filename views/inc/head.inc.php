@@ -11,4 +11,5 @@
     <link rel="stylesheet" href="/FootBook/views/css/styles.css">
     <script defer src="/FootBook/bootstrap-5.3.8-dist/js/bootstrap.bundle.js"></script>
     <script defer src="/FootBook/views/js/navbar.js"></script>
+    <script defer src="/FootBook/views/js/theme.js"></script>
 </head>
