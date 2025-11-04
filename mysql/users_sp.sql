@@ -153,5 +153,38 @@ END $$
 
 DELIMITER ;
 
+--Login del usuario
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_user_for_login`(IN p_identity VARCHAR(64))
+BEGIN
+    SELECT 
+        id, admin, username, email, password, fullname, birthday, gender,
+        birth_country, country, status, created_at
+    FROM Users
+    WHERE (username = p_identity)
+      AND status = 1
+    LIMIT 1;
+END
 
+DELIMITER ;
 
+CREATE PROCEDURE sp_get_user_data(IN p_id BIGINT)
+BEGIN
+    SELECT 
+        id,
+        admin,
+        username,
+        email,
+        fullname,
+        birthday,
+        gender,
+        birth_country,
+        country,
+        status,
+        created_at,
+        avatar     -- LONGBLOB (si lo vas a servir como binario o base64 desde PHP)
+    FROM Users
+    WHERE id = p_id AND status = 1
+    LIMIT 1;
+END $$
+DELIMITER ;

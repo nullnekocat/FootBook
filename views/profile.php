@@ -1,7 +1,14 @@
-<?php require('inc/head.inc.php'); ?>
+<?php 
+require_once __DIR__ . '/../core/auth.php';
+require_login();
+$userSession = current_user();
+require_once __DIR__ . '/../config.php';
+include __DIR__ . '/inc/head.inc.php'; 
+include __DIR__ . '/inc/navbar.inc.php'; 
+?>
 <?php require('inc/comments.inc.php')?>
+
 <body>
-<?php require('inc/navbar.inc.php'); ?>
 
 <div class="container my-4 center-maxw">
     <!-- Cover & avatar -->
@@ -11,10 +18,14 @@
         </div>
         <div class="d-flex flex-column flex-md-row align-items-center px-4 mb-md-3">
             <div class="position-relative mt-2" style="width:120px;">
-                <img src="../../img/default.jpg" alt="Profile Photo" class="rounded-circle border border-4 border-white shadow" width="120" height="120" style="object-fit:cover;">
+                <img
+                id="avatarImg" 
+                src="/FootBook/api/avatar.php?id=<?= (int)$userSession['id'] ?>" 
+                alt="Profile Photo" class="rounded-circle border border-4 border-white shadow" 
+                width="120" height="120" style="object-fit:cover;">
             </div>
             <div class="ms-md-4 text-center text-md-start mt-3 mt-md-0 flex-grow-1">
-                <h3 class="mb-0">Nombre de Usuario</h3>
+                <h3 id="profileUser" class="mb-0">/FootBook/api/avatar.php?id=<?= (int)$userSession['id'] ?></h3>
                 <span class="text-muted small">0 seguidores · 0 seguidos</span>
             </div>
             <!-- Edit profile -->
@@ -52,14 +63,14 @@
                         <div class="card mb-3 shadow-sm">
                             <div class="card-body">
                                 <div class="d-flex align-items-center mb-2">
-                                    <img src="../../img/default.jpg" class="rounded-circle me-2" width="36" height="36" alt="User">
+                                    <img src="/Footbook/img/default.jpg" class="rounded-circle me-2" width="36" height="36" alt="User">
                                     <div>
                                         <strong>Nombre de Usuario</strong>
                                         <span class="text-muted small">· 05/09/2025</span>
                                     </div>
                                 </div>
                                 <p>¡Mi primer post sobre los mundiales!</p>
-                                <img src="../../img/demo1.jpg" class="img-fluid rounded mb-2" alt="Post image">
+                                <img src="/Footbook/img/demo1.jpg" class="img-fluid rounded mb-2" alt="Post image">
                                 <div>
                                     <button class="btn btn-sm btn-outline-success me-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z"/></svg>
@@ -85,13 +96,14 @@
                 </div>
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><strong>Nombre completo:</strong> <span id="fullname-info">Nombre completo</span></li>
-                        <li class="list-group-item"><strong>Nombre de usuario:</strong> <span id="username-info">username</span></li>
-                        <li class="list-group-item"><strong>Correo electrónico:</strong> <span id="email-info">example@email.com</span></li>
-                        <li class="list-group-item"><strong>Fecha de nacimiento:</strong> <span id="birthdate-info">01/01/2000</span></li>
-                        <li class="list-group-item"><strong>Género:</strong> <span id="gender-info">Masculino</span></li>
-                        <li class="list-group-item"><strong>País de nacimiento:</strong> <span id="birthcountry-info">México</span></li>
-                        <li class="list-group-item"><strong>Nacionalidad:</strong> <span id="nationality-info">Mexicana</span></li>
+                        <li class="list-group-item"><strong>Nombre completo:</strong> <span id="fullname">Nombre completo</span></li>
+                        <li class="list-group-item"><strong>Nombre de usuario:</strong> <span id="username">username</span></li>
+                        <li class="list-group-item"><strong>Correo electrónico:</strong> <span id="email">example@email.com</span></li>
+                        <li class="list-group-item"><strong>Fecha de nacimiento:</strong> <span id="birthday">01/01/2000</span></li>
+                        <li class="list-group-item"><strong>Género:</strong> <span id="gender">Masculino</span></li>
+                        <li class="list-group-item"><strong>País de nacimiento:</strong> <span id="birth_country">México</span></li>
+                        <li class="list-group-item"><strong>Nacionalidad:</strong> <span id="country">Mexicana</span></li>
+
                     </ul>
                 </div>
             </div>
@@ -159,23 +171,6 @@
     </form>
   </div>
 </div>
-
-<script>
-// Bootstrap custom validation
-(() => {
-  'use strict'
-  const forms = document.querySelectorAll('.needs-validation')
-  Array.from(forms).forEach(form => {
-    form.addEventListener('submit', event => {
-      if (!form.checkValidity()) {
-        event.preventDefault()
-        event.stopPropagation()
-      }
-      form.classList.add('was-validated')
-    }, false)
-  })
-})()
-</script>
-
 <?php require('inc/footer.inc.php'); ?>
 </body>
+<script src="/FootBook/views/js/profile.js"></script>
