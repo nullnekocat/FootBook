@@ -11,6 +11,28 @@ class Database {
         ]);
     }
 
+    public function callSPFetchAll(string $spName, array $params = []): array {
+        $ph = $params ? implode(',', array_fill(0, count($params), '?')) : '';
+        $sql = "CALL {$spName}({$ph})";
+        $stmt = $this->pdo->prepare($sql);
+
+        // bind 1-based
+        foreach ($params as $i => $v) {
+            $stmt->bindValue($i + 1, $v);
+        }
+
+        $stmt->execute();
+
+        // lee el primer result set
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+        // drena posibles result sets extra para liberar la conexión
+        while ($stmt->nextRowset()) { /* noop */ }
+        $stmt->closeCursor();
+
+        return $rows;
+    }
+    
     public function callSP(string $sp, array $params = [], array $types = []): PDOStatement {
         $ph = implode(',', array_fill(0, count($params), '?'));
         $stmt = $this->pdo->prepare("CALL {$sp}($ph)");
