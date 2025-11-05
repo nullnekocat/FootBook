@@ -1,13 +1,11 @@
 RewriteEngine On
 
-# 2.1 Canonicaliza a /FootBook (si llegan como /footbook o /Footbook, etc.)
+# Canonicaliza a /FootBook (opcional)
 RewriteCond %{REQUEST_URI} ^/footbook [NC]
 RewriteCond %{REQUEST_URI} !^/FootBook
 RewriteRule ^(.*)$ /FootBook/$1 [R=301,L]
 
-# 2.2 Front controller
 RewriteBase /FootBook/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.php [QSA,L]
-

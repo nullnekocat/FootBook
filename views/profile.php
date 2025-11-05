@@ -1,7 +1,8 @@
 <?php 
-require_once __DIR__ . '/../core/auth.php';
-require_login();
-$userSession = current_user();
+require_once __DIR__ . '/../Middleware/auth.php';
+\Auth\require_login();
+?>
+<?php
 require_once __DIR__ . '/../config.php';
 include __DIR__ . '/inc/head.inc.php'; 
 include __DIR__ . '/inc/navbar.inc.php'; 
@@ -19,13 +20,13 @@ include __DIR__ . '/inc/navbar.inc.php';
         <div class="d-flex flex-column flex-md-row align-items-center px-4 mb-md-3">
             <div class="position-relative mt-2" style="width:120px;">
                 <img
-                id="avatarImg" 
-                src="/FootBook/api/avatar.php?id=<?= (int)$userSession['id'] ?>" 
+                id="profileAvatar" 
+                src="img/default.jpg" 
                 alt="Profile Photo" class="rounded-circle border border-4 border-white shadow" 
                 width="120" height="120" style="object-fit:cover;">
             </div>
             <div class="ms-md-4 text-center text-md-start mt-3 mt-md-0 flex-grow-1">
-                <h3 id="profileUser" class="mb-0">/FootBook/api/avatar.php?id=<?= (int)$userSession['id'] ?></h3>
+                <h3 id="profileUser" class="mb-0">Nombre de Usuario</h3>
                 <span class="text-muted small">0 seguidores · 0 seguidos</span>
             </div>
             <!-- Edit profile -->

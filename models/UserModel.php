@@ -1,4 +1,11 @@
 <?php
+namespace Models;
+use PDO;
+use PDOException;
+use Database;
+use RuntimeException;
+
+
 require_once __DIR__ . '/../core/Database.php';
 
 class UserModel {
@@ -74,5 +81,8 @@ class UserModel {
         $row  = $stmt->fetch(PDO::FETCH_ASSOC);
         $this->db->finish($stmt);
         return $row ?: null;
+    }
+    public function getListOfUsers(): array {
+        return $this->db->callSPFetchAll('sp_get_users');
     }
 }

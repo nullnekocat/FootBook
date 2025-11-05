@@ -39,7 +39,7 @@ include __DIR__ . '/inc/navbar.inc.php';
                             <a href="#">¿Olvidaste tu contraseña?</a>
                         </div-->
                         <p class="mt-3 mb-0 text-center">
-                            ¿Aún no tienes cuenta? <a href="router.php?page=signup">Regístrate</a>
+                            ¿Aún no tienes cuenta? <a href="<?= url('signup') ?>">Regístrate</a>
                         </p>
                     </div>
                 </div>
