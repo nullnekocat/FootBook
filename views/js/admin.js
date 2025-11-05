@@ -85,7 +85,7 @@ if (document.querySelector('#admin-users').classList.contains('show')) {
 
   // === Nuevo fetch adaptado al controller ===
   async function fetchCategories() {
-    const res = await fetch('/FootBook/api/categories?ts=' + Date.now(), { method: 'GET' });
+    const res = await fetch('/FootBook/api/categories/list', { method: 'GET' });
     if (!res.ok) throw new Error('No se pudieron obtener las categorías');
     const data = await res.json();
     // nuestro controller devuelve { data: [...] }
@@ -135,6 +135,60 @@ if (document.querySelector('#admin-users').classList.contains('show')) {
     renderCategorySelect(items);
   }
 
+  // ---- Crear categoría por submit (sin recargar) ----
+(function () {
+  const form  = document.getElementById('category-form');
+  const input = document.getElementById('category-name');
+  const API_CREATE = '/FootBook/api/categories/create'; // si usas /create
+
+  if (!form || !input) {
+    console.warn('[Admin] Falta #category-form o #category-name en el DOM');
+    return;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const name = (input.value || '').trim();
+    if (!name) { input.focus(); return; }
+
+    const payload = { name };
+    console.log('[Admin] POST', API_CREATE, payload);
+
+    try {
+      const res = await fetch(API_CREATE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const raw = await res.text();
+      console.log('[Admin] POST status:', res.status, 'raw:', raw);
+
+      let json;
+      try { json = JSON.parse(raw); } catch {
+        alert('La API no devolvió JSON válido:\n' + raw.slice(0, 300));
+        return;
+      }
+
+      if (!res.ok) {
+        alert(json.error || ('Error ' + res.status));
+        return;
+      }
+
+      // Éxito: limpia y recarga lista sin refrescar la página
+      input.value = '';
+      if (typeof loadCategories === 'function') {
+        await loadCategories();
+      }
+    } catch (err) {
+      console.error('[Admin] create error:', err);
+      alert('Error: ' + (err?.message || err));
+    }
+  });
+})();
+
+  
   // Delegación para los botones Edit/Delete
   document.addEventListener('click', async (ev) => {
     const btn = ev.target.closest('[data-action]');
@@ -150,17 +204,12 @@ if (document.querySelector('#admin-users').classList.contains('show')) {
     if (action === 'delete') {
       if (!confirm('¿Eliminar la categoría ' + id + '?')) return;
       alert('DELETE aún no implementado en el backend.');
-      // Cuando implementes DELETE:
-      /*
-      const resp = await fetch('/FootBook/api/categories/' + id, { method: 'DELETE' });
-      const body = await resp.json();
-      alert(body.message || body.error || 'Acción completada');
-      await loadCategories();
-      */
     }
   });
 
   // Carga inicial
   try { await loadCategories(); }
   catch (e) { console.error(e); alert(e.message); }
+
+
 })();

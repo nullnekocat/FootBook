@@ -13,7 +13,7 @@ class CategoryController {
         $this->model = new CategoryModel(); // usa tus SP vía Database
     }
 
-    public function index(): void {
+    public function index(): void { // listar categorías
         try {
             $rows = $this->model->getListOfCategory();
             $this->json(200, ['data' => $rows]);
@@ -22,7 +22,7 @@ class CategoryController {
         }
     }
 
-    public function store(): void {
+    public function store(): void { // crear nueva categoría
         try {
             $body = $this->jsonIn();
             $name = trim((string)($body['name'] ?? ''));
@@ -58,18 +58,22 @@ class CategoryController {
     }
 }
 
+/* ===== Dispatcher local, igual estilo que CategoryController ===== */
 $controller = new CategoryController();
 $method = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
+$uriPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
 
-switch ($method) {
-    case 'GET':
-        $controller->index();
-        break;
-    case 'POST':
-        $controller->store();
-        break;
-    default:
-        http_response_code(405);
-        echo json_encode(['error' => 'Method not allowed'], JSON_UNESCAPED_UNICODE);
-        exit;
+// recorta base path (p.ej., /FootBook) de forma case-insensitive
+$base = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/\\');
+if ($base && stripos($uriPath, $base) === 0) {
+    $uriPath = substr($uriPath, strlen($base));
 }
+$path = '/' . trim($uriPath, '/');       // '/api/login'
+$low  = strtolower($path);
+
+if ($method === 'GET' && $low === '/api/categories/list')    { $controller->index();    exit; }
+if ($method === 'POST' && $low === '/api/categories/create')    { $controller->store();    exit; }
+
+http_response_code(404);
+echo json_encode(['error' => 'Ruta no encontrada']);
+exit;

@@ -27,7 +27,7 @@ include __DIR__ . '/inc/navbar.inc.php';
         <!-- Categories -->
         <div class="tab-pane fade show active" id="admin-categories">
             <h5 class="text-dark">Crear nueva categoría</h5>
-            <form class="row g-3 mb-4" autocomplete="off">
+            <form id="category-form" class="row g-3 mb-4" autocomplete="off">
                 <div class="col-auto flex-fill">
                     <input type="text" class="form-control" id="category-name" name="category_name" placeholder="Nombre de la categoría" required>
                 </div>
@@ -168,7 +168,6 @@ include __DIR__ . '/inc/navbar.inc.php';
     </div>
 </div>
 
-<script src="/Footbook/views/js/admin.js"> </script>
-
 <?php include __DIR__ . '/inc/footer.inc.php'; ?>
+<script type="module" src="/FootBook/views/js/admin/index.js"></script>
 </body>

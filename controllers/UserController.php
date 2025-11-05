@@ -4,14 +4,88 @@ declare(strict_types=1);
 use Models\UserModel;
 
 require_once __DIR__ . '/../models/UserModel.php';
+require_once __DIR__ . '/../Middleware/auth.php';
 
 header('Content-Type: application/json; charset=UTF-8');
 
 class UserController {
     private UserModel $model;
-
+    
     public function __construct() {
         $this->model = new UserModel(); // usa tus SP vía Database
+    }
+
+    public function me(): void {
+        // requiere estar logueado
+        $sessUser = \Auth\current_user();
+        if (!$sessUser) {
+            http_response_code(401);
+            echo json_encode(['error' => 'No autenticado']);
+            return;
+        }
+
+        $id = (int)$sessUser['id'];
+        $row = $this->model->getUserDataById($id);
+
+        if (!$row) {
+            http_response_code(404);
+            echo json_encode(['error' => 'Usuario no encontrado']);
+            return;
+        }
+
+        $avatarExists = isset($row['avatar']) && $row['avatar'] !== null && $row['avatar'] !== '';
+        $base = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/\\');
+        $avatarUrl = ($avatarExists ? ($base . '/api/users/me/avatar?ts=' . time()) : null);
+
+        $payload = [
+            'user' => [
+                'id'            => $id,
+                'username'      => $row['username']      ?? $sessUser['username'] ?? null,
+                'admin'         => (int)($row['admin']    ?? $sessUser['admin']    ?? 0),
+                'fullname'      => $row['fullname']      ?? null,
+                'email'         => $row['email']         ?? null,
+                'birthday'      => $row['birthday']      ?? null,
+                'gender'        => isset($row['gender']) ? (int)$row['gender'] : null,
+                'birth_country' => $row['birth_country'] ?? null,
+                'country'       => $row['country']       ?? null,
+                'avatar_exists' => (bool)$avatarExists,
+                'avatar_url'    => $avatarUrl,
+            ],
+        ];
+
+        echo json_encode($payload, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function avatar(): void {
+        $sessUser = \Auth\current_user();
+        if (!$sessUser) { http_response_code(401); echo 'No autenticado'; return; }
+
+        $id  = (int)$sessUser['id'];
+        $row = $this->model->getUserDataById($id);
+        $bin = $row['avatar'] ?? null;
+
+        if (!$bin) { http_response_code(404); echo 'Sin avatar'; return; }
+
+        // Detecta MIME de forma segura
+        $mime = 'image/jpeg';
+        if (function_exists('getimagesizefromstring')) {
+            $info = @getimagesizefromstring($bin);
+            if (!empty($info['mime'])) $mime = $info['mime'];
+        } elseif (class_exists(\finfo::class)) {
+            $f = new \finfo(FILEINFO_MIME_TYPE);
+            $det = $f->buffer($bin);
+            if ($det) $mime = $det;
+        }
+
+        // Limpia cualquier output/headers previos
+        while (ob_get_level()) { ob_end_clean(); }
+        header_remove('Content-Type');                  // elimina 'application/json'
+        header('Content-Type: ' . $mime);
+        header('Cache-Control: no-store, no-cache, must-revalidate');
+        header('Pragma: no-cache');
+
+        echo $bin;
+        exit;
     }
 
     public function login(): void {
@@ -31,7 +105,12 @@ class UserController {
                 $this->json_out(401, ['error' => 'Usuario o contraseña incorrectos']);
                 return;
             }
-
+            // Guarda en sesión
+            \Auth\login(
+                (int)($user['id'] ?? $user['user_id']),
+                (string)($user['username'] ?? ''),
+                (int)($user['admin'] ?? 0)
+            );
             // Éxito
             $this->json_out(200, [
                 'ok'   => true,
@@ -42,6 +121,7 @@ class UserController {
                 ],
                 'redirect' => '/FootBook/home'
             ]);
+            
         } catch (\Throwable $e) {
             $this->json_out(500, ['error' => 'Server error', 'detail' => $e->getMessage()]);
         }
@@ -88,6 +168,16 @@ class UserController {
             $this->json_out($code, ['error' => $e->getMessage()]);
         }
     }
+
+    public function getUsersList(): void {
+        try{
+            $rows = $this->model->getListOfUsers();
+            $this->json(200, ['data' => $rows]);
+        } catch (Throwable $e){
+            $this->json(500, ['error' => 'Server error', 'detail' => $e->getMessage()]);
+        }
+    }
+
     /* ----------------- helpers (mismo patrón) ----------------- */
     private function json_in(): array {
         $raw = file_get_contents('php://input') ?: '';
@@ -100,6 +190,11 @@ class UserController {
         echo json_encode($payload, JSON_UNESCAPED_UNICODE);
         exit;
     }
+    private function json(int $status, array $data): void {
+        http_response_code($status);
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        exit;
+    }    
 }
 
 /* ===== Dispatcher local, igual estilo que CategoryController ===== */
@@ -117,6 +212,10 @@ $low  = strtolower($path);
 
 if ($method === 'POST' && $low === '/api/users/login')    { $controller->login();    exit; }
 if ($method === 'POST' && $low === '/api/users/register')    { $controller->register();    exit; }
+if ($method === 'GET' && $low === '/api/users/list')    { $controller->getUsersList();    exit; }
+if ($method === 'GET' && $low === '/api/users/me')    { $controller->me();    exit; }
+if ($method === 'GET' && $low === '/api/users/me/avatar')    { $controller->me();    exit; }
+
 
 http_response_code(404);
 echo json_encode(['error' => 'Ruta no encontrada']);

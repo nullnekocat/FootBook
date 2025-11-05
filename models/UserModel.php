@@ -82,4 +82,7 @@ class UserModel {
         $this->db->finish($stmt);
         return $row ?: null;
     }
+    public function getListOfUsers(): array {
+        return $this->db->callSPFetchAll('sp_get_users');
+    }
 }
