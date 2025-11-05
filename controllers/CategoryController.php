@@ -31,8 +31,6 @@ class CategoryController {
                 $this->json(422, ['error' => 'name is required']);
                 return;
             }
-
-            // Tu model devuelve ['category_id' => null] por ahora; lo respetamos
             $result = $this->model->createCategory(['name' => $name]);
 
             $this->json(201, [

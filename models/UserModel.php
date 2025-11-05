@@ -1,4 +1,11 @@
 <?php
+namespace Models;
+use PDO;
+use PDOException;
+use Database;
+use RuntimeException;
+
+
 require_once __DIR__ . '/../core/Database.php';
 
 class UserModel {
