@@ -8,7 +8,7 @@ CREATE PROCEDURE sp_create_user (
     IN p_admin TINYINT(1),
     IN p_username VARCHAR(32),
     IN p_email VARCHAR(64),
-    IN p_password VARCHAR(32),
+    IN p_password VARCHAR(255),
     IN p_fullname VARCHAR(255),
     IN p_birthday DATE,
     IN p_gender INT,

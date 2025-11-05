@@ -1,17 +1,11 @@
 <?php 
 require_once __DIR__ . '/../core/auth.php';
-$user = current_user();
+require_login();
+$userSession = current_user();
 require_once __DIR__ . '/../config.php';
 include __DIR__ . '/inc/head.inc.php'; 
 include __DIR__ . '/inc/navbar.inc.php'; 
 ?>
-<?php if ($user): ?>
-  <div class="alert alert-success mb-3">
-    Hola, <strong><?= htmlspecialchars($user['username']) ?></strong> (<?= htmlspecialchars($user['email']) ?>)
-  </div>
-<?php else: ?>
-  <a href="router.php?page=login" class="btn btn-sm btn-outline-secondary">Inicia sesión</a>
-<?php endif; ?>
 <?php require('inc/comments.inc.php')?>
 
 <body>
@@ -24,10 +18,14 @@ include __DIR__ . '/inc/navbar.inc.php';
         </div>
         <div class="d-flex flex-column flex-md-row align-items-center px-4 mb-md-3">
             <div class="position-relative mt-2" style="width:120px;">
-                <img src="/Footbook/img/default.jpg" alt="Profile Photo" class="rounded-circle border border-4 border-white shadow" width="120" height="120" style="object-fit:cover;">
+                <img
+                id="avatarImg" 
+                src="/FootBook/api/avatar.php?id=<?= (int)$userSession['id'] ?>" 
+                alt="Profile Photo" class="rounded-circle border border-4 border-white shadow" 
+                width="120" height="120" style="object-fit:cover;">
             </div>
             <div class="ms-md-4 text-center text-md-start mt-3 mt-md-0 flex-grow-1">
-                <h3 class="mb-0">Nombre de Usuario</h3>
+                <h3 id="profileUser" class="mb-0">/FootBook/api/avatar.php?id=<?= (int)$userSession['id'] ?></h3>
                 <span class="text-muted small">0 seguidores · 0 seguidos</span>
             </div>
             <!-- Edit profile -->
@@ -98,13 +96,14 @@ include __DIR__ . '/inc/navbar.inc.php';
                 </div>
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><strong>Nombre completo:</strong> <span id="fullname-info">Nombre completo</span></li>
-                        <li class="list-group-item"><strong>Nombre de usuario:</strong> <span id="username-info">username</span></li>
-                        <li class="list-group-item"><strong>Correo electrónico:</strong> <span id="email-info">example@email.com</span></li>
-                        <li class="list-group-item"><strong>Fecha de nacimiento:</strong> <span id="birthdate-info">01/01/2000</span></li>
-                        <li class="list-group-item"><strong>Género:</strong> <span id="gender-info">Masculino</span></li>
-                        <li class="list-group-item"><strong>País de nacimiento:</strong> <span id="birthcountry-info">México</span></li>
-                        <li class="list-group-item"><strong>Nacionalidad:</strong> <span id="nationality-info">Mexicana</span></li>
+                        <li class="list-group-item"><strong>Nombre completo:</strong> <span id="fullname">Nombre completo</span></li>
+                        <li class="list-group-item"><strong>Nombre de usuario:</strong> <span id="username">username</span></li>
+                        <li class="list-group-item"><strong>Correo electrónico:</strong> <span id="email">example@email.com</span></li>
+                        <li class="list-group-item"><strong>Fecha de nacimiento:</strong> <span id="birthday">01/01/2000</span></li>
+                        <li class="list-group-item"><strong>Género:</strong> <span id="gender">Masculino</span></li>
+                        <li class="list-group-item"><strong>País de nacimiento:</strong> <span id="birth_country">México</span></li>
+                        <li class="list-group-item"><strong>Nacionalidad:</strong> <span id="country">Mexicana</span></li>
+
                     </ul>
                 </div>
             </div>
@@ -172,23 +171,6 @@ include __DIR__ . '/inc/navbar.inc.php';
     </form>
   </div>
 </div>
-
-<script>
-// Bootstrap custom validation
-(() => {
-  'use strict'
-  const forms = document.querySelectorAll('.needs-validation')
-  Array.from(forms).forEach(form => {
-    form.addEventListener('submit', event => {
-      if (!form.checkValidity()) {
-        event.preventDefault()
-        event.stopPropagation()
-      }
-      form.classList.add('was-validated')
-    }, false)
-  })
-})()
-</script>
-
 <?php require('inc/footer.inc.php'); ?>
 </body>
+<script src="/FootBook/views/js/profile.js"></script>

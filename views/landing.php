@@ -2,12 +2,12 @@
 <body>
     <?php require('inc/navbar.inc.php'); ?>
 
-    <img src="../img/LandingXL.png" class="img-fluid">
+    <img src="img/LandingXL.png" class="img-fluid">
 
     <div class="container">
         <div class="my-4 text-center text-black">
                 <h1>Lo mejor de los mundiales</h1>
-                <p class="my-2"><a class="btn btn-lg btn-primary" href="signup.php">Registrate ahora</a></p>
+                <p class="my-2"><a class="btn btn-lg btn-primary" href="<?= url('signup') ?>">Registrate ahora</a></p>
         </div>
         <hr class="featurette-divider my-5">
         <div class="row featurette">
@@ -28,7 +28,7 @@
                 </p>
             </div>
             <div class="col-md-5">
-                <img src="../img/copa.jpg" class="img-fluid rounded mb-2" alt="La copa del mundo">
+                <img src="img/copa.jpg" class="img-fluid rounded mb-2" alt="La copa del mundo">
             </div>
         </div>
         <hr class="featurette-divider m-5">
@@ -50,7 +50,7 @@
                 </p>
             </div>
             <div class="col-md-4 order-md-1"> 
-                <img src="../img/world1.jpg" class="img-fluid rounded mb-2" alt="El planeta tierra con un balón de fútbol como luna">
+                <img src="img/world1.jpg" class="img-fluid rounded mb-2" alt="El planeta tierra con un balón de fútbol como luna">
             </div>
         </div>
         <hr class="featurette-divider"> <!-- /END THE FEATURETTES -->

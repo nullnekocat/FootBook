@@ -1,4 +1,11 @@
 <?php
+namespace Models;
+use PDO;
+use PDOException;
+use Database;
+use RuntimeException;
+
+
 require_once __DIR__ . '/../core/Database.php';
 
 class UserModel {
@@ -70,10 +77,9 @@ class UserModel {
         return $user ?: null;
     }
     public function getUserDataById(int $id): ?array {
-    $stmt = $this->db->callSP('sp_get_user_data', [$id], [PDO::PARAM_INT]);
-    $row  = $stmt->fetch(PDO::FETCH_ASSOC);
-    $this->db->finish($stmt);
-    return $row ?: null;
-}
-
+        $stmt = $this->db->callSP('sp_get_user_data', [$id], [PDO::PARAM_INT]);
+        $row  = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->db->finish($stmt);
+        return $row ?: null;
+    }
 }
