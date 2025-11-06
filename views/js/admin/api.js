@@ -1,4 +1,4 @@
-// /assets/js/admin/api.js
+// views/js/admin/api.js
 export async function getJSON(url, opts={}) {
   const res = await fetch(url, { method:'GET', ...opts });
   const txt = await res.text();

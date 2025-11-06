@@ -1,4 +1,4 @@
-// /FootBook/views/js/admin/index.js
+// views/js/admin/index.js
 // Arranque por el panel activo en tu HTML (.tab-pane.show.active)
 // y cambio de pestañas con botones .admin-tab-btn (data-target="#admin-...")
 console.log('[Admin] index.js loaded');
@@ -22,8 +22,7 @@ async function boot(name) {
   }
   // Si luego haces módulos:
   // else if (name === 'posts')  { const { bootPosts }  = await import('./posts.js');  bootPosts(); }
-  // else if (name === 'wikis')  { const { bootWikis }  = await import('./wikis.js');  bootWikis(); }
-  
+  else if (name === 'wikis')  { const { bootWikis }  = await import('./wikis.js');  bootWikis(); }
   else if (name === 'users')  { const { bootUsers }  = await import('./users.js');  bootUsers(); }
 }
 

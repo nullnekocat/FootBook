@@ -6,88 +6,110 @@ use Models\UserModel;
 require_once __DIR__ . '/../models/UserModel.php';
 require_once __DIR__ . '/../Middleware/auth.php';
 
-header('Content-Type: application/json; charset=UTF-8');
-
 class UserController {
     private UserModel $model;
     
     public function __construct() {
         $this->model = new UserModel(); // usa tus SP vía Database
+        header('Content-Type: application/json; charset=UTF-8');
+    }
+/* ----------------- helpers ----------------- */
+    private function json($data, int $code = 200): void
+    {
+        http_response_code($code);
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
+    /* ---------- helpers JSON ---------- */
+    private function json_in(): array
+    {
+        // Acepta JSON y/x-www-form-urlencoded por compat
+        $in = $_POST;
+        if (empty($in)) {
+            $raw = file_get_contents('php://input');
+            if ($raw !== false && $raw !== '') {
+                $j = json_decode($raw, true);
+                if (is_array($j)) $in = $j;
+            }
+        }
+        return $in ?: [];
     }
 
-    public function me(): void {
-        // requiere estar logueado
-        $sessUser = \Auth\current_user();
-        if (!$sessUser) {
-            http_response_code(401);
-            echo json_encode(['error' => 'No autenticado']);
-            return;
-        }
-
-        $id = (int)$sessUser['id'];
-        $row = $this->model->getUserDataById($id);
-
-        if (!$row) {
-            http_response_code(404);
-            echo json_encode(['error' => 'Usuario no encontrado']);
-            return;
-        }
-
-        $avatarExists = isset($row['avatar']) && $row['avatar'] !== null && $row['avatar'] !== '';
-        $base = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/\\');
-        $avatarUrl = ($avatarExists ? ($base . '/api/users/me/avatar?ts=' . time()) : null);
-
-        $payload = [
-            'user' => [
-                'id'            => $id,
-                'username'      => $row['username']      ?? $sessUser['username'] ?? null,
-                'admin'         => (int)($row['admin']    ?? $sessUser['admin']    ?? 0),
-                'fullname'      => $row['fullname']      ?? null,
-                'email'         => $row['email']         ?? null,
-                'birthday'      => $row['birthday']      ?? null,
-                'gender'        => isset($row['gender']) ? (int)$row['gender'] : null,
-                'birth_country' => $row['birth_country'] ?? null,
-                'country'       => $row['country']       ?? null,
-                'avatar_exists' => (bool)$avatarExists,
-                'avatar_url'    => $avatarUrl,
-            ],
-        ];
-
+    private function json_out(int $code, array $payload): void
+    {
+        http_response_code($code);
         echo json_encode($payload, JSON_UNESCAPED_UNICODE);
     }
 
-    public function avatar(): void {
-        $sessUser = \Auth\current_user();
-        if (!$sessUser) { http_response_code(401); echo 'No autenticado'; return; }
-
-        $id  = (int)$sessUser['id'];
-        $row = $this->model->getUserDataById($id);
-        $bin = $row['avatar'] ?? null;
-
-        if (!$bin) { http_response_code(404); echo 'Sin avatar'; return; }
-
-        // Detecta MIME de forma segura
-        $mime = 'image/jpeg';
-        if (function_exists('getimagesizefromstring')) {
-            $info = @getimagesizefromstring($bin);
-            if (!empty($info['mime'])) $mime = $info['mime'];
-        } elseif (class_exists(\finfo::class)) {
-            $f = new \finfo(FILEINFO_MIME_TYPE);
-            $det = $f->buffer($bin);
-            if ($det) $mime = $det;
+    public function index(): void { //index = list
+        try{
+            $rows = $this->model->getListOfUsers();
+            $this->json(['ok' => true, 'data' => $rows], 200);
+        } catch (Throwable $e){
+            $this->json(['ok' => false, 'error' => $e->getMessage()], 500);
         }
-
-        // Limpia cualquier output/headers previos
-        while (ob_get_level()) { ob_end_clean(); }
-        header_remove('Content-Type');                  // elimina 'application/json'
-        header('Content-Type: ' . $mime);
-        header('Cache-Control: no-store, no-cache, must-revalidate');
-        header('Pragma: no-cache');
-
-        echo $bin;
-        exit;
     }
+    public function register(): void
+    {
+        try {
+            $in = $this->json_in();
 
+            // Requeridos según tu tabla/SP
+            $required = [
+                'username','email','password','fullname',
+                'birthday','gender','birth_country','country'
+            ];
+            foreach ($required as $r) {
+                if (!isset($in[$r]) || trim((string)$in[$r]) === '') {
+                    $this->json_out(422, ['ok'=>false,'error'=>"Campo requerido: $r"]);
+                    return;
+                }
+            }
+
+            // Limpia avatar si viene como data URL
+            $avatarB64 = $in['avatar'] ?? null;
+            if (is_string($avatarB64) && str_starts_with($avatarB64, 'data:')) {
+                $pos = strpos($avatarB64, 'base64,');
+                if ($pos !== false) $avatarB64 = substr($avatarB64, $pos + 7);
+            }
+
+            // Normaliza/asegura tipos
+            $data = [
+                'admin'         => (int)($in['admin'] ?? 0),
+                'username'      => trim((string)$in['username']),
+                'email'         => trim((string)$in['email']),
+                'password'      => password_hash((string)$in['password'], PASSWORD_BCRYPT), // 🔐
+                'fullname'      => trim((string)$in['fullname']),
+                'birthday'      => (string)$in['birthday'],      // YYYY-MM-DD
+                'gender'        => (int)$in['gender'],           // 1/2/3 (ajusta a tu catálogo)
+                'birth_country' => trim((string)$in['birth_country']),
+                'country'       => trim((string)$in['country']),
+                'avatar'        => ($avatarB64 && $avatarB64 !== '') ? base64_decode($avatarB64) : null, // LONGBLOB
+            ];
+
+            // Validaciones mínimas
+            if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+                $this->json_out(422, ['ok'=>false,'error'=>'Email inválido']);
+                return;
+            }
+            if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $data['birthday'])) {
+                $this->json_out(422, ['ok'=>false,'error'=>'birthday debe ser YYYY-MM-DD']);
+                return;
+            }
+
+            // Llama a tu SP vía el modelo (ajusta al nombre real de tu método)
+            // Ejemplo esperado: $this->model->createUser($data);
+            $this->model->createUser($data);
+
+            $this->json_out(201, [
+                'ok'      => true,
+                'message' => 'Usuario creado correctamente',
+                'redirect'=> '/FootBook/login'
+            ]);
+        } catch (\Throwable $e) {
+            $code = (int)($e->getCode() ?: 500);
+            $this->json_out($code, ['ok'=>false,'error'=>$e->getMessage()]);
+        }
+    }
     public function login(): void {
         try {
             $in = $this->json_in();
@@ -122,101 +144,34 @@ class UserController {
                 'redirect' => '/FootBook/home'
             ]);
             
-        } catch (\Throwable $e) {
+        }catch (\Throwable $e) {
             $this->json_out(500, ['error' => 'Server error', 'detail' => $e->getMessage()]);
         }
-    }
-
-    public function register(): void {
-        try {
-            $in = $this->json_in();
-
-            // Campos requeridos según tu tabla y SP
-            $required = ['username','email','password','fullname','birthday','gender','birth_country','country'];
-            foreach ($required as $r) {
-                if (!isset($in[$r]) || $in[$r] === '') {
-                    $this->json_out(422, ['error' => "Campo requerido: $r"]);
-                    return;
-                }
-            }
-
-            // Normaliza/asegura tipos
-            $data = [
-                'admin'         => (int)($in['admin'] ?? 0),
-                'username'      => trim((string)$in['username']),
-                'email'         => trim((string)$in['email']),
-                'password'      => password_hash((string)$in['password'], PASSWORD_BCRYPT), // 🔐
-                'fullname'      => trim((string)$in['fullname']),
-                'birthday'      => (string)$in['birthday'],      // YYYY-MM-DD
-                'gender'        => (int)$in['gender'],           // 1/2/3
-                'birth_country' => trim((string)$in['birth_country']),
-                'country'       => trim((string)$in['country']),
-                // Si viene base64 desde el front, lo pasamos a binario para el LONGBLOB
-                'avatar'        => isset($in['avatar']) && $in['avatar'] !== '' ? base64_decode($in['avatar']) : null,
-            ];
-
-            // Llama a tu SP vía el Model
-            $this->model->createUser($data);
-
-            $this->json_out(201, [
-                'ok'      => true,
-                'message' => 'Usuario creado correctamente',
-                'redirect'=> '/FootBook/login'
-            ]);
-        } catch (\Throwable $e) {
-            $code = $e->getCode() ?: 500;
-            $this->json_out($code, ['error' => $e->getMessage()]);
+    }   
+    public function me(): void
+{
+    try {
+        // Autenticación por sesión
+        $sessUser = \Auth\current_user();
+        if (!$sessUser) {
+            $this->json_out(401, ['ok' => false, 'error' => 'No autenticado']);
+            return;
         }
-    }
 
-    public function getUsersList(): void {
-        try{
-            $rows = $this->model->getListOfUsers();
-            $this->json(200, ['data' => $rows]);
-        } catch (Throwable $e){
-            $this->json(500, ['error' => 'Server error', 'detail' => $e->getMessage()]);
+        $id = (int)$sessUser['id'];
+        $rows = $this->model->getUserDataById($id);
+        $row = is_array($rows) && array_is_list($rows) ? ($rows[0] ?? null) : $rows;
+
+        if (!$row) {
+            $this->json_out(404, ['ok' => false, 'error' => 'Not found']);
+            return;
         }
-    }
 
-    /* ----------------- helpers ----------------- */
-    private function json_in(): array {
-        $raw = file_get_contents('php://input') ?: '';
-        $data = json_decode($raw, true);
-        return is_array($data) ? $data : [];
-    }
+        $this->json_out(200, ['ok' => true, 'data' => $row]);
 
-    private function json_out(int $code, array $payload = []): void {
-        http_response_code($code);
-        echo json_encode($payload, JSON_UNESCAPED_UNICODE);
-        exit;
+    } catch (\Throwable $e) {
+        $this->json_out(500, ['ok' => false, 'error' => 'Server error', 'detail' => $e->getMessage()]);
     }
-    private function json(int $status, array $data): void {
-        http_response_code($status);
-        echo json_encode($data, JSON_UNESCAPED_UNICODE);
-        exit;
-    }    
 }
-
-/* ===== Dispatcher local ===== */
-$controller = new UserController();
-$method = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
-$uriPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
-
-// recorta base path (p.ej., /FootBook) de forma case-insensitive
-$base = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/\\');
-if ($base && stripos($uriPath, $base) === 0) {
-    $uriPath = substr($uriPath, strlen($base));
+   
 }
-$path = '/' . trim($uriPath, '/');       // '/api/login'
-$low  = strtolower($path);
-
-if ($method === 'POST' && $low === '/api/users/login')    { $controller->login();    exit; }
-if ($method === 'POST' && $low === '/api/users/register')    { $controller->register();    exit; }
-if ($method === 'GET' && $low === '/api/users/list')    { $controller->getUsersList();    exit; }
-if ($method === 'GET' && $low === '/api/users/me')    { $controller->me();    exit; }
-if ($method === 'GET' && $low === '/api/users/me/avatar')    { $controller->avatar();    exit; }
-
-
-http_response_code(404);
-echo json_encode(['error' => 'Ruta no encontrada']);
-exit;

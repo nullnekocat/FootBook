@@ -1,4 +1,5 @@
 <?php
+//core/Database.php
 class Database {
     private $pdo;
 

@@ -4,76 +4,49 @@ declare(strict_types=1);
 use Models\CategoryModel;
 require_once __DIR__ . '/../models/CategoryModel.php';
 
-header('Content-Type: application/json; charset=UTF-8');
-
-class CategoryController {
+class CategoryController
+{
     private CategoryModel $model;
 
-    public function __construct() {
-        $this->model = new CategoryModel(); // usa tus SP vía Database
+    public function __construct()
+    {
+        $this->model = new CategoryModel();
+        header('Content-Type: application/json; charset=UTF-8');
     }
 
-    public function index(): void { // listar categorías
+    private function json($data, int $code = 200): void
+    {
+        http_response_code($code);
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
+
+    /** GET /FootBook/api/categories */
+    public function list(): void
+    {
         try {
-            $rows = $this->model->getListOfCategory();
-            $this->json(200, ['data' => $rows]);
-        } catch (Throwable $e) {
-            $this->json(500, ['error' => 'Server error', 'detail' => $e->getMessage()]);
+            $rows = $this->model->getListOfCategory();   // <- tu SP
+            $this->json(['ok' => true, 'data' => $rows]);
+        } catch (\Throwable $e) {
+            $this->json(['ok' => false, 'error' => $e->getMessage()], 500);
         }
     }
 
-    public function store(): void { // crear nueva categoría
+    /** POST /FootBook/api/categories/:name */
+    public function create($name): void
+    {
         try {
-            $body = $this->jsonIn();
-            $name = trim((string)($body['name'] ?? ''));
-
+            $name = trim((string)$name);
             if ($name === '') {
-                $this->json(422, ['error' => 'name is required']);
+                $this->json(['ok' => false, 'error' => 'name is required'], 422);
                 return;
             }
-            $result = $this->model->createCategory(['name' => $name]);
 
-            $this->json(201, [
-                'ok'           => true,
-                'message'      => 'Category created',
-                'category_id'  => $result['category_id'] ?? null
-            ]);
-        } catch (Throwable $e) {
-            $this->json(500, ['error' => 'Server error', 'detail' => $e->getMessage()]);
+            // tu SP: no necesitas body, el name viene en la URL
+            $this->model->createCategory(['name' => $name]);
+
+            $this->json(['ok' => true, 'data' => ['name' => $name]], 201);
+        } catch (\Throwable $e) {
+            $this->json(['ok' => false, 'error' => $e->getMessage()], 500);
         }
     }
-
-    /* ----------------- helpers ----------------- */
-
-    private function jsonIn(): array {
-        $raw = file_get_contents('php://input') ?: '';
-        $data = json_decode($raw, true);
-        return is_array($data) ? $data : [];
-    }
-
-    private function json(int $status, array $data): void {
-        http_response_code($status);
-        echo json_encode($data, JSON_UNESCAPED_UNICODE);
-        exit;
-    }
 }
-
-/* ===== Dispatcher local, igual estilo que CategoryController ===== */
-$controller = new CategoryController();
-$method = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
-$uriPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
-
-// recorta base path (p.ej., /FootBook) de forma case-insensitive
-$base = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/\\');
-if ($base && stripos($uriPath, $base) === 0) {
-    $uriPath = substr($uriPath, strlen($base));
-}
-$path = '/' . trim($uriPath, '/');       // '/api/login'
-$low  = strtolower($path);
-
-if ($method === 'GET' && $low === '/api/categories/list')    { $controller->index();    exit; }
-if ($method === 'POST' && $low === '/api/categories/create')    { $controller->store();    exit; }
-
-http_response_code(404);
-echo json_encode(['error' => 'Ruta no encontrada']);
-exit;

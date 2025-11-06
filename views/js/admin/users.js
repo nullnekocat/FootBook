@@ -1,9 +1,11 @@
-// /FootBook/views/js/admin/users.js
+// /views/js/admin/users.js
 console.log('[Users] module loaded');
 
-const API = { list: '/FootBook/api/users/list' };
+const API = { 
+  list: '/FootBook/api/users'
+};
 
-// ✅ función hoisteada (ya no entra en TDZ)
+// util simple y hoisteado
 function escapeHtml(s = '') {
   return s
     .replaceAll('&','&amp;').replaceAll('<','&lt;')
@@ -16,7 +18,10 @@ export function bootUsers() {
   const pane  = document.getElementById('admin-users');
   const table = document.getElementById('admin-users-table');
   const tbody = table?.querySelector('tbody');
-  if (!pane || !table || !tbody) { console.warn('[Users] Faltan nodos'); return; }
+  if (!pane || !table || !tbody) { 
+    console.warn('[Users] Faltan nodos'); 
+    return; 
+  }
 
   if (pane.dataset.wired === 'true') { load(); return; }
   pane.dataset.wired = 'true';
@@ -28,16 +33,28 @@ export function bootUsers() {
       console.log('[Users] GET', API.list);
       const res = await fetch(API.list, { method: 'GET' });
       const raw = await res.text();
-      console.log('[Users] GET status:', res.status, 'raw:', raw);
+      let json; 
+      try { json = JSON.parse(raw); } 
+      catch { throw new Error('Respuesta no es JSON:\n' + raw.slice(0,300)); }
 
-      let json; try { json = JSON.parse(raw); } catch { throw new Error('Respuesta no es JSON:\n' + raw.slice(0,300)); }
-      if (!res.ok) throw new Error(json.error || ('Error ' + res.status));
+      // Soporta { ok:true, data:[...] } o directamente [...]
+      if (Array.isArray(json)) {
+        render(json);
+        return;
+      }
+      if (json && json.ok === true && Array.isArray(json.data)) {
+        render(json.data);
+        return;
+      }
+      // Si el controller manda ok:false, muéstralo
+      if (json && json.ok === false) {
+        throw new Error(json.error || 'Error del API');
+      }
 
-      const items = Array.isArray(json) ? json : (Array.isArray(json?.data) ? json.data : []);
-      render(items);
+      throw new Error('Formato inesperado de respuesta');
     } catch (err) {
       console.error('[Users] list error:', err);
-      tbody.innerHTML = `<tr><td colspan="6" class="text-danger">${err.message || err}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6" class="text-danger">${escapeHtml(err.message || String(err))}</td></tr>`;
     }
   }
 
@@ -52,8 +69,9 @@ export function bootUsers() {
       const fullname  = u.fullname ?? u.fullName ?? '';
       const email     = u.email ?? '';
       const created   = u.created_at ?? u.createdAt ?? '';
+
       return `
-        <tr data-id="${id}">
+        <tr data-id="${escapeHtml(String(id))}">
           <td>${escapeHtml(String(id))}</td>
           <td>${escapeHtml(username)}</td>
           <td>${escapeHtml(fullname)}</td>

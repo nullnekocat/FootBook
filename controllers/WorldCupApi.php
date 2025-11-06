@@ -1,89 +1,56 @@
 <?php
-declare(strict_types=1);
-
+// controllers/WorldCupApi.php
 use Models\WorldCupModel;
-
 require_once __DIR__ . '/../models/WorldCupModel.php';
 
-header('Content-Type: application/json; charset=UTF-8');
-
-class WorldCupController {
+class WorldCupApi
+{
     private WorldCupModel $model;
 
-    public function __construct() {
-        $this->model = new WorldCupModel(); 
+    public function __construct()
+    {
+        $this->model = new WorldCupModel();
+        header('Content-Type: application/json; charset=utf-8');
     }
 
-    public function index(): void {
+    private function json($data, int $code = 200): void
+    {
+        http_response_code($code);
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
+
+    /** GET /FootBook/api/worldcups
+     *  Devuelve [{ id, name, country, year, description, banner_b64 }, ...]
+     */
+    public function index(): void
+    {
         try {
             $rows = $this->model->getAllWorldCups();
-            header('Content-Type: application/json; charset=utf-8');
-            echo json_encode(['ok' => true, 'data' => $rows], JSON_UNESCAPED_UNICODE);
-        } catch (Throwable $e) {
-            http_response_code(500);
-            echo json_encode(['error' => $e->getMessage()]);
+            $this->json(['ok' => true, 'data' => $rows]);
+        } catch (\Throwable $e) {
+            $this->json(['ok' => false, 'error' => $e->getMessage()], 500);
         }
     }
+
+    /** GET /FootBook/api/worldcups/:id
+     *  Reusa la lista y devuelve solo 1
+     */
     public function show($id): void
     {
         try {
-            $id = (int)($id ?? 0);
-            if ($id <= 0) {
-                http_response_code(400);
-                header('Content-Type: application/json; charset=utf-8');
-                echo json_encode(['error' => 'Parámetro id inválido']);
-                return;
+            $id = (int)$id;
+            $rows = $this->model->getWorldCupById($id);
+            $found = null;
+            foreach ($rows as $r) {
+                // soporta distintas claves de id si fuera el caso
+                $rid = $r['id'] ?? $r['worldcup_id'] ?? $r['id_worldcup'] ?? null;
+                if ((int)$rid === $id) { $found = $r; break; }
             }
 
-            $row = null;
-            $row = $this->model->getWorldCupById($id);
-            if ($row) {
-                if (!isset($row['banner_b64']) && isset($row['banner']) && $row['banner'] !== null) {
-                    $row['banner_b64'] = base64_encode($row['banner']);
-                }
-                // Nunca enviamos el binario en el JSON
-                unset($row['banner']);
-            }
-            
-
-            if (!$row) {
-                http_response_code(404);
-                header('Content-Type: application/json; charset=utf-8');
-                echo json_encode(['error' => 'No encontrado']);
-                return;
-            }
-
-            header('Content-Type: application/json; charset=utf-8');
-            echo json_encode(
-                ['ok' => true, 'data' => $row],
-                JSON_UNESCAPED_UNICODE
-            );
-
-        } catch (Throwable $e) {
-            http_response_code(500);
-            header('Content-Type: application/json; charset=utf-8');
-            echo json_encode(['error' => $e->getMessage()]);
+            if (!$found) { $this->json(['ok'=>false,'error'=>'Not found'], 404); return; }
+            $this->json(['ok' => true, 'data' => $found]);
+        } catch (\Throwable $e) {
+            $this->json(['ok' => false, 'error' => $e->getMessage()], 500);
         }
     }
-
-}   
-
-/* ===== Dispatcher local ===== */
-$controller = new WorldCupController();
-$method = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
-$uriPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
-
-// recorta base path (p.ej., /FootBook) de forma case-insensitive
-$base = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/\\');
-if ($base && stripos($uriPath, $base) === 0) {
-    $uriPath = substr($uriPath, strlen($base));
 }
-$path = '/' . trim($uriPath, '/'); 
-$low  = strtolower($path);
-
-if ($method === 'GET' && $low === '/api/worldcups')    { $controller->index();    exit; }
-//Aqui falta el ahora llamar y mandar el id a show 
-
-http_response_code(404);
-echo json_encode(['error' => 'Ruta no encontrada']);
-exit;

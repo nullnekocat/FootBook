@@ -1,6 +1,4 @@
-<? 
- 
- ?>
+
 <section class="mb-4">
     <div class="card shadow-sm">
         <div class="card-body d-flex align-items-center" data-new-post>
@@ -11,7 +9,6 @@
         </div>
     </div>
 </section>
-<?//php endif; ?>
 
 <!-- Modal post -->
 <div class="modal fade" id="modal-post" tabindex="-1" aria-labelledby="modal-post-label" aria-hidden="true">

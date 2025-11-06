@@ -61,14 +61,9 @@ class UserModel {
         }
     }
 
-    public function getAllUsers() {
-        $this->db->callSP('sp_get_all_users');
-        return []; // si tu SP devuelve filas, aquí puedes fetchAll
-    }
-
     public function getUserById($id) {
         $this->db->callSP('sp_get_user_by_id', [(int)$id], [PDO::PARAM_INT]);
-        return []; // idem comentario de arriba
+        return []; 
     }
     public function getUserForLogin(string $identity) {
         $stmt = $this->db->callSP('sp_get_user_for_login', [$identity], [PDO::PARAM_STR]);
@@ -76,12 +71,14 @@ class UserModel {
         $stmt->closeCursor();
         return $user ?: null;
     }
+    
     public function getUserDataById(int $id): ?array {
         $stmt = $this->db->callSP('sp_get_user_data', [$id], [PDO::PARAM_INT]);
         $row  = $stmt->fetch(PDO::FETCH_ASSOC);
         $this->db->finish($stmt);
         return $row ?: null;
     }
+
     public function getListOfUsers(): array {
         return $this->db->callSPFetchAll('sp_get_users');
     }
