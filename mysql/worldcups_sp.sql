@@ -30,14 +30,6 @@ END $$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_get_worldcup_by_id (IN p_id INT)
-BEGIN
-	SELECT name, country, year, description, banner FROM WorldCups 
-    WHERE id = p_id AND status = 1;
-END $$
-DELIMITER ;
-
-DELIMITER $$
 CREATE PROCEDURE sp_get_worldcup_by_id_light (IN p_id INT)
 BEGIN
 	SELECT name, country, year FROM WorldCups 
@@ -80,6 +72,37 @@ CREATE PROCEDURE sp_soft_delete_worldcup (IN p_id INT)
 BEGIN
 	UPDATE WorldCups SET status = 0 WHERE id = p_id;
 END $$
+/*Cosas nuevas*/
+DELIMITER ;
+CREATE PROCEDURE `sp_get_worldcups_data`()
+BEGIN
+    /* Devuelve todas los mundiales ordenadas por id del menor a mayor*/
+    SELECT 
+    id, 
+    name, 
+    country, 
+    year, 
+    description,
+    TO_BASE64(banner) AS banner_b64
+    FROM worldcups WHERE status = 1 ORDER BY id ASC;  -- orden por id
+END$$
+DELIMITER ;
+
+DELIMITER ;
+CREATE PROCEDURE `sp_get_worldcup_by_id`(
+IN p_id INT
+)
+BEGIN
+    /* Devuelve todas los mundiales ordenadas por id del menor a mayor*/
+    SELECT 
+    id,
+    name,
+    country,
+    year,
+    description,
+    TO_BASE64(banner) AS banner_b64 
+    FROM worldcups WHERE status = 1 AND id = p_id; -- orden por id
+END$$
 DELIMITER ;
 
 
