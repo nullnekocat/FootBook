@@ -32,7 +32,6 @@
   </div>
 </div>
 
-<script src="<?= BASE_URL ?>views/js/wiki.js"></script>
-
-<?php include __DIR__ . '/inc/footer.inc.php'; ?>
+  <?php include __DIR__ . '/inc/footer.inc.php'; ?>
+  <script src="<?= BASE_URL ?>views/js/wiki.js"></script>
 </body>

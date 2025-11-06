@@ -11,7 +11,7 @@
                     <div class="row card-header pt-3 bg-dark text-light " style="margin:0!important;">
                         <h4 class="col-5">Crear cuenta</h4>
                         <h6 class="col-7 pt-1 text-end">
-                            ¿Ya tienes cuenta? <a href="router.php?page=login">Inicia sesión</a>
+                            ¿Ya tienes cuenta? <a href="<?= url('login') ?>">Inicia sesión</a>
                         </h6>
                     </div>
                     <div class="card-body">

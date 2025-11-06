@@ -1,4 +1,5 @@
 <?php
+// models/CategoryModel.php
 namespace Models;
 use PDO;
 use Database;
@@ -13,10 +14,9 @@ class CategoryModel {
     }
 
     /** Crear categoría */
-    public function createCategory(array $data): array {
+    public function createCategory(array $data) {
         $name = trim($data['name'] ?? '');
         $this->db->callSP('sp_create_category', [$name], [PDO::PARAM_STR]);
-        return ['category_id' => null];
     }
 
     /** Listar categorías (A→Z por nombre o ASC por id según tu SP) */

@@ -152,10 +152,10 @@ BEGIN
 END $$
 
 DELIMITER ;
-
+/*Cosas nuevas*/
 --Login del usuario
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_user_for_login`(IN p_identity VARCHAR(64))
+CREATE  PROCEDURE `sp_get_user_for_login`(IN p_identity VARCHAR(64))
 BEGIN
     SELECT 
         id, admin, username, email, password, fullname, birthday, gender,
@@ -166,9 +166,8 @@ BEGIN
     LIMIT 1;
 END
 
-DELIMITER ;
-
-CREATE PROCEDURE sp_get_user_data(IN p_id BIGINT)
+DELIMITER $$
+CREATE PROCEDURE `sp_get_user_data`(IN p_id BIGINT)
 BEGIN
     SELECT 
         id,
@@ -182,9 +181,22 @@ BEGIN
         country,
         status,
         created_at,
-        avatar     -- LONGBLOB (si lo vas a servir como binario o base64 desde PHP)
+        TO_BASE64(avatar) AS avatar_b64     
     FROM Users
     WHERE id = p_id AND status = 1
     LIMIT 1;
-END $$
+END$$
+DELIMITER ;
+DELIMITER $$
+CREATE PROCEDURE `sp_get_users`()
+BEGIN
+    /* Devuelve todas los los usarios ordenados por id del menor a mayor*/
+    SELECT 
+		id,
+        username,
+        email,
+        created_at
+    FROM users
+    ORDER BY id ASC;  -- orden por id
+END$$
 DELIMITER ;

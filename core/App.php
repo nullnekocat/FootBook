@@ -1,4 +1,5 @@
 <?php
+//core/App.php
 class App {
     public function loadController($controllerName) {
         $controllerFile = __DIR__ . '/../controllers/' . $controllerName . '.php';

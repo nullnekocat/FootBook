@@ -4,16 +4,112 @@ declare(strict_types=1);
 use Models\UserModel;
 
 require_once __DIR__ . '/../models/UserModel.php';
-
-header('Content-Type: application/json; charset=UTF-8');
+require_once __DIR__ . '/../Middleware/auth.php';
 
 class UserController {
     private UserModel $model;
-
+    
     public function __construct() {
         $this->model = new UserModel(); // usa tus SP vía Database
+        header('Content-Type: application/json; charset=UTF-8');
+    }
+/* ----------------- helpers ----------------- */
+    private function json($data, int $code = 200): void
+    {
+        http_response_code($code);
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
+    /* ---------- helpers JSON ---------- */
+    private function json_in(): array
+    {
+        // Acepta JSON y/x-www-form-urlencoded por compat
+        $in = $_POST;
+        if (empty($in)) {
+            $raw = file_get_contents('php://input');
+            if ($raw !== false && $raw !== '') {
+                $j = json_decode($raw, true);
+                if (is_array($j)) $in = $j;
+            }
+        }
+        return $in ?: [];
     }
 
+    private function json_out(int $code, array $payload): void
+    {
+        http_response_code($code);
+        echo json_encode($payload, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function index(): void { //index = list
+        try{
+            $rows = $this->model->getListOfUsers();
+            $this->json(['ok' => true, 'data' => $rows], 200);
+        } catch (Throwable $e){
+            $this->json(['ok' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
+    public function register(): void
+    {
+        try {
+            $in = $this->json_in();
+
+            // Requeridos según tu tabla/SP
+            $required = [
+                'username','email','password','fullname',
+                'birthday','gender','birth_country','country'
+            ];
+            foreach ($required as $r) {
+                if (!isset($in[$r]) || trim((string)$in[$r]) === '') {
+                    $this->json_out(422, ['ok'=>false,'error'=>"Campo requerido: $r"]);
+                    return;
+                }
+            }
+
+            // Limpia avatar si viene como data URL
+            $avatarB64 = $in['avatar'] ?? null;
+            if (is_string($avatarB64) && str_starts_with($avatarB64, 'data:')) {
+                $pos = strpos($avatarB64, 'base64,');
+                if ($pos !== false) $avatarB64 = substr($avatarB64, $pos + 7);
+            }
+
+            // Normaliza/asegura tipos
+            $data = [
+                'admin'         => (int)($in['admin'] ?? 0),
+                'username'      => trim((string)$in['username']),
+                'email'         => trim((string)$in['email']),
+                'password'      => password_hash((string)$in['password'], PASSWORD_BCRYPT), // 🔐
+                'fullname'      => trim((string)$in['fullname']),
+                'birthday'      => (string)$in['birthday'],      // YYYY-MM-DD
+                'gender'        => (int)$in['gender'],           // 1/2/3 (ajusta a tu catálogo)
+                'birth_country' => trim((string)$in['birth_country']),
+                'country'       => trim((string)$in['country']),
+                'avatar'        => ($avatarB64 && $avatarB64 !== '') ? base64_decode($avatarB64) : null, // LONGBLOB
+            ];
+
+            // Validaciones mínimas
+            if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+                $this->json_out(422, ['ok'=>false,'error'=>'Email inválido']);
+                return;
+            }
+            if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $data['birthday'])) {
+                $this->json_out(422, ['ok'=>false,'error'=>'birthday debe ser YYYY-MM-DD']);
+                return;
+            }
+
+            // Llama a tu SP vía el modelo (ajusta al nombre real de tu método)
+            // Ejemplo esperado: $this->model->createUser($data);
+            $this->model->createUser($data);
+
+            $this->json_out(201, [
+                'ok'      => true,
+                'message' => 'Usuario creado correctamente',
+                'redirect'=> '/FootBook/login'
+            ]);
+        } catch (\Throwable $e) {
+            $code = (int)($e->getCode() ?: 500);
+            $this->json_out($code, ['ok'=>false,'error'=>$e->getMessage()]);
+        }
+    }
     public function login(): void {
         try {
             $in = $this->json_in();
@@ -31,7 +127,12 @@ class UserController {
                 $this->json_out(401, ['error' => 'Usuario o contraseña incorrectos']);
                 return;
             }
-
+            // Guarda en sesión
+            \Auth\login(
+                (int)($user['id'] ?? $user['user_id']),
+                (string)($user['username'] ?? ''),
+                (int)($user['admin'] ?? 0)
+            );
             // Éxito
             $this->json_out(200, [
                 'ok'   => true,
@@ -42,82 +143,35 @@ class UserController {
                 ],
                 'redirect' => '/FootBook/home'
             ]);
-        } catch (\Throwable $e) {
+            
+        }catch (\Throwable $e) {
             $this->json_out(500, ['error' => 'Server error', 'detail' => $e->getMessage()]);
         }
-    }
-
-    public function register(): void {
-        try {
-            $in = $this->json_in();
-
-            // Campos requeridos según tu tabla y SP
-            $required = ['username','email','password','fullname','birthday','gender','birth_country','country'];
-            foreach ($required as $r) {
-                if (!isset($in[$r]) || $in[$r] === '') {
-                    $this->json_out(422, ['error' => "Campo requerido: $r"]);
-                    return;
-                }
-            }
-
-            // Normaliza/asegura tipos
-            $data = [
-                'admin'         => (int)($in['admin'] ?? 0),
-                'username'      => trim((string)$in['username']),
-                'email'         => trim((string)$in['email']),
-                'password'      => password_hash((string)$in['password'], PASSWORD_BCRYPT), // 🔐
-                'fullname'      => trim((string)$in['fullname']),
-                'birthday'      => (string)$in['birthday'],      // YYYY-MM-DD
-                'gender'        => (int)$in['gender'],           // 1/2/3
-                'birth_country' => trim((string)$in['birth_country']),
-                'country'       => trim((string)$in['country']),
-                // Si viene base64 desde el front, lo pasamos a binario para el LONGBLOB
-                'avatar'        => isset($in['avatar']) && $in['avatar'] !== '' ? base64_decode($in['avatar']) : null,
-            ];
-
-            // Llama a tu SP vía el Model
-            $this->model->createUser($data);
-
-            $this->json_out(201, [
-                'ok'      => true,
-                'message' => 'Usuario creado correctamente',
-                'redirect'=> '/FootBook/login'
-            ]);
-        } catch (\Throwable $e) {
-            $code = $e->getCode() ?: 500;
-            $this->json_out($code, ['error' => $e->getMessage()]);
+    }   
+    public function me(): void
+{
+    try {
+        // Autenticación por sesión
+        $sessUser = \Auth\current_user();
+        if (!$sessUser) {
+            $this->json_out(401, ['ok' => false, 'error' => 'No autenticado']);
+            return;
         }
-    }
-    /* ----------------- helpers (mismo patrón) ----------------- */
-    private function json_in(): array {
-        $raw = file_get_contents('php://input') ?: '';
-        $data = json_decode($raw, true);
-        return is_array($data) ? $data : [];
-    }
 
-    private function json_out(int $code, array $payload = []): void {
-        http_response_code($code);
-        echo json_encode($payload, JSON_UNESCAPED_UNICODE);
-        exit;
+        $id = (int)$sessUser['id'];
+        $rows = $this->model->getUserDataById($id);
+        $row = is_array($rows) && array_is_list($rows) ? ($rows[0] ?? null) : $rows;
+
+        if (!$row) {
+            $this->json_out(404, ['ok' => false, 'error' => 'Not found']);
+            return;
+        }
+
+        $this->json_out(200, ['ok' => true, 'data' => $row]);
+
+    } catch (\Throwable $e) {
+        $this->json_out(500, ['ok' => false, 'error' => 'Server error', 'detail' => $e->getMessage()]);
     }
 }
-
-/* ===== Dispatcher local, igual estilo que CategoryController ===== */
-$controller = new UserController();
-$method = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
-$uriPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
-
-// recorta base path (p.ej., /FootBook) de forma case-insensitive
-$base = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/\\');
-if ($base && stripos($uriPath, $base) === 0) {
-    $uriPath = substr($uriPath, strlen($base));
+   
 }
-$path = '/' . trim($uriPath, '/');       // '/api/login'
-$low  = strtolower($path);
-
-if ($method === 'POST' && $low === '/api/users/login')    { $controller->login();    exit; }
-if ($method === 'POST' && $low === '/api/users/register')    { $controller->register();    exit; }
-
-http_response_code(404);
-echo json_encode(['error' => 'Ruta no encontrada']);
-exit;
