@@ -178,7 +178,7 @@ class UserController {
         }
     }
 
-    /* ----------------- helpers (mismo patrón) ----------------- */
+    /* ----------------- helpers ----------------- */
     private function json_in(): array {
         $raw = file_get_contents('php://input') ?: '';
         $data = json_decode($raw, true);
@@ -197,7 +197,7 @@ class UserController {
     }    
 }
 
-/* ===== Dispatcher local, igual estilo que CategoryController ===== */
+/* ===== Dispatcher local ===== */
 $controller = new UserController();
 $method = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
 $uriPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
@@ -214,7 +214,7 @@ if ($method === 'POST' && $low === '/api/users/login')    { $controller->login()
 if ($method === 'POST' && $low === '/api/users/register')    { $controller->register();    exit; }
 if ($method === 'GET' && $low === '/api/users/list')    { $controller->getUsersList();    exit; }
 if ($method === 'GET' && $low === '/api/users/me')    { $controller->me();    exit; }
-if ($method === 'GET' && $low === '/api/users/me/avatar')    { $controller->me();    exit; }
+if ($method === 'GET' && $low === '/api/users/me/avatar')    { $controller->avatar();    exit; }
 
 
 http_response_code(404);

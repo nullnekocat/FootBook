@@ -32,8 +32,7 @@ require('inc/comments.inc.php');
                 </div>
             </form>
         </section>
-        <?php require('inc/new_post.inc.php'); ?>
-
+        <?php include __DIR__ . '/inc/new_post.inc.php'; ?>
         <!-- Feed -->
         <section class="mb-4">
             <!-- Posts loop -->
@@ -67,4 +66,6 @@ require('inc/comments.inc.php');
         </section>
     </div>
     <?php require('inc/footer.inc.php'); ?>
+    
+    <script type="module" src="/FootBook/views/js/home.js"></script>
 </body>

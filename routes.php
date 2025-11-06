@@ -21,6 +21,11 @@ $router->add('/api/users/register', 'controllers/UserController.php');
 $router->add('/api/users/list', 'controllers/UserController.php');
 $router->add('/api/users/me', 'controllers/UserController.php');
 $router->add('/api/users/me/avatar', 'controllers/UserController.php');
+    //Rutas de WorldCups
+$router->add('/api/worldcups', 'controllers/WorldCupApi.php'); 
+
+//$router->get('/api/worldcups/:id', 'controllers/WorldCupApi.php');
+
 
 // Ejecuta
 $router->dispatch($_SERVER['REQUEST_URI'] ?? '/');

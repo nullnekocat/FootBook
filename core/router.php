@@ -41,8 +41,9 @@ class Router {
     echo "Error {$code}: {$msg}";
     exit;
   }
+
   public function addMiddleware($route, $middleware) {
-      
       $this->routes[$route]['middleware'] = $middleware;
   }  
 }
+

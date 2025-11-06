@@ -57,7 +57,7 @@ const fallback = BASE + 'img/default-avatar.png'; // ajusta si tu placeholder es
 
 // util para setear el src probando dos IDs posibles
 const setAvatarSrc = (src) => {
-  const el = document.getElementById('avatarImg') || document.getElementById('profileAvatar');
+  const el = document.getElementById('profileAvatar');
   if (el) el.src = src;
 };
 
