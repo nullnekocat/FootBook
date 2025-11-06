@@ -1,4 +1,5 @@
 <?php
+// models/WorldCupModel.php
 namespace Models;
 use PDO;
 use Database;

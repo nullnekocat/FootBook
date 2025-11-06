@@ -1,20 +1,36 @@
 <?php
 // routes.php
 // Incluye el router y lo inicializa
+
+use function Auth\require_login;
+use function Auth\checkAuthAndAdmin;
+
 require_once __DIR__ . '/core/router.php';
+require_once __DIR__ . '/Middleware/auth.php';
+
 $router = new Router(); // detecta /FootBook automáticamente
 
-/* ===== VISTAS (add) =====
-   Usa add() para views. El handler es un archivo PHP dentro de /views. */
+/* ===== VISTAS (add) ===== */
 
-$router->add('/FootBook',             'landing.php');
-$router->add('/FootBook/home',        'index.php');
-$router->add('/FootBook/wiki',        'wiki.php');
-$router->add('/FootBook/login',       'login.php');
-$router->add('/FootBook/profile',     'profile.php');
-$router->add('/FootBook/signup',      'signup.php');
-$router->add('/FootBook/admin',      'admin.php');
-
+$router->add('/FootBook',             'views/landing.php');
+$router->add('/FootBook/home', function(){        
+    require_login(); //Te redirige si no estás logueado
+    require 'views/index.php';
+}); 
+$router->add('/FootBook/wiki',        'views/wiki.php'); 
+$router->add('/FootBook/login',       'views/login.php');
+$router->add('/FootBook/profile', function(){        
+    require_login(); //Te redirige si no estás logueado
+    require 'views/profile.php';
+});
+$router->add('/FootBook/signup',      'views/signup.php');
+/**/
+$router->add('/FootBook/admin', function(){        
+    checkAuthAndAdmin(); //Te redirige si no estás logueado
+    require 'views/admin.php';
+});
+//$router->add('/FootBook/admin',       'views/admin.php');
+$router->add('/FootBook/results',       'views/results.php');
 /* ===== Controladores =====  */
 
     // ===== CATEGORIES ===== //

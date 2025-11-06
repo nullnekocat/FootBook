@@ -1,52 +1,63 @@
 <?php
+// /Middleware/auth.php
 namespace Auth;
 
-if (session_status() !== \PHP_SESSION_ACTIVE) {
-    session_start();
+session_start();
+
+/* ------------------ FUNCIONES DE LOGIN ------------------ */
+
+function current_user() {
+    return $_SESSION['user_id'] ?? null;
 }
 
-/** Guarda al usuario en sesión */
-function login(int $id, string $username, int $admin = 0): void {
-    $_SESSION['user'] = [
-        'id'       => $id,
-        'username' => $username,
-        'admin'    => (int)$admin,
-    ];
+// Esta función valida el login del usuario y lo guarda en sesión
+function login($user) {
+    $_SESSION['user_id'] = $user['user_id'];
+    $_SESSION['username'] = $user['username'];
+    $_SESSION['is_admin'] = $user['is_admin']; 
 }
 
-/** Devuelve el usuario en sesión o null */
-function current_user(): ?array {
-    return $_SESSION['user'] ?? null;
-}
-
-/** ¿Es admin? */
-function is_admin(): bool {
-    return !empty($_SESSION['user']['admin']);
-}
-
-/** Requiere login (redirecciona a /FootBook/login) */
-function require_login(): void {
-    if (!current_user()) {
-        header('Location: /FootBook/login');
-        exit;
-    }
-}
-
-/** Requiere admin (403 si no lo es) */
-function require_admin(): void {
-    if (!is_admin()) {
-        http_response_code(403);
-        echo 'Forbidden';
-        exit;
-    }
-}
-
-/** Cerrar sesión por completo */
-function logout(): void {
-    $_SESSION = [];
-    if (ini_get('session.use_cookies')) {
-        $params = session_get_cookie_params();
-        setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
-    }
+// Esta función realiza el logout
+function logout() {
+    session_unset();
     session_destroy();
+}
+
+
+/* ------------------ FUNCIONES DE AUTORIZACIÓN ------------------ */
+
+// Verifica si el usuario está autenticado
+function checkAuth() {
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: /FootBook');
+        exit();
+    }
+}
+
+// Verifica si el usuario es administrador
+function checkAdmin() {
+    if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== 1) {
+        header('Location: /FootBook/home');
+        exit();
+    }
+}
+
+// Verifica si el usuario está autenticado y no es admin
+function checkUser() {
+    checkAuth();
+    if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === 1) {
+        header('Location: /FootBook/admin');
+        exit();
+    }
+}
+
+// Verifica que el usuario esté autenticado y sea admin
+function checkAuthAndAdmin() {
+    checkAuth();  
+    checkAdmin(); 
+}
+
+// Esta función protege el acceso de usuarios no autenticados
+function require_login() {
+    checkAuth();  
 }

@@ -1,107 +1,160 @@
 // /views/js/admin/wikis.js
+const API_BASE = '/FootBook/api/worldcups';
+const DEFAULT_BANNER = '/FootBook/img/russia2018.png';
 
-const API = {
-  list: '/FootBook/api/worldcups',  // Para listar todas las wikis (WorldCups)
-  show: '/FootBook/api/worldcups/:id' // Para ver el detalle de una wiki
-};
 
-function escapeHtml(s = '') {
-  return s
-    .replaceAll('&','&amp;').replaceAll('<','&lt;')
-    .replaceAll('>','&gt;').replaceAll('"','&quot;')
-    .replaceAll("'",'&#039;');
+const container = document.getElementById('worldcupContainer');
+
+/* -------------------- utils -------------------- */
+
+function guessMimeFromB64(b64) {
+  if (!b64 || b64.length < 4) return 'image/jpeg';
+  if (b64.startsWith('/9j/'))   return 'image/jpeg';  // JPG
+  if (b64.startsWith('iVBOR'))  return 'image/png';   // PNG
+  if (b64.startsWith('UklGR'))  return 'image/webp';  // WEBP
+  if (b64.startsWith('R0lGO'))  return 'image/gif';   // GIF
+  return 'image/jpeg';
+}
+function b64src(b64) {
+  return `data:${guessMimeFromB64(b64)};base64,${b64}`;
+}
+function getBannerSrc(obj) {
+  const b64 = obj.banner_b64 || obj.bannerB64 || obj.banner;
+  if (b64 && typeof b64 === 'string' && b64.length > 10) return b64src(b64);
+
+  // distintos flags que podría devolver tu API
+  const exists = obj.banner_exists ?? obj.has_banner ?? obj.bannerExists;
+  const id = obj.id ?? obj.worldcup_id ?? obj.id_worldcup;
+  if (exists && id) return `${API_BASE}/${id}/banner?ts=${Date.now()}`;
+  return DEFAULT_BANNER;
 }
 
-// Función para hacer el GET de forma reutilizable
-async function getJSON(url, opts = {}) {
-  const res = await fetch(url, { method: 'GET', ...opts });
-  const txt = await res.text();
-  let data;
-  try {
-    data = JSON.parse(txt);
-  } catch {
-    throw new Error(txt.slice(0, 300));
-  }
-  if (!res.ok) throw new Error(data.error || ('Error ' + res.status));
-  return data;
+// Normaliza campos por si el API usa otros nombres
+function normalizeCup(raw = {}) {
+  return {
+    id:   raw.id ?? raw.worldcup_id ?? raw.id_worldcup ?? raw.ID,
+    name: raw.name ?? raw.title ?? raw.nom ?? '',
+    country: raw.country ?? raw.host_country ?? raw.country_name ?? '',
+    year:    raw.year ?? raw.season ?? raw.edition_year ?? '',
+    description: raw.description ?? raw.desc ?? '',
+    banner_b64: raw.banner_b64 ?? raw.bannerB64 ?? raw.banner ?? null,
+    banner_exists: raw.banner_exists ?? raw.has_banner ?? raw.bannerExists ?? null,
+  };
 }
 
-export async function bootWikis() {
-  console.log('[Admin] Boot Wikis');
-  const container = document.querySelector('#admin-wikis .row'); // Contenedor de las wikis
+async function getFlexibleJSON(url, options) {
+  const res = await fetch(url, options);
+  const text = await res.text();
+  let json;
+  try { json = JSON.parse(text); }
+  catch { throw new Error(`Respuesta no-JSON de ${url}:\n${text.slice(0,300)}`); }
 
-  if (!container) {
-    console.error('[Admin] No se encontró el contenedor para wikis.');
-    return;
-  }
-
-  // Cargar las wikis desde la API
-  try {
-    const data = await getJSON(API.list);
-
-    // Verifica si 'data' es un array antes de intentar mapearlo
-    if (Array.isArray(data)) {
-      container.innerHTML = data.map(c => createWikiCard(c)).join('');
-      addEditModalListeners();  // Agregar los listeners de modales
-    } else {
-      console.error('[Admin] Error al cargar las wikis:', data);
-      container.innerHTML = '<p class="text-muted">No se encontraron wikis.</p>';
-    }
-  } catch (err) {
-    console.error('[Admin] Error al obtener wikis:', err);
-    container.innerHTML = '<p class="text-danger">Error cargando las wikis.</p>';
-  }
+  // Acepta {ok:true,data:...} o ... directo
+  if (Array.isArray(json)) return json;
+  if (json && json.ok === true && 'data' in json) return json.data;
+  if (json && json.ok === false) throw new Error(json.error || 'API error');
+  return json; // objeto plano (p.ej. detalle)
 }
 
+/* ----------------- render -------------------- */
 // Crear una tarjeta de wiki
-function createWikiCard(wiki) {
-  const imgSrc = wiki.banner_b64 ? `data:image/jpeg;base64,${wiki.banner_b64}` : '/FootBook/img/default.jpg';
+function createWikiCard(cup) {
+  const imgSrc = getBannerSrc(cup);
+  const name = cup.name ?? '';
+  const country = cup.country ?? '';
+  const year = cup.year ?? '';
+  const id = cup.id ?? '';
+
   return `
-    <div class="col">
-      <div class="card h-100">
-        <img src="${imgSrc}" class="card-img-top" alt="${escapeHtml(wiki.name)}">
-        <div class="card-body">
-          <h6 class="card-title mb-0">${escapeHtml(wiki.name)}</h6>
-          <button class="btn btn-outline-success btn-sm mt-2 w-100" 
-                  data-bs-toggle="modal" 
-                  data-bs-target="#editWikiModal${wiki.id}" 
-                  data-id="${wiki.id}">
-            <i class="bi bi-pencil"></i> Editar wiki
-          </button>
-        </div>
+    <div class="card shadow-sm h-100">
+      <img class="card-img-top" alt="${name}"
+           src="${imgSrc}"
+           onerror="this.onerror=null;this.src='${DEFAULT_BANNER}'">
+      <div class="card-body text-center">
+        <h6 class="card-title mb-1">${name}</h6>
+        <p class="text-muted small mb-2">${country} • ${year}</p>
+        <button class="btn btn-outline-success btn-sm w-100"
+                data-id="${id}"
+                data-bs-toggle="modal"
+                data-bs-target="#editWikiModal"
+                data-bs-name="${name}">
+          <i class="bi bi-pencil"></i> Editar Wiki
+        </button>
       </div>
     </div>
   `;
 }
 
-// Asignar event listeners a los botones de "Editar"
-function addEditModalListeners() {
-  const editButtons = document.querySelectorAll('[data-bs-toggle="modal"][data-bs-target^="#editWikiModal"]');
-  editButtons.forEach(btn => {
-    btn.addEventListener('click', async (e) => {
-      const id = e.target.closest('[data-id]').getAttribute('data-id');
-      await loadWikiData(id);
+async function loadWorldCups() {
+  try {
+    const raw = await getFlexibleJSON(API_BASE); // lista
+    const cups = (Array.isArray(raw) ? raw : (raw?.items ?? []))
+      .map(normalizeCup);
+
+    if (!cups.length) {
+      container.innerHTML = '<p class="text-muted">No se encontraron mundiales.</p>';
+      return;
+    }
+
+    container.innerHTML = cups.map(c => `
+      <div class="col-md-4 col-lg-3 mb-3">
+        ${createWikiCard(c)}
+      </div>
+    `).join('');
+
+    // Asignar evento al botón de edición
+    document.querySelectorAll('[data-bs-target="#editWikiModal"]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.getAttribute('data-id');
+        const name = btn.getAttribute('data-bs-name') || '';
+        await loadWikiData(id, name);   // <-- ahora sí existe
+      });
     });
-  });
+
+  } catch (err) {
+    console.error('Error fetching World Cups:', err);
+    container.innerHTML = `<p class="text-danger">${(err.message || 'Error cargando mundiales.')}</p>`;
+  }
 }
 
-// Cargar datos de la wiki en el modal de edición
-async function loadWikiData(id) {
+/* -------------------- Cargar datos al modal -------------------- */
+async function loadWikiData(id, name) {
   try {
-    const wiki = await getJSON(API.show.replace(':id', id));
+    const raw = await getFlexibleJSON(`${API_BASE}/${id}`);
+    // getFlexibleJSON ya te devuelve el objeto plano o json.data si {ok:true}
+    const d = normalizeCup(raw);
 
-    // Verifica si wiki.data existe antes de intentar asignar los valores
-    if (wiki && wiki.data) {
-      const modal = document.querySelector(`#editWikiModal${id}`);
-      if (!modal) return;
-
-      // Llenar los campos con la data obtenida
-      modal.querySelector('[name="description"]').value = wiki.data.description || '';
-      modal.querySelector('[name="countries"]').value = wiki.data.countries || '';
-    } else {
-      console.error('[Admin] No se encontró la data de la wiki');
+    const modal = document.getElementById('editWikiModal');
+    if (!modal) {
+      console.error('Modal #editWikiModal no encontrado');
+      return;
     }
+
+    // título
+    const titleEl = modal.querySelector('.modal-title');
+    if (titleEl) titleEl.textContent = `Editar Wiki - ${name || d.name || ''}`;
+
+    // campos del formulario
+    const descEl = modal.querySelector('[name="description"]');
+    const countriesEl = modal.querySelector('[name="countries"]');
+    const previewImg = modal.querySelector('[name="main_image_preview"]');
+
+    if (descEl) descEl.value = d.description ?? '';
+    if (countriesEl) countriesEl.value = d.country ?? '';
+    if (previewImg) {
+      previewImg.src = getBannerSrc(d);
+      previewImg.onerror = () => { previewImg.src = DEFAULT_BANNER; };
+    }
+
   } catch (err) {
-    console.error('[Admin] Error al cargar los datos de la wiki:', err);
+    console.error('Error cargando wiki:', err);
+    alert('Error cargando la información del mundial.');
   }
+}
+
+
+
+export async function bootWikis() {
+  console.log('[Admin] Boot Wikis');
+  await loadWorldCups();
 }

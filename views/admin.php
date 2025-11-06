@@ -67,43 +67,42 @@ include __DIR__ . '/inc/navbar.inc.php';
                 </div>
             </div>
         </div>
-        <!-- Wiki admin -->
-        <div class="tab-pane fade" id="admin-wikis">
-            <h5 class="text-dark">Administrar Wikis de Mundiales</h5>
-            <div class="row row-cols-2 row-cols-md-3 g-3" id="admin-wikis-container">
-                <!-- Las wikis se cargarán dinámicamente aquí -->
-            </div>
-        </div>
+<div class="tab-pane fade" id="admin-wikis">
+  <h5 class="text-dark">Administrar Wikis de Mundiales</h5>
+  <div class="row row-cols-2 row-cols-md-3 g-3" id="worldcupContainer"></div>
+</div>
 
-        <!-- Modal de edición de wiki (este es un ejemplo dinámico para una wiki) -->
-        <div class="modal fade" id="editWikiModal2018" tabindex="-1" aria-labelledby="editWikiModal2018Label" aria-hidden="true">
-            <div class="modal-dialog modal-xl modal-dialog-centered">
-                <form class="modal-content">
-                    <div class="modal-header bg-secondary text-white">
-                        <h5 class="modal-title" id="editWikiModal2018Label">Editar Wiki - Rusia 2018</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label class="form-label">Descripción</label>
-                            <textarea class="form-control" rows="4" name="description">La Copa Mundial de la FIFA 2018 se celebró en Rusia...</textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Países participantes (separados por coma)</label>
-                            <input class="form-control" name="countries" value="Rusia, Francia, Croacia, Brasil, Alemania">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Imagen principal</label>
-                            <input type="file" class="form-control" name="main_image">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-success">Guardar cambios</button>
-                    </div>
-                </form>
-            </div>
+<!-- Modal reutilizable -->
+<div class="modal fade" id="editWikiModal" tabindex="-1" aria-labelledby="editWikiModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <form class="modal-content">
+      <div class="modal-header bg-secondary text-white">
+        <h5 class="modal-title" id="editWikiModalLabel">Editar Wiki</h5>
+        <button type="button" class="btn btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Descripción</label>
+          <textarea class="form-control" rows="4" name="description"></textarea>
         </div>
+        <div class="mb-3">
+          <label class="form-label">Países participantes (separados por coma)</label>
+          <input class="form-control" name="countries">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Imagen principal</label>
+          <input type="file" class="form-control" name="main_image">
+          <img class="mt-3 rounded shadow-sm" name="main_image_preview" width="200" alt="Preview">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-success">Guardar cambios</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 
         <!-- Users -->
         <div class="tab-pane fade" id="admin-users">
