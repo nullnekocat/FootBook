@@ -43,30 +43,14 @@ include __DIR__ . '/inc/navbar.inc.php';
                 
             </ul>
         </div>
-        <!-- Post approving -->
-        <div class="tab-pane fade" id="admin-posts">
-            <h5 class="text-dark">Aprobar publicaciones de usuarios</h5>
-            <div class="list-group mb-4">
-                <div class="list-group-item">
-                    <div class="d-flex w-100 justify-content-between align-items-center">
-                        <div>
-                            <h6 class="mb-1">Usuario123 <span class="badge bg-info">Jugadas</span> <span class="badge bg-secondary">Qatar 2022</span></h6>
-                            <small>05/09/2025</small>
-                            <p class="mb-1">Dummy: Texto de post en las herramientas de administrador</p>
-                            <img src="img/demo1.jpg" class="img-fluid rounded mb-2" style="max-width:220px;" alt="Post image">
-                        </div>
-                        <div class="ms-3">
-                            <button class="btn btn-success btn-sm mb-2 w-100"> 
-                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg>
-                            </button>
-                            <button class="btn btn-danger btn-sm w-100">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Post approving -->
+    <div class="tab-pane fade" id="admin-posts">
+        <h5 class="text-dark">Aprobar publicaciones de usuarios</h5>
+        <div class="list-group mb-4" id="admin-posts-list">
+            <!-- Se llena dinámicamente desde posts.js -->
         </div>
+    </div>
+
 <div class="tab-pane fade" id="admin-wikis">
   <h5 class="text-dark">Administrar Wikis de Mundiales</h5>
   <div class="row row-cols-2 row-cols-md-3 g-3" id="worldcupContainer"></div>
@@ -102,30 +86,27 @@ include __DIR__ . '/inc/navbar.inc.php';
     </form>
   </div>
 </div>
-
-
-        <!-- Users -->
-        <div class="tab-pane fade" id="admin-users">
-            <h5 class="text-dark">Usuarios registrados</h5>
-            <div class="table-responsive">
-                <table class="table table-striped" id="admin-users-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Usuario</th>
-                            <th>Nombre</th>
-                            <th>Email</th>
-                            <th>Creado</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Filled dynamically -->
-                    </tbody>
-                </table>
-            </div>
+    <div class="tab-pane fade" id="admin-users">
+        <h5 class="text-dark">Usuarios registrados</h5>
+        <div class="table-responsive">
+            <table class="table table-striped" id="admin-users-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Usuario</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Creado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Filled dynamically -->
+                </tbody>
+            </table>
         </div>
     </div>
+</div>
 </div>
 
 <?php include __DIR__ . '/inc/footer.inc.php'; ?>

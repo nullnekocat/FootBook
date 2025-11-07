@@ -165,9 +165,16 @@ BEGIN
       AND status = 1
     LIMIT 1;
 END
+USE `footbook_db`;
+DROP procedure IF EXISTS `sp_get_user_data`;
+
+USE `footbook_db`;
+DROP procedure IF EXISTS `footbook_db`.`sp_get_user_data`;
+;
 
 DELIMITER $$
-CREATE PROCEDURE `sp_get_user_data`(IN p_id BIGINT)
+USE `footbook_db`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_user_data`(IN p_id BIGINT)
 BEGIN
     SELECT 
         id,
@@ -181,22 +188,12 @@ BEGIN
         country,
         status,
         created_at,
-        TO_BASE64(avatar) AS avatar_b64     
+        TO_BASE64(avatar) AS avatar_b64  --   
     FROM Users
     WHERE id = p_id AND status = 1
     LIMIT 1;
 END$$
+
 DELIMITER ;
-DELIMITER $$
-CREATE PROCEDURE `sp_get_users`()
-BEGIN
-    /* Devuelve todas los los usarios ordenados por id del menor a mayor*/
-    SELECT 
-		id,
-        username,
-        email,
-        created_at
-    FROM users
-    ORDER BY id ASC;  -- orden por id
-END$$
-DELIMITER ;
+;
+

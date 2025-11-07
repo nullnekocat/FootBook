@@ -19,9 +19,6 @@ class WorldCupApi
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
     }
 
-    /** GET /FootBook/api/worldcups
-     *  Devuelve [{ id, name, country, year, description, banner_b64 }, ...]
-     */
     public function index(): void
     {
         try {
@@ -32,9 +29,6 @@ class WorldCupApi
         }
     }
 
-    /** GET /FootBook/api/worldcups/:id
-     *  Reusa la lista y devuelve solo 1
-     */
     public function show($id): void
     {
         try {
@@ -49,6 +43,15 @@ class WorldCupApi
 
             if (!$found) { $this->json(['ok'=>false,'error'=>'Not found'], 404); return; }
             $this->json(['ok' => true, 'data' => $found]);
+        } catch (\Throwable $e) {
+            $this->json(['ok' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function lightindex():void{
+        try {
+            $rows = $this->model->getAllWorldCupsLight();
+            $this->json(['ok' => true, 'data' => $rows]);
         } catch (\Throwable $e) {
             $this->json(['ok' => false, 'error' => $e->getMessage()], 500);
         }

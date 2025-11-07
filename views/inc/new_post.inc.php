@@ -21,23 +21,23 @@
         <div class="modal-body">
         <div class="mb-3">
             <label for="categoria" class="form-label">Categoría</label>
-            <select class="form-select" name="categoria" id="categoria" required>
-            <option value="Jugadas">Jugadas</option>
-            <option value="Entrevistas">Entrevistas</option>
-            <option value="Partidos">Partidos</option>
+            <select class="form-select" name="category_id" id="post-category" required>
+                <option value="">Cargando categorías...</option>
             </select>
         </div>
         <div class="mb-3">
             <label for="worldcup" class="form-label">Mundial</label>
-            <select class="form-select" name="worldcup" id="worldcup" required>
-            <option value="2018">Rusia 2018</option>
-            <option value="2022">Qatar 2022</option>
-            <option value="2026">México/EUA/Canadá 2026</option>
+            <select class="form-select" name="worldcup_id" id="post-worldcup" required>
+            <option value="">Cargando mundiales...</option>
             </select>
         </div>
         <div class="mb-3">
             <label for="seleccion" class="form-label">Selección (opcional)</label>
             <input type="text" class="form-control" name="seleccion" id="seleccion" placeholder="Ej. Argentina">
+        </div>
+        <div class="mb-3">
+            <label for="titulo" class="form-label">Titulo</label>
+            <input type="text" class="form-control" name="titulo" id="titulo" placeholder="Ej. Mi experiencia en el Mundial" maxlength="64" required>
         </div>
         <div class="mb-3">
             <label for="contenido" class="form-label">Contenido</label>

@@ -98,8 +98,7 @@ class UserController {
                 return;
             }
 
-            // Llama a tu SP vía el modelo (ajusta al nombre real de tu método)
-            // Ejemplo esperado: $this->model->createUser($data);
+            // Llama a tu SP vía el modelo
             $this->model->createUser($data);
 
             $this->json_out(201, [

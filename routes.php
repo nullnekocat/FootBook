@@ -24,33 +24,38 @@ $router->add('/FootBook/profile', function(){
     require 'views/profile.php';
 });
 $router->add('/FootBook/signup',      'views/signup.php');
-/**/
 $router->add('/FootBook/admin', function(){        
     checkAuthAndAdmin(); //Te redirige si no estás logueado
     require 'views/admin.php';
 });
-//$router->add('/FootBook/admin',       'views/admin.php');
 $router->add('/FootBook/results',       'views/results.php');
+
 /* ===== Controladores =====  */
 
     // ===== CATEGORIES ===== //
 $router->get('/FootBook/api/categories',                'CategoryController@list'); //Lista 
-$router->post('/FootBook/api/categories/:name',                'CategoryController@create'); //Crear
+$router->post('/FootBook/api/categories/:name',         'CategoryController@create'); //Crear
 
     // ===== USERS ===== //
-$router->get('/FootBook/api/users',                'UserController@index'); 
-$router->post('/FootBook/api/users/register',                'UserController@register');
-$router->post('/FootBook/api/users/login',                'UserController@login');
-$router->get('/FootBook/api/users/me',                'UserController@me');
+$router->get('/FootBook/api/users',                     'UserController@index'); 
+$router->post('/FootBook/api/users/register',           'UserController@register');
+$router->post('/FootBook/api/users/login',              'UserController@login');
+$router->get('/FootBook/api/users/me',                  'UserController@me');
+
+    // ===== POSTS ===== //
+$router->post('/FootBook/api/posts',                    'PostController@post'); //Crear post
+$router->get('/FootBook/api/posts/to_approve',          'PostController@to_aproved'); //Obtener lista de posts para aprobar
+$router->post('/FootBook/api/posts/:id/approve',        'PostController@approve_post');  //Aprobar o Denegar post
+// FEED (scroll infinito)
+$router->get('/FootBook/api/feed', 'PostController@feed');
 
 
-/* ===== API WorldCups ===== */
+    // ===== API WIKIS ===== //
+
+/* ===== WorldCups ===== */
 $router->get('/FootBook/api/worldcups',                 'WorldCupApi@index');
+$router->get('/FootBook/api/worldcups/light',           'WorldCupApi@lightindex');
 $router->get('/FootBook/api/worldcups/:id',             'WorldCupApi@show');
-
-
-
-
 
 /* ===== Despacho ===== */
 $router->dispatch();
