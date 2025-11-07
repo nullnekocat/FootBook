@@ -6,6 +6,8 @@ use Models\UserModel;
 require_once __DIR__ . '/../models/UserModel.php';
 require_once __DIR__ . '/../Middleware/auth.php';
 
+use function Auth\current_user;
+
 class UserController {
     private UserModel $model;
     
@@ -96,8 +98,7 @@ class UserController {
                 return;
             }
 
-            // Llama a tu SP vía el modelo (ajusta al nombre real de tu método)
-            // Ejemplo esperado: $this->model->createUser($data);
+            // Llama a tu SP vía el modelo
             $this->model->createUser($data);
 
             $this->json_out(201, [
@@ -127,17 +128,19 @@ class UserController {
                 $this->json_out(401, ['error' => 'Usuario o contraseña incorrectos']);
                 return;
             }
+            
             // Guarda en sesión
-            \Auth\login(
-                (int)($user['id'] ?? $user['user_id']),
-                (string)($user['username'] ?? ''),
-                (int)($user['admin'] ?? 0)
-            );
+            \Auth\login([
+                'user_id'       => $user['id'],
+                'username' => $user['username'] ?? null,
+                'is_admin'    => (int)($user['admin'] ?? 0),
+            ]);
+                       
             // Éxito
             $this->json_out(200, [
                 'ok'   => true,
                 'user' => [
-                    'id'       => $user['id'] ?? $user['user_id'] ?? null,
+                    'user_id'       => $user['id'] ?? $user['user_id'] ?? null,
                     'identity' => $user['username'] ?? null,
                     'admin'    => (int)($user['admin'] ?? 0),
                 ],
@@ -149,29 +152,29 @@ class UserController {
         }
     }   
     public function me(): void
-{
-    try {
-        // Autenticación por sesión
-        $sessUser = \Auth\current_user();
-        if (!$sessUser) {
-            $this->json_out(401, ['ok' => false, 'error' => 'No autenticado']);
-            return;
+    {
+        try {
+            // Autenticación por sesión
+            $userId = current_user();
+            if (!$userId) {
+                $this->json_out(401, ['ok' => false, 'error' => 'No autenticado']);
+                return;
+            }
+
+         
+            $rows = $this->model->getUserDataById((int)$userId);
+            $row = is_array($rows) && array_is_list($rows) ? ($rows[0] ?? null) : $rows;
+
+            if (!$row) {
+                $this->json_out(404, ['ok' => false, 'error' => 'Usuario no encontrado']);
+                return;
+            }
+
+            $this->json_out(200, ['ok' => true, 'data' => $row]);
+
+        } catch (\Throwable $e) {
+            $this->json_out(500, ['ok' => false, 'error' => 'Server error', 'detail' => $e->getMessage()]);
         }
-
-        $id = (int)$sessUser['id'];
-        $rows = $this->model->getUserDataById($id);
-        $row = is_array($rows) && array_is_list($rows) ? ($rows[0] ?? null) : $rows;
-
-        if (!$row) {
-            $this->json_out(404, ['ok' => false, 'error' => 'Not found']);
-            return;
-        }
-
-        $this->json_out(200, ['ok' => true, 'data' => $row]);
-
-    } catch (\Throwable $e) {
-        $this->json_out(500, ['ok' => false, 'error' => 'Server error', 'detail' => $e->getMessage()]);
     }
-}
    
 }

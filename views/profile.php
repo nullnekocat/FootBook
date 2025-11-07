@@ -1,7 +1,3 @@
-<?php 
-require_once __DIR__ . '/../Middleware/auth.php';
-\Auth\require_login();
-?>
 <?php
 require_once __DIR__ . '/../config.php';
 include __DIR__ . '/inc/head.inc.php'; 

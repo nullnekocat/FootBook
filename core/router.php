@@ -36,9 +36,9 @@ class Router
      * add(): úsalo para VISTAS (archivos PHP bajo /views).
      * Internamente las registra como GET pero el handler es un "view".
      */
-    public function add(string $pattern, string $viewFile): void
+    public function add(string $pattern, callable|string $handler): void
     {
-        $this->map('GET', $pattern, ['__view__' => $viewFile]);
+        $this->map('GET', $pattern, $handler);
     }
 
     private function map(string $method, string $pattern, $handler): void
@@ -97,64 +97,63 @@ class Router
         $this->json(['ok' => false, 'error' => 'Route not found', 'path' => $uriPath]);
     }
 
-    private function invoke($handler, array $params): void
-    {
-        // Si es una vista registrada con add()
-        if (is_array($handler) && isset($handler['__view__'])) {
-            $view = $handler['__view__'];
-            $file = $this->resolveView($view);
-            if (!is_file($file)) {
-                http_response_code(500);
-                echo "View not found: $file";
-                return;
-            }
-            // variables disponibles: $params
-            require $file;
+    private function invoke(callable|string $handler, array $params = []): void
+{
+    // --- 1️⃣ Controladores tipo "Controller@method" (APIs) ---
+    if (is_string($handler) && str_contains($handler, '@')) {
+        [$ctrl, $method] = explode('@', $handler, 2);
+        $ctrlFile = $this->resolveController($ctrl);
+
+        if (!is_file($ctrlFile)) {
+            http_response_code(500);
+            echo "Controller file not found: $ctrlFile";
             return;
         }
 
-        // Si es "Controller@method"
-        if (is_string($handler) && str_contains($handler, '@')) {
-            [$ctrl, $method] = explode('@', $handler, 2);
-            $ctrlFile = $this->resolveController($ctrl);
+        require_once $ctrlFile;
 
-            if (is_file($ctrlFile)) {
-                require_once $ctrlFile;
-            }
-
-            if (!class_exists($ctrl)) {
-                http_response_code(500);
-                echo "Controller not found: $ctrl";
-                return;
-            }
-
-            $instance = new $ctrl();
-            if (!method_exists($instance, $method)) {
-                http_response_code(500);
-                echo "Method not found: $ctrl@$method";
-                return;
-            }
-
-            // Pasa params nombrados como argumentos en orden
-            $ref = new ReflectionMethod($instance, $method);
-            $args = [];
-            foreach ($ref->getParameters() as $p) {
-                $name = $p->getName();
-                $args[] = $params[$name] ?? null;
-            }
-            $ref->invokeArgs($instance, $args);
+        if (!class_exists($ctrl)) {
+            http_response_code(500);
+            echo "Controller not found: $ctrl";
             return;
         }
 
-        // Si es un closure/callable
-        if (is_callable($handler)) {
-            call_user_func($handler, $params);
+        $instance = new $ctrl();
+        if (!method_exists($instance, $method)) {
+            http_response_code(500);
+            echo "Method not found: $ctrl@$method";
             return;
         }
 
-        http_response_code(500);
-        echo 'Invalid route handler';
+        // Pasa parámetros nombrados
+        $ref = new ReflectionMethod($instance, $method);
+        $args = [];
+        foreach ($ref->getParameters() as $p) {
+            $name = $p->getName();
+            $args[] = $params[$name] ?? null;
+        }
+
+        $ref->invokeArgs($instance, $args);
+        return;
     }
+
+    // --- 2️⃣ Closures (rutas registradas con funciones anónimas) ---
+    if (is_callable($handler)) {
+        call_user_func_array($handler, $params);
+        return;
+    }
+
+    // --- 3️⃣ Archivos de vista (rutas tipo add('/home', 'views/home.php')) ---
+    if (is_string($handler) && is_file($handler)) {
+        require $handler;
+        return;
+    }
+
+    // --- ❌ Error por handler inválido ---
+    http_response_code(500);
+    echo 'Invalid route handler type';
+}
+
 
     private function resolveController(string $ctrl): string
     {

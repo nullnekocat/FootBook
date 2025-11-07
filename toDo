@@ -76,9 +76,9 @@ post = Página para crear y editar nuevos posts (Seguramente sea dentro de index
     Los usuarios pueden calificar las publicaciones de otros usuarios y hacer
     comentarios.
 
-login = Página para logearse
++ login = Página para logearse
 
-signup = Página para registrarse
++ signup = Página para registrarse
     Se debe contar con la funcionalidad para el registro de usuarios que
     puedan ver el contenido de la página y/o enriquecer con material que
     tengan disponible, los datos de los usuarios deben ser al menos:
@@ -96,7 +96,7 @@ signup = Página para registrarse
     o Caracteres numéricos: 923857
     o Caracteres especiales: =)§)]€&
 
-profile = Página para ver y editar perfil, además de ver posts (como facebook)
+- profile = Página para ver y editar perfil, además de ver posts (como facebook)
     Cada usuario podrá visualizar su perfil, donde pueda modificar sus datos,
     incluyendo la contraseña, y además visualizar sus publicaciones, y qué
     otros usuarios han interactuado con ellas ya sea comentando o calificando,

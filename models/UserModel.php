@@ -21,7 +21,7 @@ class UserModel {
                 (int)$data['admin'],
                 $data['username'],
                 $data['email'],
-                $data['password'],        // ya hasheado en controller
+                $data['password'],
                 $data['fullname'],
                 $data['birthday'],
                 (int)$data['gender'],

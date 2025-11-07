@@ -20,8 +20,7 @@ async function boot(name) {
     const { bootCategories } = await import('./categories.js');
     bootCategories(); // idempotente
   }
-  // Si luego haces módulos:
-  // else if (name === 'posts')  { const { bootPosts }  = await import('./posts.js');  bootPosts(); }
+  else if (name === 'posts')  { const { bootPosts }  = await import('./posts.js');  bootPosts(); }
   else if (name === 'wikis')  { const { bootWikis }  = await import('./wikis.js');  bootWikis(); }
   else if (name === 'users')  { const { bootUsers }  = await import('./users.js');  bootUsers(); }
 }

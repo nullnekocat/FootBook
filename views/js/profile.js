@@ -1,7 +1,7 @@
 // /views/js/profile.js
 (async () => {
   const BASE = (window.__BASE_URL__ || '/FootBook/').replace(/\/+$/, '') + '/';
-  const url  = BASE + 'api/users/me?t=' + Date.now();
+  const url  = BASE + 'api/users/me';
   const FALLBACK_AVATAR = BASE + 'img/default-avatar.png';
 
   // ---- helpers ----

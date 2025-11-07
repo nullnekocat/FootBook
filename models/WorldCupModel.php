@@ -1,4 +1,5 @@
 <?php
+// models/WorldCupModel.php
 namespace Models;
 use PDO;
 use Database;
@@ -24,7 +25,13 @@ class WorldCupModel {
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt->closeCursor();
         return $rows ?: [];
-    }     
+    }
+    public function getAllWorldCupsLight(): array {                 
+        $stmt = $this->db->callSP('sp_get_all_worldcups_light');    //Regresara; id, name, country, year. Ordenado por id ASC
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+        return $rows ?: [];
+    }    
 
 }
  
