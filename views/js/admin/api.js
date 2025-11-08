@@ -19,3 +19,13 @@ export async function postJSON(url, body, opts={}) {
   if (!res.ok) throw new Error(data.error || ('Error '+res.status));
   return data;
 }
+
+/** POST sin body (útil para endpoints que esperan POST pero no JSON en body) */
+export async function postNoBodyJSON(url, opts = {}) {
+  const res = await fetch(url, { method: 'POST', ...opts });
+  const txt = await res.text();
+  let data;
+  try { data = JSON.parse(txt); } catch { throw new Error(txt.slice(0, 300)); }
+  if (!res.ok) throw new Error(data.error || ('Error ' + res.status));
+  return data;
+}

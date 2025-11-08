@@ -79,6 +79,64 @@ BEGIN
     WHERE id = p_id;
 END $$
 
+-- NUEVO SP !!!
+
+USE footbook_db;
+
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_update_user_profile (
+    IN p_id BIGINT,
+    IN p_fullname VARCHAR(255),
+    IN p_username VARCHAR(32),
+    IN p_email VARCHAR(64),
+    IN p_birthday DATE,
+    IN p_gender INT,
+    IN p_birth_country VARCHAR(32),
+    IN p_country VARCHAR(32),
+    IN p_avatar LONGBLOB,
+    IN p_password VARCHAR(255)
+)
+BEGIN
+    DECLARE v_exists INT DEFAULT 0;
+
+    SELECT COUNT(*) INTO v_exists
+    FROM Users
+    WHERE id = p_id AND status = 1;
+
+    IF v_exists = 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usuario no encontrado';
+    END IF;
+
+    -- Actualizar solo los campos que no son NULL
+    UPDATE Users
+    SET
+        fullname = COALESCE(p_fullname, fullname),
+        username = COALESCE(p_username, username),
+        email = COALESCE(p_email, email),
+        birthday = COALESCE(p_birthday, birthday),
+        gender = COALESCE(p_gender, gender),
+        birth_country = COALESCE(p_birth_country, birth_country),
+        country = COALESCE(p_country, country),
+        avatar = COALESCE(p_avatar, avatar),
+        password = COALESCE(p_password, password)
+    WHERE id = p_id;
+
+    -- Retornar confirmación
+    SELECT 
+        id, 
+        username, 
+        email, 
+        fullname,
+        'Perfil actualizado correctamente' AS message
+    FROM Users
+    WHERE id = p_id;
+END$$
+
+DELIMITER ;
+
+
 
 CREATE PROCEDURE sp_soft_delete_user (IN p_id BIGINT)
 BEGIN

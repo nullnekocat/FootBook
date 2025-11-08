@@ -23,4 +23,20 @@ class CategoryModel {
     public function getListOfCategory(): array {
         return $this->db->callSPFetchAll('sp_get_categorys');
     }
+
+       /** Actualizar categoría */
+    public function updateCategory(int $id, string $name): array {
+        $stmt = $this->db->callSP('sp_update_category', [$id, $name], [PDO::PARAM_INT, PDO::PARAM_STR]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->db->finish($stmt);
+        return $row ?: [];
+    }
+
+    /** Eliminar categoría (soft delete) */
+    public function deleteCategory(int $id): array {
+        $stmt = $this->db->callSP('sp_delete_category', [$id], [PDO::PARAM_INT]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->db->finish($stmt);
+        return $row ?: [];
+    }
 }

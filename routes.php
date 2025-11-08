@@ -35,12 +35,15 @@ $router->add('/FootBook/results',       'views/results.php');
     // ===== CATEGORIES ===== //
 $router->get('/FootBook/api/categories',                'CategoryController@list'); //Lista 
 $router->post('/FootBook/api/categories/:name',         'CategoryController@create'); //Crear
+$router->post('/FootBook/api/categories/:id/update',    'CategoryController@update'); //Actualizar (usamos POST por compatibilidad)
+$router->post('/FootBook/api/categories/:id/delete',    'CategoryController@delete'); //Eliminar (soft delete)
 
     // ===== USERS ===== //
 $router->get('/FootBook/api/users',                     'UserController@index'); 
 $router->post('/FootBook/api/users/register',           'UserController@register');
 $router->post('/FootBook/api/users/login',              'UserController@login');
 $router->get('/FootBook/api/users/me',                  'UserController@me');
+$router->post('/FootBook/api/users/update',             'UserController@update');
 
     // ===== POSTS ===== //
 $router->post('/FootBook/api/posts',                    'PostController@post'); //Crear post
