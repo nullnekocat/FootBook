@@ -49,4 +49,50 @@ class CategoryController
             $this->json(['ok' => false, 'error' => $e->getMessage()], 500);
         }
     }
+
+     /** PUT /FootBook/api/categories/:id */
+    public function update($id): void
+    {
+        try {
+            $id = (int)$id;
+            if ($id <= 0) {
+                $this->json(['ok' => false, 'error' => 'ID inválido'], 422);
+                return;
+            }
+
+            // Lee el body JSON
+            $raw = file_get_contents('php://input');
+            $data = json_decode($raw, true);
+            $name = trim((string)($data['name'] ?? ''));
+
+            if ($name === '') {
+                $this->json(['ok' => false, 'error' => 'name is required'], 422);
+                return;
+            }
+
+            $result = $this->model->updateCategory($id, $name);
+
+            $this->json(['ok' => true, 'data' => $result]);
+        } catch (\Throwable $e) {
+            $this->json(['ok' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    /** DELETE /FootBook/api/categories/:id */
+    public function delete($id): void
+    {
+        try {
+            $id = (int)$id;
+            if ($id <= 0) {
+                $this->json(['ok' => false, 'error' => 'ID inválido'], 422);
+                return;
+            }
+
+            $result = $this->model->deleteCategory($id);
+
+            $this->json(['ok' => true, 'data' => $result]);
+        } catch (\Throwable $e) {
+            $this->json(['ok' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
 }

@@ -177,4 +177,82 @@ class UserController {
         }
     }
    
+
+    public function update(): void
+{
+    try {
+        $in = $this->json_in();
+
+        // El user_id viene de la sesión
+        $userId = current_user();
+        if (!$userId) {
+            $this->json_out(401, ['ok'=>false,'error'=>'No autenticado']);
+            return;
+        }
+
+        // Campos opcionales para actualizar
+        $data = ['id' => (int)$userId];
+
+        // Solo actualiza los campos que vengan en el request
+        if (isset($in['fullname']) && trim($in['fullname']) !== '') {
+            $data['fullname'] = trim($in['fullname']);
+        }
+        if (isset($in['username']) && trim($in['username']) !== '') {
+            $data['username'] = trim($in['username']);
+        }
+        if (isset($in['email']) && trim($in['email']) !== '') {
+            $email = trim($in['email']);
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $this->json_out(422, ['ok'=>false,'error'=>'Email inválido']);
+                return;
+            }
+            $data['email'] = $email;
+        }
+        if (isset($in['birthday']) && trim($in['birthday']) !== '') {
+            $birthday = trim($in['birthday']);
+            if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $birthday)) {
+                $this->json_out(422, ['ok'=>false,'error'=>'birthday debe ser YYYY-MM-DD']);
+                return;
+            }
+            $data['birthday'] = $birthday;
+        }
+        if (isset($in['gender']) && $in['gender'] !== '') {
+            $data['gender'] = (int)$in['gender'];
+        }
+        if (isset($in['birth_country']) && trim($in['birth_country']) !== '') {
+            $data['birth_country'] = trim($in['birth_country']);
+        }
+        if (isset($in['country']) && trim($in['country']) !== '') {
+            $data['country'] = trim($in['country']);
+        }
+
+        // Avatar (base64)
+        if (isset($in['avatar']) && $in['avatar'] !== '') {
+            $avatarB64 = $in['avatar'];
+            if (is_string($avatarB64) && str_starts_with($avatarB64, 'data:')) {
+                $pos = strpos($avatarB64, 'base64,');
+                if ($pos !== false) $avatarB64 = substr($avatarB64, $pos + 7);
+            }
+            $data['avatar'] = base64_decode($avatarB64);
+        }
+
+        // Password (opcional)
+        if (isset($in['password']) && trim($in['password']) !== '') {
+            $data['password'] = password_hash(trim($in['password']), PASSWORD_BCRYPT);
+        }
+
+        // Llamar al método del modelo
+        $this->model->updateUser($data);
+
+        $this->json_out(200, [
+            'ok'      => true,
+            'message' => 'Perfil actualizado correctamente'
+        ]);
+
+    } catch (\Throwable $e) {
+        $code = (int)($e->getCode() ?: 500);
+        $this->json_out($code, ['ok'=>false,'error'=>$e->getMessage()]);
+    }
+}
+
 }
