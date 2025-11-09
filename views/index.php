@@ -8,17 +8,15 @@ require('inc/comments.inc.php');
     <div class="container my-4 center-maxw">
         <!-- Filters -->
         <section class="mb-4">
-            <form class="row gx-2 align-items-center">
+            <form class="row gx-2 align-items-center" id="feed-filters-form">
                 <div class="col-5 col-auto">
-                    <select class="form-select" name="worldcup-filter">
+                    <select class="form-select" name="worldcup-filter" id ="filter-worldcup">
                         <option value="">Todas las copas</option>
-                        <option value="2018">Rusia 2018</option>
-                        <option value="2022">Qatar 2022</option>
-                        <option value="2026">México/EUA/Canadá 2026</option>
+                        <!-- Se llena dinamicamente-->
                     </select>
                 </div>
                 <div class="col-5 col-auto">
-                    <select class="form-select" name="order-by">
+                    <select class="form-select" name="order-by" id="filter-order">
                         <option value="cronologico">Más reciente</option>
                         <option value="pais">País sede</option>
                         <option value="likes">Más likes</option>
@@ -26,7 +24,7 @@ require('inc/comments.inc.php');
                     </select>
                 </div>
                 <div class="col-2 col-auto">
-                    <button class="btn btn-success w-100" type="submit">
+                    <button class="btn btn-success w-100" type="submit" id="filter-apply">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M440-160q-17 0-28.5-11.5T400-200v-240L168-736q-15-20-4.5-42t36.5-22h560q26 0 36.5 22t-4.5 42L560-440v240q0 17-11.5 28.5T520-160h-80Zm40-308 198-252H282l198 252Zm0 0Z"/></svg>
                     </button>
                 </div>

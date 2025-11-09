@@ -170,4 +170,4 @@ include __DIR__ . '/inc/navbar.inc.php';
 </div>
 <?php require('inc/footer.inc.php'); ?>
 </body>
-<script src="/FootBook/views/js/profile.js"></script>
+<script type="module" src="/FootBook/views/js/profile.js"></script>

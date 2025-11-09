@@ -1,27 +1,36 @@
+// home.js
 import { NewPost } from './new_post.js';
 
+/* ================== Bootstrap de "nuevo post" ================== */
 document.addEventListener('DOMContentLoaded', () => {
   const baseUrl = '/FootBook';
   document.querySelectorAll('[data-new-post]').forEach((node) => {
     new NewPost(node, { baseUrl });
   });
 });
-// === FEED DINÁMICO (infinite scroll con AJAX nativo) ===
+
+/* ================== FEED (AJAX + infinite scroll) ================== */
+const API_BASE            = '/FootBook';
+const FEED_ENDPOINT       = '/api/feed';
+const WORLDCUPS_LIGHT_API = '/FootBook/api/worldcups/light';
 
 const FEED = {
-  baseUrl: '/FootBook',          // raíz de tu proyecto
-  endpoint: '/api/feed',         // endpoint del feed
-  limit: 10,                     // tamaño de página
-  lastId: 0,                     // cursor para keyset pagination (id del último post mostrado)
+  limit: 10,
+  lastId: 0,          // cursor keyset
   loading: false,
-  ended: false
+  ended: false,
+  filters: {
+    worldcupId: '',   // number|'' -> se envía como worldcup_id
+    orderBy: 'cronologico' // 'cronologico' | 'pais' | 'likes' | 'comentarios'
+  }
 };
 
+// DOM
 const $feedList    = document.getElementById('feed-list');
 const $feedLoading = document.getElementById('feed-loading');
 const $btnMore     = document.getElementById('feed-load-more');
 
-// Helper AJAX nativo (mismo estilo que ya usas en admin)
+/* ------------------ AJAX helper (GET) ------------------ */
 function ajaxGET(url) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -31,14 +40,14 @@ function ajaxGET(url) {
 
     xhr.onreadystatechange = () => {
       if (xhr.readyState !== 4) return;
-      const txt = xhr.responseText || '';
+      const raw = xhr.responseText || '';
       try {
-        // tolerante a HTML envolviendo JSON
-        const i = txt.indexOf('{'), j = txt.lastIndexOf('}');
-        const json = JSON.parse(i >= 0 && j >= i ? txt.slice(i, j + 1) : txt);
+        // tolerante a HTML que envuelva JSON
+        const i = raw.indexOf('{'), j = raw.lastIndexOf('}');
+        const json = JSON.parse(i >= 0 && j >= i ? raw.slice(i, j + 1) : raw);
         if (json && json.ok) resolve(json);
         else reject(new Error(json?.error || 'Error API'));
-      } catch (e) {
+      } catch {
         reject(new Error('Respuesta no-JSON del API'));
       }
     };
@@ -48,11 +57,11 @@ function ajaxGET(url) {
   });
 }
 
-// Render de una card (ajusta a tu look & feel)
+/* ------------------ Render de tarjeta ------------------ */
 function renderPostCard(p) {
   const avatar = p.avatar_b64
     ? `data:image/*;base64,${p.avatar_b64}`
-    : '/FootBook/img/default.jpg';
+    : `${API_BASE}/img/default.jpg`;
 
   const wc  = [p.worldcup_name, p.worldcup_year].filter(Boolean).join(' ');
   const cat = p.category_name || '';
@@ -90,47 +99,51 @@ function renderPostCard(p) {
   return el;
 }
 
+/* ------------------ Cargar página del feed ------------------ */
+let FEED_REQ_VERSION = 0;
+
 async function loadFeedPage({ reset = false } = {}) {
   if (FEED.loading || FEED.ended) return;
+
+  const myVersion = ++FEED_REQ_VERSION;  // versión local de esta carga
+
+  if (reset) resetFeedState();
+
   FEED.loading = true;
-  $feedLoading.classList.remove('d-none');
+  $feedLoading?.classList.remove('d-none');
 
-  if (reset) {
-    FEED.lastId = 0;
-    FEED.ended  = false;
-    $feedList.innerHTML = '';
-  }
-
-  const qs = new URLSearchParams();
-  qs.set('limit', FEED.limit);
-  if (FEED.lastId) qs.set('after', FEED.lastId);
-
-  const url = `${FEED.baseUrl}${FEED.endpoint}?${qs.toString()}`;
+  const url = buildFeedUrl();
 
   try {
     const { data } = await ajaxGET(url);
+
+    // Si durante la espera se cambió de filtros, ignora esta respuesta
+    if (myVersion !== FEED_REQ_VERSION) return;
+
     if (!Array.isArray(data) || data.length === 0) {
       FEED.ended = true;
       return;
     }
-    // render
-    for (const post of data) {
-      $feedList.appendChild(renderPostCard(post));
-    }
-    // cursor = id del último
+
+    data.forEach(post => $feedList.appendChild(renderPostCard(post)));
     FEED.lastId = data[data.length - 1].id;
+    if (data.length < FEED.limit) FEED.ended = true;
   } catch (err) {
     console.error('[Feed] Error:', err);
   } finally {
-    FEED.loading = false;
-    $feedLoading.classList.add('d-none');
+    if (myVersion === FEED_REQ_VERSION) {
+      FEED.loading = false;
+      $feedLoading?.classList.add('d-none');
+    }
   }
 }
 
-// Scroll infinito (IntersectionObserver)
+
+/* ------------------ Scroll infinito (sentinela) ------------------ */
+const $feedSection = document.getElementById('feed'); // contenedor del feed
 const sentinel = document.createElement('div');
 sentinel.id = 'feed-sentinel';
-document.getElementById('feed').appendChild(sentinel);
+$feedSection.appendChild(sentinel);
 
 const io = new IntersectionObserver((entries) => {
   entries.forEach(e => {
@@ -140,10 +153,73 @@ const io = new IntersectionObserver((entries) => {
 
 io.observe(sentinel);
 
-// Botón "Cargar más" (por si lo quieres visible)
+// Botón “Cargar más” opcional
 $btnMore?.addEventListener('click', () => loadFeedPage());
 
-// Primera carga
+/* ================== Filtros: rellenado + submit ================== */
+async function fillWorldcupFilter() {
+  try {
+    const res = await ajaxGET(WORLDCUPS_LIGHT_API);
+    if (!res?.ok || !Array.isArray(res.data)) return;
+
+    const sel = document.getElementById('filter-worldcup');
+    // Deja la opción "Todas las copas" (value="")
+    sel.querySelectorAll('option:not([value=""])').forEach(o => o.remove());
+
+    res.data.forEach(cup => {
+      const opt = document.createElement('option');
+      opt.value = cup.id; // el back espera worldcup_id numérico
+      opt.textContent = `${cup.name}`;
+      sel.appendChild(opt);
+    });
+  } catch (err) {
+    console.warn('[Feed] No se pudo cargar worldcups:', err.message);
+  }
+}
+
+function initFeedFilters() {
+  // Rellenar opciones al entrar
+  fillWorldcupFilter();
+
+  const form        = document.getElementById('feed-filters-form');
+  const selWorldcup = document.getElementById('filter-worldcup');
+  const selOrder    = document.getElementById('filter-order');
+
+  form.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+
+    // Guarda filtros en el estado
+    FEED.filters.worldcupId = selWorldcup.value ? parseInt(selWorldcup.value, 10) : '';
+    FEED.filters.orderBy    = selOrder.value || 'cronologico';
+
+     FEED_REQ_VERSION++;
+     resetFeedState();
+    // Resetea y carga primera página con filtros aplicados
+    await loadFeedPage({ reset: true });
+  });
+}
+
+/* ================== Primera carga ================== */
 document.addEventListener('DOMContentLoaded', () => {
+  initFeedFilters();
   loadFeedPage({ reset: true });
 });
+
+/* ============ Resetear el filtro ===================== */
+function resetFeedState() {
+  FEED.lastId = 0;
+  FEED.ended  = false;
+  FEED.loading = false;        // <- importante si quedó “atorado” en true
+  $feedList.innerHTML = '';
+}
+function buildFeedUrl() {
+  const q = new URLSearchParams();
+  q.set('limit', FEED.limit);
+  if (FEED.lastId) q.set('after', FEED.lastId);
+
+  // Filtros
+  if (FEED.filters.worldcupId !== '') q.set('worldcup_id', FEED.filters.worldcupId);
+  if (FEED.filters.orderBy)           q.set('order', FEED.filters.orderBy); // <- cambia a "order"
+
+  return `${API_BASE}${FEED_ENDPOINT}?${q.toString()}`;
+}

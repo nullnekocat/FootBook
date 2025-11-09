@@ -1,4 +1,15 @@
 // /views/js/profile.js
+/* ====================== Sección de publicar ========================== */
+import { NewPost } from './new_post.js';
+
+/* ================== Bootstrap de "nuevo post" ================== */
+document.addEventListener('DOMContentLoaded', () => {
+  const baseUrl = '/FootBook';
+  document.querySelectorAll('[data-new-post]').forEach((node) => {
+    new NewPost(node, { baseUrl });
+  });
+});
+
 // Variable global para guardar datos del usuario (FUERA de la función async)
 let currentUser = null;
 
