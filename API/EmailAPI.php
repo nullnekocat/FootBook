@@ -10,24 +10,18 @@ class EmailAPI
     {
         $this->model = new EmailAPIModel();
     }
-
+    // EmailAPI.php
     public function validateEmail(string $email): array
     {
-        $check = $this->model->check($email); 
+        $check = $this->model->check($email); // {format,domain,disposable,dns,whitelist}
 
-        if (isset($check['format']) && $check['format'] === false) {
-            throw new \RuntimeException('Formato de email inválido', 422);
-        }
-        if (isset($check['disposable']) && $check['disposable'] === true) {
-            throw new \RuntimeException('No se permite email desechable', 422);
-        }
-        if (isset($check['dns']) && $check['dns'] === false) {
+        if (($check['dns'] ?? false) !== true) {
             throw new \RuntimeException('Dominio de email inválido (sin DNS)', 422);
         }
-        if (empty($check['domain'])) {
-            throw new \RuntimeException('No se pudo determinar el dominio del email', 422);
+        if (($check['whitelist'] ?? false) !== true) {
+            throw new \RuntimeException('Dominio de email no permitido', 422);
         }
-        // alias puede ser true y NO es error
+        // no bloqueamos por format/alias/disposable en esta política
         return $check;
     }
 }

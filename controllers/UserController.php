@@ -102,14 +102,13 @@ class UserController {
 
             $check = $this->emailApi->validateEmail($data['email']);
 
-            $this->json_out(201, ['ok'=>true, 'email_check'=>$check]);
-
             // Llama a tu SP vía el modelo
             $this->model->createUser($data);
 
             $this->json_out(201, [
                 'ok'      => true,
                 'message' => 'Usuario creado correctamente',
+                'email_check'=> $check,
                 'redirect'=> '/FootBook/login'
             ]);
         } catch (\Throwable $e) {
