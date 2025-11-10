@@ -44,6 +44,7 @@ $router->post('/FootBook/api/users/register',           'UserController@register
 $router->post('/FootBook/api/users/login',              'UserController@login');
 $router->get('/FootBook/api/users/me',                  'UserController@me');
 $router->post('/FootBook/api/users/update',             'UserController@update');
+$router->post('/FootBook/api/users/delete',             'UserController@delete');
 
     // ===== POSTS ===== //
 $router->post('/FootBook/api/posts',                    'PostController@post'); //Crear post
@@ -62,6 +63,9 @@ $router->get('/FootBook/api/comments',                 'CommentController@index'
 $router->get('/FootBook/api/worldcups',                 'WorldCupApi@index');
 $router->get('/FootBook/api/worldcups/light',           'WorldCupApi@lightindex');
 $router->get('/FootBook/api/worldcups/:id',             'WorldCupApi@show');
+
+
+
 
 /* ===== Despacho ===== */
 $router->dispatch();

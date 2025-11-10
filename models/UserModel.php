@@ -131,4 +131,14 @@ class UserModel {
         }
     }
 
+    public function sp_soft_delete_user(int $id): array{
+        try {
+            $stmt = $this->db->callSP('sp_soft_delete_user', [$id], [PDO::PARAM_INT]);
+            $row  = $stmt->fetch(PDO::FETCH_ASSOC); // el SP devuelve 1 registro de resumen
+            $stmt->closeCursor();
+            return $row ?: [];
+        } catch (\PDOException $e) {
+            throw new \RuntimeException('Error al dar de baja al usuario: ' . $e->getMessage(), 400, $e);
+        }
+    }
 }

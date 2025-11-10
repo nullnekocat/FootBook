@@ -3,16 +3,20 @@ declare(strict_types=1);
 
 use Models\UserModel;
 
+
 require_once __DIR__ . '/../models/UserModel.php';
 require_once __DIR__ . '/../Middleware/auth.php';
+require_once __DIR__ . '/../API/EmailAPI.php';
 
 use function Auth\current_user;
 
 class UserController {
     private UserModel $model;
-    
+    private EmailAPI  $emailApi;
+
     public function __construct() {
         $this->model = new UserModel(); // usa tus SP vía Database
+        $this->emailApi = new EmailAPI (); 
         header('Content-Type: application/json; charset=UTF-8');
     }
 /* ----------------- helpers ----------------- */
@@ -95,6 +99,10 @@ class UserController {
                 $this->json_out(422, ['ok'=>false,'error'=>'birthday debe ser YYYY-MM-DD']);
                 return;
             }
+
+            $check = $this->emailApi->validateEmail($data['email']);
+
+            $this->json_out(201, ['ok'=>true, 'email_check'=>$check]);
 
             // Llama a tu SP vía el modelo
             $this->model->createUser($data);
@@ -250,5 +258,34 @@ class UserController {
             $this->json_out($code, ['ok'=>false,'error'=>$e->getMessage()]);
         }
     }
+    public function delete($id = null): void
+    {
+        try {
+            // id desde ruta o body
+            $in     = $this->json_in();
+            $userId = $id !== null ? (int)$id : (int)($in['user_id'] ?? $in['id'] ?? 0);
 
+            if ($userId <= 0) {
+                $this->json_out(422, ['ok' => false, 'error' => 'user_id inválido']);
+                return;
+            }
+
+            $result = $this->model->sp_soft_delete_user($userId);
+
+            // Si tu SP lanzara SIGNAL, caerá al catch; si no regresó nada:
+            if (!$result) {
+                $this->json_out(500, ['ok' => false, 'error' => 'No se obtuvo respuesta del procedimiento']);
+                return;
+            }
+
+            $this->json_out(200, [
+                'ok'     => true,
+                'result' => $result,   // p.ej. { user_id: 123, new_status: 0, message: '...' }
+            ]);
+
+        } catch (\Throwable $e) {
+            $code = (int)($e->getCode() ?: 500);
+            $this->json_out($code, ['ok' => false, 'error' => $e->getMessage()]);
+        }
+    }
 }

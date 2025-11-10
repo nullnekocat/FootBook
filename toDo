@@ -1,18 +1,18 @@
 AMBOS 2:
 + Si / Validación de requisitos de contraseña para el perfil de usuario.
 + Si / Landing page atractiva y acorde a la temática
-~ No / Página para el Registro, modificación y consulta del perfil del usuario, por rol de usuario.
-+ No / Clase de PHP para la conexión a la base de datos.
++ Si / Página para el Registro, modificación y consulta del perfil del usuario, por rol de usuario.
++ Si / Clase de PHP para la conexión a la base de datos.
 
 AMBOS 3:
 - Si / Página Principal
-- Si / Filtros y ordenamiento de publicaciones
-- Si / Gestión de Usuarios
-- Si / Categorías
-- Si / Elaboración de publicaciones
+~ No / Filtros y ordenamiento de publicaciones //Falta filtrar por el segundo combo box,
+~ No / Gestión de Usuarios //Falta dar de baja usuarios
+- Si / Categorías //Falta dar de baja categorías
+- Si / Elaboración de publicaciones 
 - Si / Ver Publicaciones (multimedia)
-- Si / Interacciones (comentarios y calificación de publicaciones y estadísticas)
-- Si / Búsqueda
+~ No / Interacciones (comentarios(si) y calificación de publicaciones y estadísticas) //Falta dar likes
+~ No / Búsqueda
 - Si / Archivos con scripts de creación de objetos de la BD (un archivo por tipo)
 - No / Web Hosting
 
@@ -23,7 +23,8 @@ PWCI 2:
 
 PWCI 3:
 + Si / APIs propias aplicadas al proyecto
-- Si / APIs de terceros aplicadas al proyecto
++ Si / APIs de terceros aplicadas al proyecto
+- NO / Middleware aplicadas al proyecto
 
 BDM 2:
 + Si / Establece la estructura de la base de datos en un modelo relacional definiendo las llaves primarias y llaves foráneas.
@@ -35,8 +36,8 @@ BDM 2:
 + Si / Script con el o los SP necesarios para todas las gestiones del perfil de usuario.
 
 BDM 3:
-- Si / Uso avanzado de SQL: mínimo 2 Triggers, 8 Views, 2 Functions (que sean de utilidad al proyecto).
-- Si / Validaciones en toda la operación del proyecto (se descontará en cada rubro)
+- No / Uso avanzado de SQL: mínimo 2 Triggers, 8 Views, 2 Functions (que sean de utilidad al proyecto). // Faltan 2 Triggers, 2 Views
+- No / Validaciones en toda la operación del proyecto (se descontará en cada rubro) // Verificar cada parte del proyecto para detectar algun error
 
 GENERAL IDEA:
 index = Página principal (Feed de facebook/posts)
