@@ -7,7 +7,7 @@ AMBOS 2:
 AMBOS 3:
 - Si / Página Principal
 ~ No / Filtros y ordenamiento de publicaciones //Falta filtrar por el segundo combo box,
-~ No / Gestión de Usuarios //Falta dar de baja usuarios
+~ Si / Gestión de Usuarios //Falta dar de baja usuarios
 - Si / Categorías //Falta dar de baja categorías
 - Si / Elaboración de publicaciones 
 - Si / Ver Publicaciones (multimedia)
@@ -36,7 +36,7 @@ BDM 2:
 + Si / Script con el o los SP necesarios para todas las gestiones del perfil de usuario.
 
 BDM 3:
-- No / Uso avanzado de SQL: mínimo 2 Triggers, 8 Views, 2 Functions (que sean de utilidad al proyecto). // Faltan 2 Triggers, 2 Views
+- No / Uso avanzado de SQL: mínimo 2 Triggers, 8 Views, 2 Functions (que sean de utilidad al proyecto). // Falta 1 View
 - No / Validaciones en toda la operación del proyecto (se descontará en cada rubro) // Verificar cada parte del proyecto para detectar algun error
 
 GENERAL IDEA:
