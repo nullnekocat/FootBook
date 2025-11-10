@@ -61,10 +61,12 @@ class UserModel {
         }
     }
 
-    public function getUserById($id) {
-        $this->db->callSP('sp_get_user_by_id', [(int)$id], [PDO::PARAM_INT]);
-        return []; 
+    public function getUserById($id): array { //No esta en uso
+        $id = (int)$id; 
+        $rows = $this->db->callView('v_lista_de_usuarios', "WHERE status = 1 AND id = {$id} LIMIT 1") ?: [];
+        return $rows;
     }
+    
     public function getUserForLogin(string $identity) {
         $stmt = $this->db->callSP('sp_get_user_for_login', [$identity], [PDO::PARAM_STR]);
         $user = $stmt->fetch(); // devuelve una fila o false
@@ -73,61 +75,60 @@ class UserModel {
     }
     
     public function getUserDataById(int $id): ?array {
-        $stmt = $this->db->callSP('sp_get_user_data', [$id], [PDO::PARAM_INT]);
-        $row  = $stmt->fetch(PDO::FETCH_ASSOC);
-        $this->db->finish($stmt);
-        return $row ?: null;
+        $id = (int)$id;
+        $rows = $this->db->callView('v_lista_de_usuarios', "WHERE status = 1 AND id = {$id} LIMIT 1") ?: []; //Devuelve datos de 1 usuario
+        return $rows ?: null;
     }
 
     public function getListOfUsers(): array {
-        return $this->db->callSPFetchAll('sp_get_users');
+        return $this->db->callView('v_lista_ligera_de_usuarios', 'WHERE status = 1 ORDER BY id ASC'); //para hacer listado de usuarios
     }
 
     public function updateUser(array $data): bool {
-    try {
-        // Construir los parámetros dinámicamente
-        $params = [(int)$data['id']]; // p_id siempre va primero
-        $types = [PDO::PARAM_INT];
-        
-        // Campos que pueden actualizarse
-        $fields = [
-            'fullname', 'username', 'email', 'birthday', 
-            'gender', 'birth_country', 'country', 'avatar', 'password'
-        ];
-        
-        foreach ($fields as $field) {
-            if (isset($data[$field])) {
-                $params[] = $data[$field];
-                
-                // Determinar el tipo de dato
-                if ($field === 'gender') {
-                    $types[] = PDO::PARAM_INT;
-                } else if ($field === 'avatar') {
-                    $types[] = ($data[$field] === null ? PDO::PARAM_NULL : PDO::PARAM_LOB);
+        try {
+            // Construir los parámetros dinámicamente
+            $params = [(int)$data['id']]; // p_id siempre va primero
+            $types = [PDO::PARAM_INT];
+            
+            // Campos que pueden actualizarse
+            $fields = [
+                'fullname', 'username', 'email', 'birthday', 
+                'gender', 'birth_country', 'country', 'avatar', 'password'
+            ];
+            
+            foreach ($fields as $field) {
+                if (isset($data[$field])) {
+                    $params[] = $data[$field];
+                    
+                    // Determinar el tipo de dato
+                    if ($field === 'gender') {
+                        $types[] = PDO::PARAM_INT;
+                    } else if ($field === 'avatar') {
+                        $types[] = ($data[$field] === null ? PDO::PARAM_NULL : PDO::PARAM_LOB);
+                    } else {
+                        $types[] = PDO::PARAM_STR;
+                    }
                 } else {
-                    $types[] = PDO::PARAM_STR;
+                    // Si no viene el campo, enviar NULL para que no se actualice
+                    $params[] = null;
+                    $types[] = PDO::PARAM_NULL;
                 }
-            } else {
-                // Si no viene el campo, enviar NULL para que no se actualice
-                $params[] = null;
-                $types[] = PDO::PARAM_NULL;
             }
+
+            $stmt = $this->db->callSP('sp_update_user_profile', $params, $types);
+            $stmt->closeCursor();
+            
+            return true;
+
+        } catch (PDOException $e) {
+            $driverCode = $e->errorInfo[1] ?? null;
+            $msg = $e->getMessage();
+
+            if ($driverCode === 1062) { // Duplicate entry
+                throw new RuntimeException('El username o el email ya están en uso.', 409);
+            }
+            throw new RuntimeException('Error al actualizar usuario: ' . $msg, 400);
         }
-
-        $stmt = $this->db->callSP('sp_update_user_profile', $params, $types);
-        $stmt->closeCursor();
-        
-        return true;
-
-    } catch (PDOException $e) {
-        $driverCode = $e->errorInfo[1] ?? null;
-        $msg = $e->getMessage();
-
-        if ($driverCode === 1062) { // Duplicate entry
-            throw new RuntimeException('El username o el email ya están en uso.', 409);
-        }
-        throw new RuntimeException('Error al actualizar usuario: ' . $msg, 400);
     }
-}
 
 }

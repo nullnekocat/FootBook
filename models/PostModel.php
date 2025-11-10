@@ -61,10 +61,7 @@ class PostModel {
     }
     // Obtener publicaciones pendientes de aprobación
     public function get_posts_to_approved(): array {
-        $stmt = $this->db->callSP('sp_get_posts_to_approved'); 
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $stmt->closeCursor();
-        return $rows ?: [];
+        return $this->db->callView('v_lista_ligera_de_publicaciones','WHERE approved = 0 AND status = 1 ORDER BY id ASC') ?: [];
     }
 
     // Aprobar o Rechazar publicación

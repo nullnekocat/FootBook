@@ -135,23 +135,24 @@ class PostController {
     public function feed(): void
     {
         try {
-            $u = \Auth\current_user();
-            $userId = isset($u['id']) ? (int)$u['id'] : 0;
+            // Query params
+            $after      = isset($_GET['after'])       ? (int)$_GET['after']       : 0;
+            $limit      = isset($_GET['limit'])       ? (int)$_GET['limit']       : 10;
+            $categoryId = isset($_GET['category_id']) ? (int)$_GET['category_id'] : 0;
+            $worldcupId = isset($_GET['worldcup_id']) ? (int)$_GET['worldcup_id'] : 0;
+            $order      = isset($_GET['order'])       ? (string)$_GET['order']    : 'cronologico';
 
-            $limit = isset($_GET['limit']) ? max(1, (int)$_GET['limit']) : 10;
-            $after = isset($_GET['after']) ? (int)$_GET['after'] : 0;
+            // Si viene user_id en el querystring (perfil), úsalo para filtrar por autor
+            // Si no viene, queda 0 => feed general
+            $authorId   = isset($_GET['user_id']) ? (int)$_GET['user_id'] : 0;
 
-            // Si no vienen, mándalos como NULL (para ignorarlos en el SP)
-            $catId = (isset($_GET['category_id']) && $_GET['category_id'] !== '')
-                    ? (int)$_GET['category_id'] : null;
+            // Llama al model (pasa parámetros exactamente en el orden del SP)
+            $rows = $this->model->get_feed($authorId, $after, $limit, $categoryId, $worldcupId, $order);
 
-            $wcId  = (isset($_GET['worldcup_id']) && $_GET['worldcup_id'] !== '')
-                    ? (int)$_GET['worldcup_id']  : null;
-
-            $rows = $this->model->get_feed($userId, $after, $limit, $catId, $wcId);
-            $this->json_out(200, ['ok' => true, 'data' => $rows]);
+            $this->json(['ok' => true, 'data' => $rows]);
         } catch (\Throwable $e) {
-            $this->json_out(500, ['ok' => false, 'error' => $e->getMessage()]);
+            $this->json(['ok' => false, 'error' => $e->getMessage()], 500);
         }
     }
+
 }

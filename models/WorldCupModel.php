@@ -15,23 +15,21 @@ class WorldCupModel {
 
     // Funciones GET para obtener datos de los mundiales con sus imagenes en formato base64
     public function getAllWorldCups(): array {
-        $stmt = $this->db->callSP('sp_get_worldcups_data'); 
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $stmt->closeCursor();
-        return $rows ?: [];
+        return $this->db->callView('v_lista_de_mundiales', 'WHERE status = 1 ORDER BY id ASC') ?: [];
     }
     public function getWorldCupById(int $id): array {
-        $stmt = $this->db->callSP('sp_get_worldcup_by_id', [$id], [PDO::PARAM_INT]);
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $stmt->closeCursor();
-        return $rows ?: [];
+        $id = (int)$id; // sanity cast
+        // Devuelve el/los registros; si esperas uno, puedes quedarte con [0] abajo
+        $rows = $this->db->callView('v_lista_de_mundiales', "WHERE status = 1 AND id = {$id} LIMIT 1") ?: [];
+        return $rows; // o: return $rows[0] ?? [];
     }
     public function getAllWorldCupsLight(): array {                 
-        $stmt = $this->db->callSP('sp_get_all_worldcups_light');    //Regresara; id, name, country, year. Ordenado por id ASC
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $stmt->closeCursor();
-        return $rows ?: [];
+        return $this->db->callView('v_lista_ligera_de_mundiales', 'WHERE status = 1 ORDER BY id ASC') ?: []; 
     }    
 
 }
- 
+/*
+NOTAS:
+v_lista_ligera_de_mundiales: La tabla no devuelve imagen
+v_lista_de_mundiales: La tabla devuelve absolutamente todo
+ */
