@@ -2,10 +2,10 @@
 console.log('[Users] module loaded');
 
 const API = { 
-  list: '/FootBook/api/users'
+  list: '/FootBook/api/users',
+  delete: '/FootBook/api/users/delete'
 };
 
-// util simple y hoisteado
 function escapeHtml(s = '') {
   return s
     .replaceAll('&','&amp;').replaceAll('<','&lt;')
@@ -26,6 +26,55 @@ export function bootUsers() {
   if (pane.dataset.wired === 'true') { load(); return; }
   pane.dataset.wired = 'true';
 
+  // 👇 Delegación: escuchar clicks en botones de la tabla
+  tbody.addEventListener('click', async (ev) => {
+    const btn = ev.target.closest('button[data-action="delete"]');
+    if (!btn) return;
+
+    const tr = btn.closest('tr');
+    const id = tr?.getAttribute('data-id');
+    if (!id) return;
+
+    // Confirmación simple
+    const ok = confirm(`¿Dar de baja al usuario #${id}?`);
+    if (!ok) return;
+
+    // UI: estado de carga
+    const oldHTML = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '…';
+
+    try {
+      const res = await fetch(API.delete, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ user_id: Number(id) })
+      });
+      const raw = await res.text();
+      let json;
+      try { json = JSON.parse(raw); }
+      catch { throw new Error('Respuesta no es JSON:\n' + raw.slice(0,300)); }
+
+      if (json?.ok !== true) {
+        throw new Error(json?.error || 'Error del API');
+      }
+
+      // 👇 Opción A: quitar la fila
+      tr.remove();
+
+      // Opción B (en lugar de quitar): marcar “inactivo”
+      // tr.classList.add('table-warning');
+      // btn.remove(); // o deshabilitar permanentemente
+
+    } catch (err) {
+      console.error('[Users] delete error:', err);
+      alert(err?.message || 'No se pudo dar de baja');
+      btn.disabled = false;
+      btn.innerHTML = oldHTML;
+      return;
+    }
+  });
+
   load();
 
   async function load() {
@@ -37,19 +86,9 @@ export function bootUsers() {
       try { json = JSON.parse(raw); } 
       catch { throw new Error('Respuesta no es JSON:\n' + raw.slice(0,300)); }
 
-      // Soporta { ok:true, data:[...] } o directamente [...]
-      if (Array.isArray(json)) {
-        render(json);
-        return;
-      }
-      if (json && json.ok === true && Array.isArray(json.data)) {
-        render(json.data);
-        return;
-      }
-      // Si el controller manda ok:false, muéstralo
-      if (json && json.ok === false) {
-        throw new Error(json.error || 'Error del API');
-      }
+      if (Array.isArray(json)) { render(json); return; }
+      if (json && json.ok === true && Array.isArray(json.data)) { render(json.data); return; }
+      if (json && json.ok === false) { throw new Error(json.error || 'Error del API'); }
 
       throw new Error('Formato inesperado de respuesta');
     } catch (err) {
@@ -69,7 +108,6 @@ export function bootUsers() {
       const fullname  = u.fullname ?? u.fullName ?? '';
       const email     = u.email ?? '';
       const created   = u.created_at ?? u.createdAt ?? '';
-
       return `
         <tr data-id="${escapeHtml(String(id))}">
           <td>${escapeHtml(String(id))}</td>
@@ -77,7 +115,9 @@ export function bootUsers() {
           <td>${escapeHtml(fullname)}</td>
           <td>${escapeHtml(email)}</td>
           <td>${escapeHtml(created)}</td>
-          <td><button class="btn btn-sm btn-outline-danger" disabled>🗑</button></td>
+          <td>
+            <button class="btn btn-sm btn-outline-danger" data-action="delete" title="Dar de baja">🗑</button>
+          </td>
         </tr>`;
     }).join('');
     tbody.innerHTML = rows;

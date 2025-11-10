@@ -34,7 +34,7 @@ class CategoryModel {
 
     /** Eliminar categoría (soft delete) */
     public function deleteCategory(int $id): array {
-        $stmt = $this->db->callSP('sp_delete_category', [$id], [PDO::PARAM_INT]);
+        $stmt = $this->db->callSP('sp_soft_delete_category', [$id], [PDO::PARAM_INT]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $this->db->finish($stmt);
         return $row ?: [];
