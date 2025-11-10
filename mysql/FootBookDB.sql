@@ -29,7 +29,7 @@ CREATE TABLE `categories` (
   `name` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -72,7 +72,7 @@ CREATE TABLE `comments` (
   KEY `user_id` (`user_id`),
   CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`),
   CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -124,7 +124,7 @@ CREATE TABLE `posts` (
   CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `posts_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`),
   CONSTRAINT `posts_ibfk_3` FOREIGN KEY (`worldcup_id`) REFERENCES `worldcups` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -151,8 +151,136 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary view structure for view `v_lista_de_categorias`
+--
+
+DROP TABLE IF EXISTS `v_lista_de_categorias`;
+/*!50001 DROP VIEW IF EXISTS `v_lista_de_categorias`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `v_lista_de_categorias` AS SELECT 
+ 1 AS `id`,
+ 1 AS `name`,
+ 1 AS `status`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary view structure for view `v_lista_de_comentarios`
+--
+
+DROP TABLE IF EXISTS `v_lista_de_comentarios`;
+/*!50001 DROP VIEW IF EXISTS `v_lista_de_comentarios`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `v_lista_de_comentarios` AS SELECT 
+ 1 AS `id`,
+ 1 AS `post_id`,
+ 1 AS `user_id`,
+ 1 AS `username`,
+ 1 AS `avatar_b64`,
+ 1 AS `content`,
+ 1 AS `status`,
+ 1 AS `created_at`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary view structure for view `v_lista_de_mundiales`
+--
+
+DROP TABLE IF EXISTS `v_lista_de_mundiales`;
+/*!50001 DROP VIEW IF EXISTS `v_lista_de_mundiales`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `v_lista_de_mundiales` AS SELECT 
+ 1 AS `id`,
+ 1 AS `name`,
+ 1 AS `country`,
+ 1 AS `year`,
+ 1 AS `description`,
+ 1 AS `banner_b64`,
+ 1 AS `status`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary view structure for view `v_lista_de_usuarios`
+--
+
+DROP TABLE IF EXISTS `v_lista_de_usuarios`;
+/*!50001 DROP VIEW IF EXISTS `v_lista_de_usuarios`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `v_lista_de_usuarios` AS SELECT 
+ 1 AS `id`,
+ 1 AS `admin`,
+ 1 AS `username`,
+ 1 AS `email`,
+ 1 AS `fullname`,
+ 1 AS `birthday`,
+ 1 AS `gender`,
+ 1 AS `birth_country`,
+ 1 AS `country`,
+ 1 AS `status`,
+ 1 AS `created_at`,
+ 1 AS `avatar_b64`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary view structure for view `v_lista_ligera_de_mundiales`
+--
+
+DROP TABLE IF EXISTS `v_lista_ligera_de_mundiales`;
+/*!50001 DROP VIEW IF EXISTS `v_lista_ligera_de_mundiales`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `v_lista_ligera_de_mundiales` AS SELECT 
+ 1 AS `id`,
+ 1 AS `name`,
+ 1 AS `country`,
+ 1 AS `year`,
+ 1 AS `description`,
+ 1 AS `status`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary view structure for view `v_lista_ligera_de_publicaciones`
+--
+
+DROP TABLE IF EXISTS `v_lista_ligera_de_publicaciones`;
+/*!50001 DROP VIEW IF EXISTS `v_lista_ligera_de_publicaciones`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `v_lista_ligera_de_publicaciones` AS SELECT 
+ 1 AS `id`,
+ 1 AS `username`,
+ 1 AS `category_name`,
+ 1 AS `worldcup_name`,
+ 1 AS `title`,
+ 1 AS `description`,
+ 1 AS `media_b64`,
+ 1 AS `created_at`,
+ 1 AS `approved`,
+ 1 AS `status`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary view structure for view `v_lista_ligera_de_usuarios`
+--
+
+DROP TABLE IF EXISTS `v_lista_ligera_de_usuarios`;
+/*!50001 DROP VIEW IF EXISTS `v_lista_ligera_de_usuarios`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `v_lista_ligera_de_usuarios` AS SELECT 
+ 1 AS `id`,
+ 1 AS `username`,
+ 1 AS `email`,
+ 1 AS `created_at`,
+ 1 AS `status`*/;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `worldcups`
@@ -176,6 +304,50 @@ CREATE TABLE `worldcups` (
 --
 -- Dumping routines for database 'footbook_db'
 --
+/*!50003 DROP FUNCTION IF EXISTS `fn_exists_post_active` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `fn_exists_post_active`(p_post_id BIGINT) RETURNS tinyint
+    READS SQL DATA
+    DETERMINISTIC
+RETURN EXISTS(
+  SELECT 1 FROM posts
+  WHERE id = p_post_id AND status = 1
+) ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP FUNCTION IF EXISTS `fn_exists_user_active` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `fn_exists_user_active`(p_user_id BIGINT) RETURNS tinyint
+    READS SQL DATA
+    DETERMINISTIC
+RETURN EXISTS(
+  SELECT 1 FROM Users
+  WHERE id = p_user_id AND status = 1
+) ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_approve_post` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -341,6 +513,65 @@ BEGIN
 
     -- Retorna el id creado
     SELECT LAST_INSERT_ID() AS category_id;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_create_comment` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_create_comment`(
+  IN p_post_id BIGINT,
+  IN p_user_id BIGINT,
+  IN p_content TEXT
+)
+BEGIN
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    ROLLBACK;
+    RESIGNAL;
+  END;
+
+  /* Validaciones */
+  IF p_post_id IS NULL OR p_post_id <= 0 THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'p_post_id inválido';
+  END IF;
+
+  IF p_user_id IS NULL OR p_user_id <= 0 THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'p_user_id inválido';
+  END IF;
+
+  IF fn_exists_user_active(p_user_id) = 0 THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El usuario no existe o está inactivo';
+  END IF;
+
+  IF fn_exists_post_active(p_post_id) = 0 THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El post no existe o está inactivo';
+  END IF;
+
+  IF p_content IS NULL OR CHAR_LENGTH(TRIM(p_content)) = 0 THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Contenido vacío';
+  END IF;
+
+  START TRANSACTION;
+
+  INSERT INTO comments (post_id, user_id, content, status, created_at)
+  VALUES (p_post_id, p_user_id, TRIM(p_content), 1, CURRENT_TIMESTAMP);
+
+  SELECT c.id, c.post_id, c.user_id, c.content, c.status, c.created_at
+  FROM comments c
+  WHERE c.id = LAST_INSERT_ID();
+
+  COMMIT;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -578,51 +809,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `sp_get_all_worldcups_light` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_all_worldcups_light`()
-BEGIN
-	SELECT id, name, country, year FROM WorldCups
-    WHERE status = 1 ORDER BY id ASC;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `sp_get_categorys` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_categorys`()
-BEGIN
-    /* Devuelve todas las categorías ordenadas por id del menor a mayor*/
-    SELECT 
-        id,
-        name
-    FROM categories 
-    WHERE status = 1 -- filtrado de status activos
-    ORDER BY id ASC;  -- orden por id
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_get_feed` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -667,113 +853,9 @@ BEGIN
       AND (p_after_id    IS NULL OR p_after_id    = 0 OR p.id < p_after_id)
       AND (p_category_id IS NULL OR p_category_id = 0 OR p.category_id = p_category_id)
       AND (p_worldcup_id IS NULL OR p_worldcup_id = 0 OR p.worldcup_id = p_worldcup_id)
+      AND (p_user_id     IS NULL OR p_user_id     = 0 OR p.user_id = p_user_id)
     ORDER BY p.id DESC
     LIMIT p_limit;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `sp_get_posts_to_approved` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_posts_to_approved`()
-BEGIN
-    /*
-      Devuelve los posts pendientes de aprobación.
-      - id del post
-      - username (tabla Users.username)
-      - category_name (tabla categories.name)
-      - worldcup_name (tabla worldcups.name)
-      - title
-      - description
-      - media_b64: TO_BASE64(media) si existe, NULL en caso contrario
-    */
-
-    SELECT
-        p.id,
-        u.username,
-        c.name AS category_name,
-        w.name AS worldcup_name,
-        p.title,
-        p.description,
-        CASE WHEN p.media IS NULL THEN NULL ELSE TO_BASE64(p.media) END AS media_b64,
-        p.created_at
-    FROM posts p
-    LEFT JOIN Users      u ON u.id = p.user_id
-    LEFT JOIN categories c ON c.id = p.category_id
-    LEFT JOIN worldcups  w ON w.id = p.worldcup_id
-    WHERE p.approved = 0
-      AND p.status   = 1       -- si manejas estatus de post
-    ORDER BY p.id ASC;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `sp_get_users` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_users`()
-BEGIN
-    /* Devuelve todas los los usarios ordenados por id del menor a mayor*/
-    SELECT 
-		id,
-        username,
-        email,
-        created_at
-    FROM users
-    ORDER BY id ASC;  -- orden por id
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `sp_get_user_data` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_user_data`(IN p_id BIGINT)
-BEGIN
-    SELECT 
-        id,
-        admin,
-        username,
-        email,
-        fullname,
-        birthday,
-        gender,
-        birth_country,
-        country,
-        status,
-        created_at,
-        TO_BASE64(avatar) AS avatar_b64     
-    FROM Users
-    WHERE id = p_id AND status = 1
-    LIMIT 1;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -799,62 +881,6 @@ BEGIN
     WHERE (username = p_identity)
       AND status = 1
     LIMIT 1;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `sp_get_worldcups_data` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_worldcups_data`()
-BEGIN
-    /* Devuelve todas los mundiales ordenadas por id del menor a mayor*/
-    SELECT 
-    id, 
-    name, 
-    country, 
-    year, 
-    description,
-    TO_BASE64(banner) AS banner_b64
-    FROM worldcups WHERE status = 1 ORDER BY id ASC;  -- orden por id
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `sp_get_worldcup_by_id` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_worldcup_by_id`(
-IN p_id INT
-)
-BEGIN
-    /* Devuelve todas los mundiales ordenadas por id del menor a mayor*/
-    SELECT 
-    id,
-    name,
-    country,
-    year,
-    description,
-    TO_BASE64(banner) AS banner_b64 
-    FROM worldcups WHERE status = 1 AND id = p_id; -- orden por id
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -991,6 +1017,132 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Final view structure for view `v_lista_de_categorias`
+--
+
+/*!50001 DROP VIEW IF EXISTS `v_lista_de_categorias`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `v_lista_de_categorias` AS select `categories`.`id` AS `id`,`categories`.`name` AS `name`,`categories`.`status` AS `status` from `categories` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `v_lista_de_comentarios`
+--
+
+/*!50001 DROP VIEW IF EXISTS `v_lista_de_comentarios`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=MERGE */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY INVOKER */
+/*!50001 VIEW `v_lista_de_comentarios` AS select `c`.`id` AS `id`,`c`.`post_id` AS `post_id`,`c`.`user_id` AS `user_id`,`u`.`username` AS `username`,(case when (`u`.`avatar` is null) then NULL else to_base64(`u`.`avatar`) end) AS `avatar_b64`,`c`.`content` AS `content`,`c`.`status` AS `status`,`c`.`created_at` AS `created_at` from (`comments` `c` left join `users` `u` on((`u`.`id` = `c`.`user_id`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `v_lista_de_mundiales`
+--
+
+/*!50001 DROP VIEW IF EXISTS `v_lista_de_mundiales`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=MERGE */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY INVOKER */
+/*!50001 VIEW `v_lista_de_mundiales` AS select `worldcups`.`id` AS `id`,`worldcups`.`name` AS `name`,`worldcups`.`country` AS `country`,`worldcups`.`year` AS `year`,`worldcups`.`description` AS `description`,to_base64(`worldcups`.`banner`) AS `banner_b64`,`worldcups`.`status` AS `status` from `worldcups` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `v_lista_de_usuarios`
+--
+
+/*!50001 DROP VIEW IF EXISTS `v_lista_de_usuarios`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `v_lista_de_usuarios` AS select `users`.`id` AS `id`,`users`.`admin` AS `admin`,`users`.`username` AS `username`,`users`.`email` AS `email`,`users`.`fullname` AS `fullname`,`users`.`birthday` AS `birthday`,`users`.`gender` AS `gender`,`users`.`birth_country` AS `birth_country`,`users`.`country` AS `country`,`users`.`status` AS `status`,`users`.`created_at` AS `created_at`,to_base64(`users`.`avatar`) AS `avatar_b64` from `users` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `v_lista_ligera_de_mundiales`
+--
+
+/*!50001 DROP VIEW IF EXISTS `v_lista_ligera_de_mundiales`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `v_lista_ligera_de_mundiales` AS select `worldcups`.`id` AS `id`,`worldcups`.`name` AS `name`,`worldcups`.`country` AS `country`,`worldcups`.`year` AS `year`,`worldcups`.`description` AS `description`,`worldcups`.`status` AS `status` from `worldcups` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `v_lista_ligera_de_publicaciones`
+--
+
+/*!50001 DROP VIEW IF EXISTS `v_lista_ligera_de_publicaciones`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `v_lista_ligera_de_publicaciones` AS select `p`.`id` AS `id`,`u`.`username` AS `username`,`c`.`name` AS `category_name`,`w`.`name` AS `worldcup_name`,`p`.`title` AS `title`,`p`.`description` AS `description`,(case when (`p`.`media` is null) then NULL else to_base64(`p`.`media`) end) AS `media_b64`,`p`.`created_at` AS `created_at`,`p`.`approved` AS `approved`,`p`.`status` AS `status` from (((`posts` `p` left join `users` `u` on((`u`.`id` = `p`.`user_id`))) left join `categories` `c` on((`c`.`id` = `p`.`category_id`))) left join `worldcups` `w` on((`w`.`id` = `p`.`worldcup_id`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `v_lista_ligera_de_usuarios`
+--
+
+/*!50001 DROP VIEW IF EXISTS `v_lista_ligera_de_usuarios`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `v_lista_ligera_de_usuarios` AS select `users`.`id` AS `id`,`users`.`username` AS `username`,`users`.`email` AS `email`,`users`.`created_at` AS `created_at`,`users`.`status` AS `status` from `users` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -1001,4 +1153,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-09 10:17:51
+-- Dump completed on 2025-11-09 20:46:55

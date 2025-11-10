@@ -21,7 +21,7 @@ class CategoryModel {
 
     /** Listar categorías (A→Z por nombre o ASC por id según tu SP) */
     public function getListOfCategory(): array {
-        return $this->db->callSPFetchAll('sp_get_categorys');
+        return $this->db->callView('v_lista_de_categorias', 'WHERE status = 1 ORDER BY id ASC');
     }
 
        /** Actualizar categoría */

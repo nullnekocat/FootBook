@@ -52,6 +52,9 @@ $router->post('/FootBook/api/posts/:id/approve',        'PostController@approve_
 // FEED (scroll infinito)
 $router->get('/FootBook/api/feed', 'PostController@feed');
 
+    // ===== COMMENTS ===== //
+$router->post('/FootBook/api/comments',                 'CommentController@comentar'); //Comentar publicación
+$router->get('/FootBook/api/comments',                 'CommentController@index'); //Obtener Comentarios
 
     // ===== API WIKIS ===== //
 

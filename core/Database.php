@@ -56,4 +56,40 @@ class Database {
         while ($stmt->nextRowset()) { /* no-op */ }
         $stmt->closeCursor();
     }
+
+    // LÉELO: consulta un VIEW con una cláusula cruda opcional (WHERE/ORDER BY/LIMIT...).
+    public function callView(string $viewName, ?string $rawClause = ''): array
+    {
+        // Permitir nombres tipo: vista o schema.vista (letras/números/_)
+        $parts = explode('.', $viewName);
+        if (count($parts) > 2) {
+            throw new InvalidArgumentException('Nombre de vista inválido.');
+        }
+
+        $quoted = [];
+        foreach ($parts as $p) {
+            if (!preg_match('/^[A-Za-z0-9_]+$/', $p)) {
+                throw new InvalidArgumentException('Nombre de vista inválido.');
+            }
+            $quoted[] = '`' . $p . '`';
+        }
+        $identifier = implode('.', $quoted);
+
+        // Sanitización mínima de la cláusula cruda: prohibir múltiples sentencias
+        $raw = trim((string)$rawClause);
+        if ($raw !== '' && strpos($raw, ';') !== false) {
+            throw new InvalidArgumentException('La cláusula no debe contener punto y coma.');
+        }
+
+        // Armar SQL final
+        $sql = "SELECT * FROM {$identifier}" . ($raw !== '' ? ' ' . $raw : '');
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $this->finish($stmt);
+        return $rows;
+    }
+
+
 }
