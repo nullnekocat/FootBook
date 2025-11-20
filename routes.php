@@ -51,7 +51,8 @@ $router->post('/FootBook/api/posts',                    'PostController@post'); 
 $router->get('/FootBook/api/posts/to_approve',          'PostController@to_aproved'); //Obtener lista de posts para aprobar
 $router->post('/FootBook/api/posts/:id/approve',        'PostController@approve_post');  //Aprobar o Denegar post
 // FEED (scroll infinito)
-$router->get('/FootBook/api/feed', 'PostController@feed');
+$router->get('/FootBook/api/feed',                      'PostController@feed');
+$router->post('/FootBook/api/posts/:id/like',           'LikeController@toggleLike');
 
     // ===== COMMENTS ===== //
 $router->post('/FootBook/api/comments',                 'CommentController@comentar'); //Comentar publicación

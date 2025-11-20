@@ -95,25 +95,30 @@ class PostModel {
         }
     }
 
-    public function get_feed(
-        int $userId,
-        int $afterId,
-        int $limit,
-        ?int $categoryId = null,
-        ?int $worldcupId = null
-    ): array {
-        $params = [$userId, $afterId, $limit, $categoryId, $worldcupId];
-        $types  = [
-            PDO::PARAM_INT, // userId
-            PDO::PARAM_INT, // afterId
-            PDO::PARAM_INT, // limit
-            is_null($categoryId) ? PDO::PARAM_NULL : PDO::PARAM_INT,
-            is_null($worldcupId) ? PDO::PARAM_NULL : PDO::PARAM_INT,
-        ];
+public function get_feed(
+    int $userId,
+    int $afterId,
+    int $limit,
+    ?int $categoryId = null,
+    ?int $worldcupId = null,
+    string $order = 'cronologico',
+    string $searchText = '' // 👈 NUEVO parámetro
+): array {
+    $params = [$userId, $afterId, $limit, $categoryId, $worldcupId, $order, $searchText];
+    $types  = [
+        PDO::PARAM_INT, // userId
+        PDO::PARAM_INT, // afterId
+        PDO::PARAM_INT, // limit
+        is_null($categoryId) ? PDO::PARAM_NULL : PDO::PARAM_INT,
+        is_null($worldcupId) ? PDO::PARAM_NULL : PDO::PARAM_INT,
+        PDO::PARAM_STR, // order
+        PDO::PARAM_STR, // searchText 👈 NUEVO
+    ];
 
-        $stmt = $this->db->callSP('sp_get_feed', $params, $types);
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $stmt->closeCursor();
-        return $rows ?: [];
-    }
+    $stmt = $this->db->callSP('sp_get_feed', $params, $types);
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt->closeCursor();
+    return $rows ?: [];
+}
+
 }
