@@ -302,45 +302,53 @@ let currentUser = null;
   }
 
   function renderPostCard(p) {
-    const avatar = p.avatar_b64
-      ? `data:image/*;base64,${p.avatar_b64}`
-      : `${API_BASE}/img/default.jpg`;
+  const avatar = p.avatar_b64
+    ? `data:image/*;base64,${p.avatar_b64}`
+    : `${API_BASE}/img/default.jpg`;
 
-    const wc  = [p.worldcup_name, p.worldcup_year].filter(Boolean).join(' ');
-    const cat = p.category_name || '';
+  const wc  = [p.worldcup_name, p.worldcup_year].filter(Boolean).join(' ');
+  const cat = p.category_name || '';
 
-    const mediaHTML = p.media_b64
-      ? `<img class="img-fluid rounded mb-2" src="data:image/*;base64,${p.media_b64}" alt="Post image">`
-      : '';
+  const mediaHTML = p.media_b64
+    ? `<img class="img-fluid rounded mb-2" src="data:image/*;base64,${p.media_b64}" alt="Post image">`
+    : '';
 
-    const el = document.createElement('div');
-    el.className = 'card mb-3 shadow-sm';
-    el.innerHTML = `
-      <div class="card-body">
-        <div class="d-flex mb-2 align-items-center">
-          <img src="${avatar}" class="rounded-circle me-2" width="40" height="40" alt="User">
-          <div>
-            <strong>${p.username ?? 'Usuario'}</strong>
-            <span class="text-muted small">en ${wc}</span>
-            <span class="badge bg-secondary ms-2">${cat}</span>
-          </div>
-        </div>
-        ${p.title ? `<h6 class="mb-1">${p.title}</h6>` : ''}
-        <p class="mb-2">${p.description ?? ''}</p>
-        ${mediaHTML}
+  // Clases dinámicas para el botón de like
+  const likeClass = p.liked_by_me ? 'btn-success' : 'btn-outline-success';
+  const likeIcon = p.liked_by_me 
+    ? '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z"/></svg>'
+    : '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z"/></svg>';
+
+  const el = document.createElement('div');
+  el.className = 'card mb-3 shadow-sm';
+  el.dataset.postId = p.id;
+  el.innerHTML = `
+    <div class="card-body">
+      <div class="d-flex mb-2 align-items-center">
+        <img src="${avatar}" class="rounded-circle me-2" width="40" height="40" alt="User">
         <div>
-        <button class="btn btn-sm btn-outline-success me-2">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z"/></svg>
-          ${p.likes_count ?? 0}
-        </button>
-        <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#commentsModal" data-post-id="${p.id}" >
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M880-80 720-240H320q-33 0-56.5-23.5T240-320v-40h440q33 0 56.5-23.5T760-440v-280h40q33 0 56.5 23.5T880-640v560ZM160-473l47-47h393v-280H160v327ZM80-280v-520q0-33 23.5-56.5T160-880h440q33 0 56.5 23.5T680-800v280q0 33-23.5 56.5T600-440H240L80-280Zm80-240v-280 280Z"/></svg>
-          ${p.comments_count ?? 0}
-        </button>
+          <strong>${p.username ?? 'Usuario'}</strong>
+          <span class="text-muted small">en ${wc}</span>
+          <span class="badge bg-secondary ms-2">${cat}</span>
         </div>
-      </div>`;
-    return el;
-  }
+      </div>
+      ${p.title ? `<h6 class="mb-1">${p.title}</h6>` : ''}
+      <p class="mb-2">${p.description ?? ''}</p>
+      ${mediaHTML}
+      <div>
+        <button class="btn btn-sm ${likeClass} me-2" data-action="like" data-post-id="${p.id}">
+          ${likeIcon}
+          <span class="like-count">${p.likes_count ?? 0}</span>
+        </button>
+        <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#commentsModal" data-post-id="${p.id}">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M880-80 720-240H320q-33 0-56.5-23.5T240-320v-40h440q33 0 56.5-23.5T760-440v-280h40q33 0 56.5 23.5T880-640v560ZM160-473l47-47h393v-280H160v327ZM80-280v-520q0-33 23.5-56.5T160-880h440q33 0 56.5 23.5T680-800v280q0 33-23.5 56.5T600-440H240L80-280Zm80-240v-280 280Z"/></svg>
+          <span class="comment-count">${p.comments_count ?? 0}</span>
+        </button>
+      </div>
+    </div>`;
+  
+  return el;
+}
 
   function resetFeedState() {
     FEED.lastId  = 0;

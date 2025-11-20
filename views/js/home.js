@@ -72,8 +72,15 @@ function renderPostCard(p) {
     ? `<img class="img-fluid rounded mb-2" src="data:image/*;base64,${p.media_b64}" alt="Post image">`
     : '';
 
+  // Clases dinámicas para el botón de like
+  const likeClass = p.liked_by_me ? 'btn-success' : 'btn-outline-success';
+  const likeIcon = p.liked_by_me 
+    ? '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z"/></svg>'
+    : '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z"/></svg>';
+
   const el = document.createElement('div');
   el.className = 'card mb-3 shadow-sm';
+  el.dataset.postId = p.id;
   el.innerHTML = `
     <div class="card-body">
       <div class="d-flex mb-2 align-items-center">
@@ -88,16 +95,17 @@ function renderPostCard(p) {
       <p class="mb-2">${p.description ?? ''}</p>
       ${mediaHTML}
       <div>
-        <button class="btn btn-sm btn-outline-success me-2">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z"/></svg>
-          ${p.likes_count ?? 0}
+        <button class="btn btn-sm ${likeClass} me-2" data-action="like" data-post-id="${p.id}">
+          ${likeIcon}
+          <span class="like-count">${p.likes_count ?? 0}</span>
         </button>
         <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#commentsModal" data-post-id="${p.id}">
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M880-80 720-240H320q-33 0-56.5-23.5T240-320v-40h440q33 0 56.5-23.5T760-440v-280h40q33 0 56.5 23.5T880-640v560ZM160-473l47-47h393v-280H160v327ZM80-280v-520q0-33 23.5-56.5T160-880h440q33 0 56.5 23.5T680-800v280q0 33-23.5 56.5T600-440H240L80-280Zm80-240v-280 280Z"/></svg>
-          ${p.comments_count ?? 0}
+          <span class="comment-count">${p.comments_count ?? 0}</span>
         </button>
       </div>
     </div>`;
+  
   return el;
 }
 
@@ -293,4 +301,67 @@ document.addEventListener('DOMContentLoaded', () => {
   initFeedFilters();
   initSearch(); // 👈 NUEVO: inicializar búsqueda
   loadFeedPage({ reset: true });
+});
+
+/* ================== LIKES ================== */
+document.addEventListener('click', async (e) => {
+  const likeBtn = e.target.closest('[data-action="like"]');
+  if (!likeBtn) return;
+
+  e.preventDefault();
+  
+  const postId = likeBtn.dataset.postId;
+  if (!postId) return;
+
+  // UI: deshabilitar temporalmente
+  const wasDisabled = likeBtn.disabled;
+  likeBtn.disabled = true;
+
+  try {
+    const url = `${API_BASE}/api/posts/${postId}/like`;
+    const res = await fetch(url, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Accept': 'application/json' }
+    });
+
+    const raw = await res.text();
+    let json;
+    try {
+      const i = raw.indexOf('{'), j = raw.lastIndexOf('}');
+      json = JSON.parse(i >= 0 && j >= i ? raw.slice(i, j + 1) : raw);
+    } catch {
+      throw new Error('Respuesta no-JSON del API');
+    }
+
+    if (!res.ok || !json?.ok) {
+      throw new Error(json?.error || 'Error al procesar like');
+    }
+
+    // Actualizar UI
+    const card = likeBtn.closest('[data-post-id]');
+    const likeCount = likeBtn.querySelector('.like-count');
+    
+    if (json.liked) {
+      likeBtn.classList.remove('btn-outline-success');
+      likeBtn.classList.add('btn-success');
+      likeBtn.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z"/></svg>
+        <span class="like-count">${json.total_likes}</span>
+      `;
+    } else {
+      likeBtn.classList.remove('btn-success');
+      likeBtn.classList.add('btn-outline-success');
+      likeBtn.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z"/></svg>
+        <span class="like-count">${json.total_likes}</span>
+      `;
+    }
+
+  } catch (err) {
+    console.error('[Like] Error:', err);
+    alert(err.message || 'Error al dar like');
+  } finally {
+    if (!wasDisabled) likeBtn.disabled = false;
+  }
 });
