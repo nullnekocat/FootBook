@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 const API_BASE            = '/FootBook';
 const FEED_ENDPOINT       = '/api/feed';
 const WORLDCUPS_LIGHT_API = '/FootBook/api/worldcups/light';
+const CATEGORIES_API = '/FootBook/api/categories';
 
 const FEED = {
   limit: 10,
@@ -23,8 +24,9 @@ const FEED = {
   ended: false,
   filters: {
     worldcupId: '',
+    categoryId: '',
     orderBy: 'cronologico',
-    searchText: ''  // 👈 NUEVO: texto de búsqueda
+    searchText: ''
   }
 };
 
@@ -214,17 +216,40 @@ async function fillWorldcupFilter() {
   }
 }
 
+async function fillCategoryFilter() {
+  try {
+    const res = await ajaxGET(CATEGORIES_API);
+    if (!res?.ok || !Array.isArray(res.data)) return;
+
+    const sel = document.getElementById('filter-category');
+    sel.querySelectorAll('option:not([value=""])').forEach(o => o.remove());
+
+    res.data.forEach(cat => {
+      const opt = document.createElement('option');
+      opt.value = cat.id;
+      opt.textContent = cat.name;
+      sel.appendChild(opt);
+    });
+
+  } catch (err) {
+    console.warn('[Feed] No se pudo cargar categorías:', err.message);
+  }
+}
+
 function initFeedFilters() {
   fillWorldcupFilter();
+  fillCategoryFilter(); // <---------------- NUEVO
 
   const form        = document.getElementById('feed-filters-form');
   const selWorldcup = document.getElementById('filter-worldcup');
+  const selCategory = document.getElementById('filter-category'); // <---
   const selOrder    = document.getElementById('filter-order');
 
   form.addEventListener('submit', async (ev) => {
     ev.preventDefault();
 
     FEED.filters.worldcupId = selWorldcup.value ? parseInt(selWorldcup.value, 10) : '';
+    FEED.filters.categoryId = selCategory.value ? parseInt(selCategory.value, 10) : '';
     FEED.filters.orderBy    = selOrder.value || 'cronologico';
 
     FEED_REQ_VERSION++;
@@ -288,10 +313,10 @@ function buildFeedUrl() {
   q.set('limit', FEED.limit);
   if (FEED.lastId) q.set('after', FEED.lastId);
 
-  // Filtros
   if (FEED.filters.worldcupId !== '') q.set('worldcup_id', FEED.filters.worldcupId);
+  if (FEED.filters.categoryId !== '') q.set('category_id', FEED.filters.categoryId); // <---
   if (FEED.filters.orderBy)           q.set('order', FEED.filters.orderBy);
-  if (FEED.filters.searchText !== '') q.set('q', FEED.filters.searchText); // 👈 NUEVO
+  if (FEED.filters.searchText !== '') q.set('q', FEED.filters.searchText);
 
   return `${API_BASE}${FEED_ENDPOINT}?${q.toString()}`;
 }
@@ -299,7 +324,7 @@ function buildFeedUrl() {
 /* ================== Primera carga ================== */
 document.addEventListener('DOMContentLoaded', () => {
   initFeedFilters();
-  initSearch(); // 👈 NUEVO: inicializar búsqueda
+  initSearch(); 
   loadFeedPage({ reset: true });
 });
 

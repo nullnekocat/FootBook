@@ -115,7 +115,6 @@ function createWikiCard(cup) {
       <div class="card-body text-center">
         <h6 class="card-title mb-1">${name}</h6>
         <p class="text-muted small mb-2">${country} • ${year}</p>
-        <div class="d-flex gap-1">
           <button class="btn btn-outline-success btn-sm flex-fill edit-wiki-btn"
                   data-id="${id}"
                   data-bs-toggle="modal"
@@ -125,9 +124,8 @@ function createWikiCard(cup) {
           <button class="btn btn-outline-danger btn-sm delete-wiki-btn"
                   data-id="${id}"
                   data-name="${name}">
-            <i class="bi bi-trash"></i>
+            <i class="bi bi-trash"></i> Eliminar
           </button>
-        </div>
       </div>
     </div>
   `;
