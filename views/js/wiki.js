@@ -1,60 +1,88 @@
 // /views/js/wiki.js
-const API_BASE = '/FootBook/api/worldcups';
+const API_BASE = '/FootBook/API/worldcups.php';
 const DEFAULT_BANNER = '/FootBook/img/russia2018.png';
 
 const container = document.getElementById('worldcupContainer');
 
-/* -------------------- utils -------------------- */
+/* -------------------- Utils -------------------- */
 function guessMimeFromB64(b64) {
   if (!b64 || b64.length < 4) return 'image/jpeg';
-  if (b64.startsWith('/9j/'))   return 'image/jpeg';  // JPG
-  if (b64.startsWith('iVBOR'))  return 'image/png';   // PNG
-  if (b64.startsWith('UklGR'))  return 'image/webp';  // WEBP
-  if (b64.startsWith('R0lGO'))  return 'image/gif';   // GIF
+  if (b64.startsWith('/9j/'))   return 'image/jpeg';
+  if (b64.startsWith('iVBOR'))  return 'image/png';
+  if (b64.startsWith('UklGR'))  return 'image/webp';
+  if (b64.startsWith('R0lGO'))  return 'image/gif';
   return 'image/jpeg';
 }
+
 function b64src(b64) {
   return `data:${guessMimeFromB64(b64)};base64,${b64}`;
 }
-function getBannerSrc(obj) {
-  const b64 = obj.banner_b64 || obj.bannerB64 || obj.banner;
-  if (b64 && typeof b64 === 'string' && b64.length > 10) return b64src(b64);
 
-  // distintos flags que podría devolver tu API
-  const exists = obj.banner_exists ?? obj.has_banner ?? obj.bannerExists;
-  const id = obj.id ?? obj.worldcup_id ?? obj.id_worldcup;
-  if (exists && id) return `${API_BASE}/${id}/banner?ts=${Date.now()}`;
+function getBannerSrc(obj) {
+  const b64 = obj.banner_b64;
+  if (b64 && typeof b64 === 'string' && b64.length > 10) {
+    return b64src(b64);
+  }
   return DEFAULT_BANNER;
 }
 
-// Normaliza campos por si el API usa otros nombres
 function normalizeCup(raw = {}) {
+  // Depuración: ver qué viene de la API
+  console.log('Raw data from API:', raw);
+  
   return {
-    id:   raw.id ?? raw.worldcup_id ?? raw.id_worldcup ?? raw.ID,
+    id: raw.id ?? raw.worldcup_id ?? raw.id_worldcup ?? raw.ID,
     name: raw.name ?? raw.title ?? raw.nom ?? '',
     country: raw.country ?? raw.host_country ?? raw.country_name ?? '',
-    year:    raw.year ?? raw.season ?? raw.edition_year ?? '',
+    year: raw.year ?? raw.season ?? raw.edition_year ?? '',
     description: raw.description ?? raw.desc ?? '',
     banner_b64: raw.banner_b64 ?? raw.bannerB64 ?? raw.banner ?? null,
-    banner_exists: raw.banner_exists ?? raw.has_banner ?? raw.bannerExists ?? null,
+    banner_exists: raw.banner_exists ?? raw.has_banner ?? raw.bannerExists ?? 0,
   };
 }
 
-async function getFlexibleJSON(url, options) {
-  const res = await fetch(url, options);
-  const text = await res.text();
-  let json;
-  try { json = JSON.parse(text); }
-  catch { throw new Error(`Respuesta no-JSON de ${url}:\n${text.slice(0,300)}`); }
+async function apiRequest(endpoint, options = {}) {
+  try {
+    const url = endpoint.startsWith('http') ? endpoint : `${API_BASE}${endpoint}`;
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+    });
 
-  // Acepta {ok:true,data:...} o ... directo
-  if (Array.isArray(json)) return json;
-  if (json && json.ok === true && 'data' in json) return json.data;
-  if (json && json.ok === false) throw new Error(json.error || 'API error');
-  return json; // objeto plano (p.ej. detalle)
+    const text = await response.text();
+    let json;
+    
+    try {
+      json = JSON.parse(text);
+    } catch {
+      throw new Error(`Invalid JSON response: ${text.slice(0, 300)}`);
+    }
+
+    if (!response.ok) {
+      throw new Error(json.error || `HTTP ${response.status}`);
+    }
+
+    // Soporte para formato {ok: true, data: ...}
+    if (json.ok === true && 'data' in json) {
+      return json.data;
+    }
+    
+    if (json.ok === false) {
+      throw new Error(json.error || 'API returned ok: false');
+    }
+
+    return json;
+    
+  } catch (error) {
+    console.error('API Request failed:', error);
+    throw error;
+  }
 }
 
-/* -------------------- render -------------------- */
+/* -------------------- Render -------------------- */
 function cardHtml(cup) {
   const imgSrc = getBannerSrc(cup);
   const name = cup.name ?? '';
@@ -63,9 +91,11 @@ function cardHtml(cup) {
 
   return `
     <div class="card shadow-sm h-100">
-      <img class="card-img-top" alt="${name}"
+      <img class="card-img-top" 
+           alt="${name}"
            src="${imgSrc}"
-           onerror="this.onerror=null;this.src='${DEFAULT_BANNER}'">
+           onerror="this.onerror=null;this.src='${DEFAULT_BANNER}'"
+           style="height: 200px; object-fit: cover;">
       <div class="card-body text-center">
         <h6 class="card-title mb-1">${name}</h6>
         <p class="text-muted small mb-2">${country} • ${year}</p>
@@ -80,25 +110,26 @@ function cardHtml(cup) {
   `;
 }
 
-/* -------------------- data flows -------------------- */
+/* -------------------- Data Loading -------------------- */
 async function loadWorldCups() {
   try {
-    const raw = await getFlexibleJSON(API_BASE); // lista
-    const cups = (Array.isArray(raw) ? raw : (raw?.items ?? []))
-      .map(normalizeCup);
+    container.innerHTML = '<div class="col-12 text-center"><div class="spinner-border" role="status"></div></div>';
+    
+    const data = await apiRequest('?type=full');
+    const cups = (Array.isArray(data) ? data : []).map(normalizeCup);
 
     if (!cups.length) {
-      container.innerHTML = '<p class="text-muted">No se encontraron mundiales.</p>';
+      container.innerHTML = '<p class="col-12 text-center text-muted">No se encontraron mundiales.</p>';
       return;
     }
 
     container.innerHTML = cups.map(c => `
-      <div class="col-md-4 col-lg-3 mb-3">
+      <div class="col-md-6 col-lg-4 mb-3">
         ${cardHtml(c)}
       </div>
     `).join('');
 
-    // click -> abre modal
+    // Asignar eventos a botones
     document.querySelectorAll('[data-bs-target="#worldcupModal"]').forEach(btn => {
       btn.addEventListener('click', () => {
         const id = btn.getAttribute('data-id');
@@ -108,31 +139,45 @@ async function loadWorldCups() {
 
   } catch (err) {
     console.error('Error fetching World Cups:', err);
-    container.innerHTML = `<p class="text-danger">${(err.message || 'Error cargando mundiales.')}</p>`;
+    container.innerHTML = `
+      <div class="col-12">
+        <div class="alert alert-danger" role="alert">
+          <i class="bi bi-exclamation-triangle"></i> 
+          ${err.message || 'Error cargando mundiales'}
+        </div>
+      </div>
+    `;
   }
 }
 
 async function loadModalData(id) {
   try {
-    const raw = await getFlexibleJSON(`${API_BASE}/${id}`); // detalle
-    // si vino como {ok:true,data:{...}} getFlexibleJSON ya te devolvió data
-    const d = normalizeCup(raw);
+    const data = await apiRequest(`/${id}`);
+    const d = normalizeCup(data);
+    const imgSrc = getBannerSrc(d);
 
-    document.getElementById('worldcupModalLabel').textContent = d.name || '';
-    document.getElementById('modalCountry').textContent = d.country || '';
-    document.getElementById('modalYear').textContent = d.year || '';
-    document.getElementById('modalDescription').textContent =
-      d.description || 'No description available.';
+    // Actualizar todos los elementos del modal
+    const modalTitle = document.getElementById('worldcupModalLabel');
+    const modalCountry = document.getElementById('modalCountry');
+    const modalYear = document.getElementById('modalYear');
+    const modalDescription = document.getElementById('modalDescription');
+    const modalBanner = document.getElementById('modalBanner');
 
-    const img = document.getElementById('modalBanner');
-    img.src = getBannerSrc(d);
-    img.onerror = () => { img.src = DEFAULT_BANNER; };
+    if (modalTitle) modalTitle.textContent = d.name || 'Mundial';
+    if (modalCountry) modalCountry.textContent = d.country || 'N/A';
+    if (modalYear) modalYear.textContent = d.year || 'N/A';
+    if (modalDescription) modalDescription.textContent = d.description || 'No hay descripción disponible.';
+    
+    if (modalBanner) {
+      modalBanner.src = imgSrc;
+      modalBanner.onerror = () => { modalBanner.src = DEFAULT_BANNER; };
+    }
 
   } catch (err) {
     console.error('Error loading modal data:', err);
-    // opcional: mostrar un mensaje en el modal
+    alert(`Error cargando información: ${err.message}`);
   }
 }
 
-/* -------------------- boot -------------------- */
+/* -------------------- Boot -------------------- */
 document.addEventListener('DOMContentLoaded', loadWorldCups);
